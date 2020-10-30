@@ -1,0 +1,198 @@
+% !TeX encoding = UTF-8
+% !TeX program = pdflatex
+% !TeX spellcheck = it_IT
+
+\documentclass[oneside,LaM,binding=0.0cm]{sapthesis}
+
+\usepackage{microtype}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenx}
+\usepackage{hyperref}
+\hypersetup{
+	pdftitle={Neural Network Based steering of Variable Speed Control Moment Gyroscope},
+	pdfauthor={Siddharth Nimbajirao Deore}}
+
+% I guess for biblio
+\usepackage[nottoc]{tocbibind}
+% for multi line comment
+\usepackage{verbatim}
+
+\usepackage{nomencl}
+\makenomenclature
+
+\usepackage[acronym]{glossaries}
+\makeglossaries
+
+
+
+% Remove in a normal thesis
+\usepackage{lipsum}
+\usepackage{curve2e}
+\definecolor{gray}{gray}{0.4}
+\newcommand{\bs}{\textbackslash}
+
+% Commands for the titlepage
+\title{Neural Network Based steering of \\ Variable Speed Control Moment Gyroscope}
+\author{Siddharth Nimbajirao Deore}
+\IDnumber{1823670}
+\course{Space and Astronautical Engineering}
+\courseorganizer{Dipartimento di Ingegneria Meccanica e Aerospaziale}
+\AcademicYear{2020/2021}
+\copyyear{2020}
+\advisor{Prof. Fabio Santoni}
+\advisor{Dr. Paolo Marzioli}
+\coadvisor{Prof. Fabrizio Piergentili}
+\authoremail{siddharthdeor@gmail.com}
+\website{http://deore.in}
+
+\examdate{16 January 2020}
+\examiner{Prof. Nome Cognome}
+\examiner{Prof. Nome Cognome}
+\examiner{Dr. Nome Cognome}
+\versiondate{\today}
+
+% For VSCMG Geometries
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+% Tikz from mathch.io for refrence frame symbol
+\usepackage{mathrsfs}
+
+\begin{document}
+\frontmatter
+\maketitle
+
+\begin{comment}
+\dedication{Dedicated to\\ Aai and Aaba}
+
+\begin{abstract}
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+This document is an example which shows the main features of
+the \LaTeXe\ class \texttt{sapthesis.cls} developed by Siddharth Nimbajirao Deore
+with the help of GuIT (Gruppo Utilizzatori Italiani di \TeX).
+\end{abstract}
+
+\begin{acknowledgments}
+\phantomsection
+\addcontentsline{toc}{chapter}{Acknowledgments}
+Sab ki dua
+\end{acknowledgments}
+
+% Some Glossaries/Terms
+\newglossaryentry{policy}{
+    name = policy,
+    description = neural network which produces appropriate actions.
+}
+
+
+
+% Table of Contents
+\renewcommand{\contentsname}{Table of Contents}
+\tableofcontents
+
+% List of Tables
+\listoftables
+\addcontentsline{toc}{chapter}{\listtablename}
+
+% List of Figures
+\listoffigures
+\addcontentsline{toc}{chapter}{\listfigurename}
+
+% List of Acronyms (short forms)
+\printglossary[type=\acronymtype, title=List of Acronyms]
+\addcontentsline{toc}{chapter}{List of Acronyms}
+% Some Acronyms
+%\newacronym{cmg}{CMG}{Control Moment Gyroscope}
+% usagee \acrfull{cmg}
+
+% List of Glossary
+\printglossary[title=List of Terms]
+\addcontentsline{toc}{chapter}{List of Terms}
+
+% List of Nomenclature renamed as Abbreviations
+\renewcommand{\nomname}{List of Abbreviations}
+\printnomenclature
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+
+
+
+
+
+
+
+
+
+
+% Do not use the starred version of the chapter command!
+\chapter{No Numbered Chapter}
+
+In this manual you can skip the gray text because it is just dummy text.%
+\footnote{This is a footnote.}
+
+
+
+\section*{Paragrafo non numerato}
+In this manual you can skip the gray text because it is just dummy text.
+
+% \mbox{}
+% add nomenclatures as you write latter it will update here
+\nomenclature{$c$}{Speed of light in a vacuum inertial frame}
+\nomenclature{$h$}{Planck constant}
+
+
+The \Gls{maths} typesetting markup language is specially suitable 
+for documents that include \gls{maths}. \Glspl{formula} are 
+rendered properly an easily once one gets used to the commands.
+
+in order to \Gls{policy}
+
+Given a set of numbers, there are elementary methods to compute 
+its \acrlong{gcd}, which is abbreviated \acrshort{gcd}. This 
+process is similar to that used for the \acrfull{lcm}.
+
+
+\end{comment}
+
+
+\mainmatter
+% Introduction
+\input{include/mainmatter/Chapter_1}
+% Equation of Motion
+\input{include/mainmatter/Chapter_2}
+
+\begin{comment}
+% Singularities
+\input{include/mainmatter/Chapter_3}
+%  Controller Design
+\input{include/mainmatter/Chapter_4}
+%  Numerical Sims
+\input{include/mainmatter/Chapter_5}
+% Neural Network
+\input{include/mainmatter/Chapter_6}
+% Mechanical Design
+\input{include/mainmatter/Chapter_7}
+% Electrical Design
+\input{include/mainmatter/Chapter_8}
+% Hardware in Loop Simulations
+\input{include/mainmatter/Chapter_9}
+% Conclusion
+\input{include/mainmatter/Chapter_10}
+
+%\include{filename}
+\end{comment}
+
+
+\appendix
+
+
+\backmatter
+% bibliography
+\cleardoublepage
+\phantomsection
+%\bibliographystyle{sapthesis} % BibTeX style
+%\bibliographystyle{apalike}
+\bibliographystyle{ieeetr}
+\bibliography{bibliography} % BibTeX database without .bib extension
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\end{document}

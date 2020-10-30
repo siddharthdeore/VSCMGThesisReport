@@ -1,0 +1,38 @@
+
+\begin{tikzpicture}
+% Axes
+\draw[thin,-latex,dotted] (0,0,0) -- (6,0,0) node[anchor=north east]{$x$};
+\draw[thin,-latex,dotted] (0,0,0) -- (0,6,0) node[anchor=north west]{$z$};
+\draw[thin,-latex,dotted] (0,0,0) -- (0,0,-6) node[anchor=south east]{$y$};
+
+% CMG1
+\draw[thick,-latex] (2,0,0) -- (2,0,-3) node[anchor=south]{$\hat{t}_1$};
+\draw[thick,-latex] (2,0,0) -- (0.5,2.5981,0) node[anchor=south]{$\hat{g}_1$};
+\draw[thick,-latex] (2,0,0) -- (4.5981,1.5,0) node[anchor=south east]{$\hat{s}_1$};
+% CMG2
+\draw[thick,-latex] (0,0,2) -- (3,0,2) node[anchor=north]{$\hat{t}_2$};
+\draw[thick,-latex] (0,0,2) -- (0,2.5981,0.5) node[anchor=south]{$\hat{g}_2$};
+\draw[thick,-latex] (0,0,2) -- (0,1.5,4.5981) node[anchor=south west]{$\hat{s}_2$};
+% CMG3
+\draw[thick,-latex] (-2,0,0) -- (-2,0,3) node[anchor=north]{$\hat{t}_3$} ; 
+\draw[thick,-latex] (-2,0,0) -- (-0.5,2.5981,0) node[anchor=south]{$\hat{g}_3$};
+\draw[thick,-latex] (-2,0,0) -- (-4.5981,1.5,0) node[anchor=south east]{$\hat{s}_3$};
+% CMG4
+\draw[thick,-latex] (0,0,-2) -- (-3,0,-2) node[anchor=north]{$\hat{t}_3$};
+\draw[thick,-latex] (0,0,-2) -- (0,2.5981,-0.5) node[anchor=south]{$\hat{g}_3$};
+\draw[thick,-latex] (0,0,-2) -- (0,1.5,-4.5981) node[anchor=south east]{$\hat{s}_3$};
+
+% Pyramid lines
+\draw[thin,dotted] (0,0,2) -- (0,3.46,0);
+\draw[thin,dotted] (2,0,0) -- (0,3.46,0);
+\draw[thin,dotted] (-2,0,0) -- (0,3.46,0);
+\draw[thin,dotted] (0,0,-2) -- (0,3.46,0);
+% pyramid 
+\draw[ultra thin,gray] (2,0,-2) -- (2,0,2); 
+\draw[ultra thin,gray] (-2,0,-2) -- (-2,0,2); 
+\draw[ultra thin,gray] (2,0,2) -- (0,3.46,0) -- (-2,0,2) --  cycle;
+\draw[ultra thin,gray] (2,0,-2) -- (0,3.46,0) -- (-2,0,-2) -- cycle;
+
+% grids
+% \draw[step=1, gray,very thin,dotted] (-4,-4,0) grid (6,6,0);
+\end{tikzpicture}

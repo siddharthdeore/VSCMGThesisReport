@@ -1,0 +1,60 @@
+\begin{tikzpicture}
+
+  \coordinate (O) at (0,0,0);
+  \coordinate (A) at (2,0,0);
+  \coordinate (B) at (0,2,0);
+  \coordinate (C) at (0,0,2);
+
+        % draw axis
+  \draw[-latex] (O) -- (A) node[below] {$y$};
+  \draw[-latex] (O) -- (B) node[above] {$z$};
+  \draw[-latex] (O) -- (C) node[below] {$x$};
+
+    \node[cylinder, draw, shape aspect=.5, 
+      cylinder uses custom fill, cylinder end fill=green!50, 
+      minimum height=1cm,
+      cylinder body fill=green!25, opacity=0.5, 
+    scale=3, rotate=90]{};
+
+  \begin{scope}[shift={(4,0)}]
+
+    \coordinate (O) at (0,0,0);
+    \coordinate (A) at (2,0,0);
+    \coordinate (B) at (0,2,0);
+    \coordinate (C) at (0,0,3.5);
+
+        % draw axis
+    \draw[-latex] (O) -- (A) node[below] {$y$};
+    \draw[-latex] (O) -- (B) node[above] {$z$};
+    \draw[-latex] (O) -- (C) node[below] {$x$};
+
+    \node[cylinder, draw, shape aspect=.5, 
+      cylinder uses custom fill, cylinder end fill=green!50, 
+      minimum height=0.1cm,
+      cylinder body fill=green!25, opacity=0.5, 
+    scale=10, rotate=-135]{};
+  \end{scope}
+  \begin{scope}[shift={(8.,0)}]
+
+    \coordinate (O) at (0,0,0);
+    \coordinate (A) at (2,0,0);
+    \coordinate (B) at (0,2,0);
+    \coordinate (C) at (0,0,2);
+
+        % draw axis
+    \draw[-latex] (O) -- (A) node[below] {$y$};
+    \draw[-latex] (O) -- (B) node[above] {$z$};
+    \draw[-latex] (O) -- (C) node[below] {$x$};
+
+
+    \node[cylinder, draw, shape aspect=.5,  
+      cylinder uses custom fill, cylinder end fill=green!50, 
+      minimum height=1cm,
+      cylinder body fill=green!25, opacity=0.5, 
+    scale=3]{};
+
+
+  \end{scope}
+
+
+\end{tikzpicture}

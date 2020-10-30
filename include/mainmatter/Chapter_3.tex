@@ -1,0 +1,91 @@
+\chapter{Singularity Analysis}
+
+
+In this chapter I will discuss my stylistic choices of \textsf{sapthesis}.
+I will show the page layout geometry and I will describe the page style. \cite{Shirazi2014}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{figures/fig4.eps}
+\end{figure}
+
+\section{Page layout}
+
+The page is fixed at the dimensions of an A4 paper, therefore you have to print your thesis on A4 paper to obtain the best results. The font dimension is fixed at 11\, pt. The text column and the margins are chosen to fill to the best an A4 paper while keeping a reasonable line length (396\, pt) for a good readability. The text height and the text width are in golden ratio (\textasciitilde 1.6180) as well as the outer and inner margins in a two-side document after binding margin removal. Also the top margin (excluding the header) and bottom margin are in the golden ratio. In Fig.~\ref{layout} a sketch of the \textsf{sapthesis} page layout is shown. \acrlong{vscmg}
+
+\begin{figure}[h]
+\centering
+\setlength{\unitlength}{0.27mm}
+\begin{picture}(420,297)(-210,0)
+\polyline(-210,0)(210,0)(210,297)(-210,297)(-210,0)
+\Line(0,0)(0,297)
+\put(27.05,37.4){\polygon(0,0)(139.2,0)(139.2,223.8)(0,223.8)}
+\put(-27.05,37.4){\polygon(0,0)(-139.2,0)(-139.2,223.8)(0,223.8)}
+\put(27.05,268.16){\polygon(0,0)(139.2,0)(139.2,4.22)(0,4.22)}
+\put(-27.05,268.16){\polygon(0,0)(-139.2,0)(-139.2,4.22)(0,4.22)}
+\end{picture}
+\caption{Page layout scheme of \textsf{sapthesis class} using a zero binding margin.}
+\label{layout}
+\end{figure}
+
+
+\section{Page style}
+
+The captions have a smaller font respect to the text and the label is in boldface. The appearance of the margin notes has been improved.
+They have the same font dimension of the footnotes and are typed in italics.
+Moreover I defined a new command to typeset margin note aligned to the left on the right page and vice versa on the left page.
+Notice that if a binding margin greater than 1.5\, cm is used, the dimensions of the margin notes become too small and very ugly.
+Do not use them in this case.
+
+The mathematical objects, figures and tables are numbered within the chapters (e.g. 1.1, 1.2,\ldots for the first chapter, 2.1, 2.2 for the second one and so on\ldots). See for example the number of this simple equation
+\begin{equation}
+x_{1,2}=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
+\end{equation}
+
+
+The title page is automatically composed when the \texttt{\bs maketitle} command is given.
+The parameters needed for the title page, author, title, etc\ldots , are supplied by dedicated commands explained in the next section.
+Two copies of the university logo in \texttt{pdf} format, one for color printing and the other one for black and white printing, are supplied in the \textsf{sapthesis} package. They are shown in Fig.~\ref{fig:largenenough}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{sapienza-MLred-pos}\\[3ex]
+\includegraphics[width=0.7\textwidth]{sapienza-MLblack-pos}
+\caption{Logo of the Sapienza -- University of Rome.}
+\label{fig:largenenough}
+\end{figure}
+
+
+
+\section{About figures and tables}
+
+As regards the image formats, please use vector images as much as possible! Use jpg images only for photographs! pdf\LaTeX\ supports the pdf, jpg and png formats.
+
+A very simple table is show in Tab.~\ref{tab:letters}. Remember to typeset
+always the table caption above the table. Do not use vertical lines.
+
+\begin{table}
+\caption{This is a simple table.}
+\label{tab:letters}
+\centering
+\begin{tabular}{lcc}
+\toprule
+Letter & Test & Test \\
+\midrule
+A & C & E \\
+B & D & F \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{A section}
+
+In this manual you can skip the gray text because it is just dummy text.
+
+
+
+\section{Another section}
+
+In this manual you can skip the gray text because it is just dummy text.
+

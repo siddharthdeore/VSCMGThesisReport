@@ -1,0 +1,29 @@
+\newcommand{\AxisRotator}[1][rotate=0]{%
+    \tikz [x=0.25cm,y=0.60cm,line width=.1ex,-stealth,#1] \draw (0,0) arc (-150:150:1 and 1);%
+}
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,284); %set diagram left start at 0, and has height of 284
+
+%Shape: Can [id:dp7170334139971102] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (260.4,169.85) -- (260.4,180.76) .. controls (260.4,181.45) and (254.49,182) .. (247.2,182) .. controls (239.91,182) and (234,181.45) .. (234,180.76) -- (234,169.85) .. controls (234,169.17) and (239.91,168.62) .. (247.2,168.62) .. controls (254.49,168.62) and (260.4,169.17) .. (260.4,169.85) .. controls (260.4,170.54) and (254.49,171.09) .. (247.2,171.09) .. controls (239.91,171.09) and (234,170.54) .. (234,169.85) ;
+%Shape: Can [id:dp8604613691481404] 
+\draw  [color={rgb, 255:red, 0; green, 0; blue, 0 }  ,draw opacity=1 ][fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (263.97,171.79) -- (224.4,172.01) .. controls (218.52,172.04) and (213.61,147.06) .. (213.43,116.2) .. controls (213.26,85.35) and (217.89,60.31) .. (223.78,60.28) -- (263.34,60.06) .. controls (269.23,60.03) and (274.14,85.01) .. (274.31,115.86) .. controls (274.48,146.72) and (269.85,171.76) .. (263.97,171.79) .. controls (258.08,171.82) and (253.17,146.84) .. (253,115.98) .. controls (252.83,85.13) and (257.46,60.09) .. (263.34,60.06) ;
+%Shape: Can [id:dp28656579674299] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (257.2,49.55) -- (257.2,60.46) .. controls (257.2,61.15) and (251.29,61.7) .. (244,61.7) .. controls (236.71,61.7) and (230.8,61.15) .. (230.8,60.46) -- (230.8,49.55) .. controls (230.8,48.87) and (236.71,48.32) .. (244,48.32) .. controls (251.29,48.32) and (257.2,48.87) .. (257.2,49.55) .. controls (257.2,50.24) and (251.29,50.79) .. (244,50.79) .. controls (236.71,50.79) and (230.8,50.24) .. (230.8,49.55) ;
+%Straight Lines [id:da6813117542504483] 
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (232.87,127.13) -- (244,116) ;
+%Straight Lines [id:da7942658869494881] 
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (244,116) -- (266,116);
+%Straight Lines [id:da8094718055923082] 
+\draw  [dash pattern={on 0.84pt off 2.51pt}]  (244,48.32) -- (244,116) ;
+
+%Straight Lines [id:da10899843254419173] 
+\draw[-latex]    (266,116) -- (326,116) node[anchor=west] {$\hat{s}$} node [midway] {\AxisRotator[x=0.15cm,y=0.3cm,->,rotate=0,black]} ;
+%Straight Lines [id:da31922966493534966] 
+\draw[-latex]    (232,128) -- (202,158) node[anchor=north east] {$\hat{t}$};
+%Straight Lines [id:da6086340922936091] 
+\draw[-latex]    (244,48.32) -- (244,14.71) node[above] {$\hat{g}$} node [midway] {\AxisRotator[x=0.15cm,y=0.3cm,->,rotate=90,black]};
+
+
+\end{tikzpicture}

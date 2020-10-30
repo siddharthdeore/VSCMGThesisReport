@@ -1,0 +1,35 @@
+\chapter{Electronics Design}
+ESP32, ESP8266, ESC, Stepper Driver, AMS5600 Batteries, Power Supply things
+
+
+\section{Special commands provided by \textsf{sapthesis}}
+
+\textsf{Sapthesis} provides some special commands, particularly useful for scientific works. You can use for example the roman shape, instead of the italic, for the imaginary unit (\texttt{\bs iu}) and Napier's number (\texttt{\bs eu}):
+\begin{equation}
+\eu^{\iu\pi}+1=0
+\end{equation}
+
+There are also two commands to speed up the writing of derivatives. In the following example we have used the commands \texttt{\bs der} and \texttt{\bs pder}):
+\begin{equation}
+\der{f}{x} \qquad \pder[2]{f}{y}
+\end{equation}
+
+
+\textsf{Sapthesis} provides also 4 commands to improve the writing of subscripts, \texttt{\bs rb} and \texttt{\bs tb}, and superscripts, \texttt{\bs rp} and \texttt{\bs tp}. Two of these commands, \texttt{\bs rb} and \texttt{\bs rp}, can be used both in text and in math mode and compose their argument in roman. The other two, \texttt{\bs tb} and \texttt{\bs tp}, can be used only in text mode and compose their argument as are. Here it is an usage example of \texttt{\bs rb} and \texttt{\bs rp}:
+\[
+a_b \neq a\rb{b}\qquad a^b \neq a\rp{b}
+\]
+And here it is an usage example of \texttt{\bs tb}: \emph{Cu\tb{It} indicates copper bought in Italy}. And a usage example of \texttt{\bs ts}: \emph{Cher G\tp{le} Napol\'eon}.
+
+
+Then several commands for the correct typesetting of unit of measurements are provided. For example the command \texttt{\bs un} typesets its argument in roman and leaves a thin space between the number and the unit: $25\un{m}$, $3.5\un{m/s}$. Other commands are: (\texttt{\bs g}) 45\g, (\texttt{\bs C}) 30\,\C, (\texttt{\bs A}) 12\,\A, (\texttt{\bs micro}) 40\,\micro m, (\texttt{\bs ohm}) 27\,\ohm. 
+
+We have also \texttt{\bs x} as abbreviation of \texttt{\bs times}: \$7 \bs x 10\^{}5\$ gives $7 \x 10^5$. Then \texttt{\bs di} is the differential symbol which automatically insert the correct spacing.
+\[
+\int x \di x
+\]
+
+Finally we have defined the color \textsf{sapred} which is the official color
+of Sapienza -- University of Rome. It is defined as RGB(130,36,51). \textcolor{sapred}{This text is written with the color \textsf{sapred}.}
+\marginpar{This is a fancy margin note!}
+In the following dummy text you can observe the usage of \texttt{\bs mnote} command which typesets fancy margin notes.\cite{Baker2016}
