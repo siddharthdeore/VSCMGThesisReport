@@ -1,0 +1,233 @@
+\section{Frame of reference}
+To realize attitude of rigid body and its evaluation over time as function of initial angular velocity and applied torques, reference frames and rotation among reference needs to be introduced. We attach body frame $ \mathcal{F}_{b}$ having basis vectors $ (\hat{b}_{1} ,\hat{b}_{2} ,\hat{b}_{3})$ and the orientation of $ \mathcal{F}_{b}$ with respect to inertial reference frame $ \mathcal{F} i$ associated basis vector $ (\hat{e}_{1} ,\hat{e}_{2} ,\hat{e}_{3})$ describes attitude of spacecraft. Rotation from one frame of reference to other can described with Rotation matrix, Euler axis angles representation, Davenport chained rotations, and unit quaternions.
+
+\subsection{Rotation Matrix}
+Three mutually perpendicular basis vectors describes reference frame in Euclidean space. Rotation is represented by specifying vector components of one frame with respect to other. Each column describe components of unit vector.
+\begin{equation}
+\mathbf{R}_{3\times 3} \ =\ \begin{pmatrix}
+\vdots  & \vdots  & \vdots \\
+\hat{e}_{1} & \hat{e}_{2} & \hat{e}_{3}\\
+\vdots  & \vdots  & \vdots 
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\mathbf{R}^{T}\mathbf{R} =\mathbf{RR}^{T} =\mathbf{I}_{3\times 3}\\
+\det\mathbf{R} =+1
+\end{aligned}
+\label{eqn:rotmat}
+\end{equation}
+
+$ R$ is real and orthogonal matrix with eigenvalues $ \left\{1,e^{\pm i\theta }\right\}$, with unit determinant. Successive rotations are represented as product of matrix in order of rotation performed.
+
+
+\begin{equation}
+^{B}\mathbf{R}_{I} =\ ^{B}\mathbf{R}_{n} \ ^{n}\mathbf{R}_{n-1} \cdots ^{2}\mathbf{R}_{1} \ ^{1}\mathbf{R}_{I}
+\end{equation}
+
+\subsection{Euler Axis angle}
+
+Euler rotation theorem states If $ \mathbf{R}$ satisfies \autoref{eqn:rotmat} then there exist non zero vector $ \hat{\mathbf{a}}$ which satisfies $ \mathbf{R\hat{a}} =\hat{\mathbf{a}}$. Any arbitrary composition of rotations of a rigid body can be represented as single rotation by angle $ \varphi $ about unique axis $ \hat{\mathbf{a}}$ which remains unchanged by the rotation.\cite{eulerAxis} Rotation matrix $ \mathbf{R}$ relates certain vector $ \mathbf{v}$ and corrusponding rotated vector $ \mathbf{v'} =\mathbf{Rv}$ Roudrigues rotation formula for $ \mathbf{R}$ as function of unit vector $ \hat{\mathbf{a}}$ along the rotation axis and by angle $ \varphi $ is
+\begin{equation}
+\mathbf{R}(\hat{\mathbf{a}} ,\varphi ) =\cos \varphi \ \mathbf{I} \ +\ ( 1-\cos \varphi ) \ \hat{\mathbf{a}} \otimes \hat{\mathbf{a}} +\sin( \varphi ) \ \hat{\mathbf{a}}^{\times }
+\end{equation}
+Here $\mathbf{I}$ is identity matrix and vector with superscript $\times$ is a skew symmetric matrix for cross product of vector denoted with $a^{\times}$ represented as
+
+\begin{equation*}
+a^{\times } =\begin{pmatrix}
+0 & a_{3} & -a_{2}\\
+-a_{3} & 0 & a_{1}\\
+a_{2} & a_{1} & 0
+\end{pmatrix}
+\end{equation*}
+With dextro-rotation assumption, $ \mathbf{R}$ moves the vectors but not co-ordinate axes hence gives active point of view of rotation.
+
+\subsection{Davenport chained rotations}
+Davenport chained rotations are three chained sequence of consecutive intrinsic rotation about body-fixed axes. Based on number of axes used to represent rotation Davenport chain rotations are characterized in two types, "Generalized Euler rotations" if two rotation occurs about same axis and "Generalized Tait–Bryan rotations" if each rotations occur about different axis. Order in which rotations are performed is not cumulative so must be specified. Three numbers indicates axis about which rotations are performed. For example Euler 313 commonly used in aerodynamics to describe satellites position with other parameters. Sequence involves first rotation about third axis, second rotation about first axis and finally, third rotation about third axis. Tait-Bryan angle sequence 123 is commonly used t describe attitude of aircraft and individual rotation is called roll, pitch and yaw ($ \phi ,\theta ,\psi $). Classic Euler angles are first introduced by Euler for orbital mechanics and rigid body dynamics. Problem with classic Euler angle is, they become singular near zero angles, on the other hand Tait–Bryan angles become singular when second rotation is $ \pi/2$ condition also referred as Gimble Lock. \\
+
+\noindent Elaboration of Tait–Bryan $ R_{123}$ is product of three individual coordinate rotation about each axis$ R_{i} :\mathbb{R}\longrightarrow SO( 3)$ for $ i\in \{1,2,3\}$ as shown below:
+
+
+\begin{equation*}
+R_{1} (\phi )=\begin{pmatrix}
+1 & 0 & 0\\
+0 & \cos \phi  & \sin \phi \\
+0 & -\sin \phi  & \cos \phi 
+\end{pmatrix}
+\end{equation*}
+\begin{equation*}
+R_{2} (\theta )=\begin{pmatrix}
+\cos \theta  & 0 & -\sin \theta \\
+0 & 1 & 0\\
+\sin \theta  & 0 & \cos \theta 
+\end{pmatrix}
+\end{equation*}
+\begin{equation*}
+R_{3} (\psi )=\begin{pmatrix}
+\cos \psi  & \sin \psi  & 0\\
+-\sin \psi  & \cos \psi  & 0\\
+0 & 0 & 1
+\end{pmatrix}
+\end{equation*}
+Performing the multiplication, the complete rotation from the body frame to the inertial frame is given by
+\begin{equation*}
+    R_{123}( \phi ,\theta ,\psi ) =R_{1} (\phi )R_{2} (\theta )R_{3} (\psi )
+\end{equation*}
+\begin{equation*}
+    R_{123} (\phi ,\theta ,\psi )=\begin{pmatrix}
+\cos \psi \cos \theta  & \cos \psi \sin \phi \sin \theta -\cos \phi \sin \psi  & \sin \phi \sin \psi +\cos \phi \cos \psi \sin \theta \\
+\cos \theta \sin \psi  & \cos \phi \cos \psi +\sin \phi \sin \psi \sin \theta  & \cos \phi \sin \psi \sin \theta -\cos \psi \sin \phi \\
+-\sin \theta  & \cos \theta \sin \phi  & \cos \phi \cos \theta 
+\end{pmatrix}
+\end{equation*}
+
+\subsection{Quaternions}
+Quaternions were first introduced in 1983 by William Rowan Hamilton as four dimension vector having three imaginary dimensions describing space and a real number perpendicular to it in fourth dimension. Quaternion rotation is written as combination of scalar with hyper-complex numbers \ in the form of 
+
+
+\begin{equation}
+\mathbf{q} =q_{0} \ +\ q_{1}\mathbf{i} \ +q_{2} \ \mathbf{j} \ +q_{3} \ \mathbf{k}
+\end{equation}
+where $\displaystyle \{q_{0} ,q_{1} ,q_{2} ,q_{3}\} \ \in \ \mathbb{R}$ and $\displaystyle i,j,k$ are the fundamental quaternion units. Hamiltonian representation of quaternion follows \footnote{Apart from Hamiltonian representation, an alternative standard representation "JPL" \cite{Ortega2016QuaternionKF} has component order as $q=q_0i+q_1j+q_2k+q_3$ holds algebraic relation 
+$\mathbf{i}^{2} +\mathbf{j}^{2} +\mathbf{k}^{2} =\mathbf{ijk} =1$}
+\begin{equation}
+\mathbf{i}^{2} +\mathbf{j}^{2} +\mathbf{k}^{2} =\mathbf{ijk} =-1
+\end{equation}
+The term $\displaystyle \mathbf{i} ,\mathbf{j} ,\mathbf{k}$ represents three unit Cartesian with imaginary properties and satisfies following relation
+\begin{gather*}
+\mathbf{ij} =\mathbf{k} \ \quad \mathbf{ij} =-\mathbf{k}\\
+\mathbf{jk} =\mathbf{i} \ \quad \mathbf{jk} =-\mathbf{i}\\
+\mathbf{ki} =\mathbf{j} \ \quad \mathbf{ki} =-\mathbf{j}
+\end{gather*}
+A quaternion $\displaystyle \mathbf{q} \in \mathbb{H}$ is represented as vector with scalar $\displaystyle q_{0}$ and $\displaystyle \mathbf{\sigma } =[ q_{1} \ q_{2} \ q_{3}]^{T}$as
+
+
+\begin{equation*}
+\mathbf{q} =\begin{bmatrix}
+q_{0} & q_{1} & q_{2} & q_{3}
+\end{bmatrix}^{T} =\begin{bmatrix}
+q_{0}\\
+\mathbf{\sigma }
+\end{bmatrix}
+\end{equation*}
+Quaternion norm conjugate and inverse is computed as
+
+
+\begin{gather}
+\mathbf{q}^{*} =\begin{bmatrix}
+q_{0}\\
+-\mathbf{\sigma }
+\end{bmatrix} \ \\
+\| \mathbf{q} \| =\sqrt{\mathbf{qq}^{*}} =\sqrt{q^{2}_{0} +q^{2}_{1} +q^{2}_{2} +q^{2}_{3}}\\
+\mathbf{q}^{-1} =\frac{\mathbf{q}^{*}}{\| \mathbf{q} \| ^{2}}
+\end{gather}
+Quaternion product is noncommutative, defined in terms of scalar and vector part, product of two quaternion $\displaystyle \mathbf{q}_{1}$ and $\displaystyle \mathbf{q}_{2}$ evaluated as 
+\begin{equation}
+\label{quatProduct}
+\begin{aligned}
+\mathbf{q_{1} \otimes q}_{2} & =\begin{bmatrix}
+q\mathbf{_{1,0}}\\
+{\mathbf{\sigma }_{1}}
+\end{bmatrix} \otimes \begin{bmatrix}
+{q\mathbf{_{2}}}_{2,0}\\
+{\mathbf{\sigma }_{2}}
+\end{bmatrix}\\
+ & =\ \begin{bmatrix}
+q\mathbf{_{1,0}} q\mathbf{_{2,0}} -\sigma _{1} \cdot \sigma _{2}\\
+q\mathbf{_{1,0} \sigma _{2}} +q\mathbf{_{2,0} \sigma }_{1} +\mathbf{\sigma ^{\times }_{1} \sigma }_{2}
+\end{bmatrix}
+\end{aligned} \ 
+\end{equation}
+Unit quaternions are special class of quaternion which poses following property
+\begin{equation}
+\| \mathbf{q} \| =\sqrt{q^{2}_{0} +q^{2}_{1} +q^{2}_{2} +q^{2}_{3}} =1
+\end{equation}
+Rotation in three dimensions can be represented with unit quaternions, they have been employed in several disciplines such as computer graphics, aerodynamics, quantum computing, robotics and to describe attitude of rigid body. \ Consider a vector $\displaystyle \mathbf{x} \in \mathbb{R}^{3}$ in inertial frame $\displaystyle \mathcal{F}_{i}$ and $\displaystyle \mathbf{x} '$ being same vector viewed from body fixed frame then we get rotation of vector $\displaystyle \mathbf{x}$ as
+\begin{equation*}
+\begin{aligned}
+\begin{bmatrix}
+0\\
+\mathbf{x} '
+\end{bmatrix} & =\mathbf{q} \cdot \begin{bmatrix}
+0\\
+\mathbf{x}
+\end{bmatrix} \cdot \mathbf{q}^{-1}\\
+ & =\begin{bmatrix}
+1 & \mathbf{0}^{T}\\
+\mathbf{0} & \mathbf{R}(\mathbf{q})
+\end{bmatrix}\begin{bmatrix}
+0\\
+\mathbf{x} '
+\end{bmatrix}\\
+\mathbf{x} ' & =\mathbf{R}(\mathbf{q})\mathbf{x}\\
+\mathbf{x} & =\mathbf{R}(\mathbf{q})^{T}\mathbf{x} '
+\end{aligned}
+\end{equation*}
+where rotation matrix $\displaystyle \mathbf{R}$ as function of $\displaystyle \mathbf{q}$ shown below.
+\begin{equation}
+\ \begin{aligned}
+\mathbf{R}(\mathbf{q}) & =\left( q^{2}_{0} -\mathbf{\sigma ^{T} \sigma }\right)\mathbf{I}_{3\times 3} +2\mathbf{\sigma \sigma }^{T} +2q_{0}\mathbf{\sigma }^{\times }\\
+\mathbf{R}(\mathbf{q}) & =\begin{pmatrix}
+1-2q^{2}_{2} -2q^{2}_{3} & 2q_{1} q_{2} -2q_{0} q_{3} & 2q_{1} q_{3} +2q_{0} q_{2}\\
+2q_{1} q_{2} +2q_{0} q_{3} & 1-2q^{2}_{1} -2q^{2}_{3} & 2q_{2} q_{3} -2q_{0} q_{1}\\
+2q_{1} q_{3} -2q_{0} q_{2} & 2q_{2} q_{3} +2q_{0} q_{1} & 1-2q^{2}_{1} -2q^{2}_{2}
+\end{pmatrix}
+\end{aligned}
+\end{equation}
+Relation ship with axis angle $\displaystyle \hat{\mathbf{e}} =[ e_{1} \ e_{2} \ e_{3}]^{T}$ and rotation by angle $\displaystyle \varphi $ is expressed as follows
+\begin{equation}
+\label{eqn:axisAngle}
+\mathbf{q} =\begin{bmatrix}
+\cos\frac{\varphi }{2}\\
+\hat{\mathbf{e}} \ \sin\frac{\varphi }{2}
+\end{bmatrix}
+\end{equation}
+
+\section{Kinematics}
+Kinematic relation of rigid body describes changing attitude over time of body fixed reference frame $\displaystyle \mathcal{F}_{b}$ with inertial reference frame $\displaystyle \mathcal{F}_{i}$.To identify kinematic differential equation, let us consider instantaneous angular velocity vector $\displaystyle \mathbf{\omega }$ of frame $\displaystyle \mathcal{F}_{b}$ with respect to frame $\displaystyle \mathcal{F} i$ as viewed from $\displaystyle \mathcal{F}_{b}$ frame orthogonal components described as
+\begin{equation*}
+\mathbf{\omega } =\omega _{1}\hat{\mathbf{b}}_{1} +\omega _{2}\hat{\mathbf{b}}_{2} +\omega _{3}\hat{\mathbf{b}}_{3}
+\end{equation*}
+Then $\displaystyle ^{\mathcal{F}_{i}} d/dt\{\hat{\mathbf{b}}\}$ is derivative of $\displaystyle \mathcal{F}_{b}$ base vectors taken in $\displaystyle \mathcal{F} i$, applying transport theorem
+\begin{equation}
+\frac{^{\mathcal{F}_{i}} d}{dt} \ \hat{\mathbf{b}}_{i} =\ \frac{^{\mathcal{F}_{b}} d}{dt} \ \hat{\mathbf{b}}_{i} +\ \mathbf{\omega } \times \ \hat{\mathbf{b}}_{i}
+\end{equation}
+Selection of attitude coordinate system to represent rotation of spacecraft is crucial in order to simplify mathematics and avoid geometrical or numerical singularity, quaternion kinematics is used in this thesis. In spite of the fact that quaternions are less intuitive, they does not undergo trivial singularity \ presence in Euler angles moreover quaternions are linear in nature. In this section we will realize quaternion kinematic relation.
+
+Let $\displaystyle \mathbf{q}$ represent attitude of spacecraft with respect to inertial reference frame at time $\displaystyle t$ and $\displaystyle \mathbf{q}$' be attitude quaternion after $\displaystyle t+\Delta t$ about axis $\displaystyle \hat{\mathbf{e}}$ and by angle $\displaystyle \Delta \varphi $ rotation using \autoref{eqn:axisAngle}
+\begin{equation}
+\dot{\mathbf{q}} =\mathbf{q}( t+\Delta t) =\mathbf{q} '=\begin{bmatrix}
+\cos\frac{\Delta \varphi }{2}\\
+\hat{\mathbf{e}} \ \sin\frac{\Delta \varphi }{2}
+\end{bmatrix}
+\end{equation}
+amusing very small angle $\displaystyle \Delta \varphi =\mathbf{\omega } \Delta t$ thus $\displaystyle \cos\frac{\Delta \varphi }{2} \approx 1$ and $\displaystyle \sin\frac{\Delta \varphi }{2} \approx \frac{\Delta \varphi }{2}$
+\begin{equation}
+\begin{aligned}
+\dot{\mathbf{q}} & =\frac{1}{2}\begin{bmatrix}
+-\mathbf{\omega } \cdot \mathbf{\sigma }\\
+( q_{0}\mathbf{\omega }) -\mathbf{\sigma }^{\times }
+\end{bmatrix}\\
+ & =\frac{1}{2}\begin{bmatrix}
+0 & -\mathbf{\omega }\\
+(\mathbf{\omega } & -\mathbf{\omega }^{\times }
+\end{bmatrix}\begin{bmatrix}
+q_{0}\\
+\mathbf{\sigma }
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+As seen from inertial frame of reference kinematic relation becomes
+\begin{equation}
+\dot{\mathbf{q}} =\frac{1}{2}\mathbf{\Omega }(\mathbf{\omega })\mathbf{q}
+\end{equation}
+here, skew symmetric matrix $\Omega(\omega)$ is $4\times4$ matrix with diagonal element zero and non diagonal elements are components of spacecraft angular velocity.
+\begin{equation*}
+\mathbf{\Omega }(\mathbf{\omega }) =\begin{bmatrix}
+0 & -\omega _{1} & -\omega _{2} & -\omega _{3}\\
+\omega _{1} & 0 & \omega _{3} & -\omega _{2}\\
+\omega _{2} & -\omega _{3} & 0 & \omega _{1}\\
+\omega _{3} & \omega _{2} & -\omega _{1} & 0
+\end{bmatrix}
+\end{equation*}

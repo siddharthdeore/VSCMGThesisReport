@@ -1,0 +1,63 @@
+\section{Dynamics}
+\subsection{System Identification}
+\subsection{CMG Modeling}
+
+
+\begin{figure}[!h]
+    \centering
+    \input{figures/tikCMG2}
+    \caption{Axis definition for Control Moment Gyroscope}
+    \label{fig:tikCMG}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \include{figures/tikCMGFrame}
+    \caption{Frame of reference definition for Spacecraft Body with \acrfull{vscmg}}
+    \label{fig:tikCMG}
+\end{figure}
+\usetikzlibrary{shapes}
+\tdplotsetmaincoords{60}{120}
+
+
+\begin{equation*}
+A\hat{s} =
+\begin{pmatrix}
+\cos{\beta} \cos{\delta_1} & -\sin{\delta_2} & -\cos{\beta} \cos{\delta_3} &  \sin{\delta_4} \\
+-\sin{\delta_1} & -\cos{\beta} \cos{\delta_2} &  \sin{\delta_3} &  \cos{\beta} \cos{\delta_4} \\
+\sin{\beta} \cos{\delta_1} &  \sin{\beta} \cos{\delta_2} &  \sin{\beta} \cos{\delta_3} &  \sin{\beta} \cos{\delta_4} 
+\end{pmatrix}
+\end{equation*}
+\begin{equation*}
+A\hat{t} =
+\begin{pmatrix}
+\cos{\beta} \sin{\delta_1} &         \cos{\delta_2} & -\cos{\beta} \sin{\delta_3} &       -\cos{\delta_4} \\
+       \cos{\delta_1} & -\cos{\beta} \sin{\delta_2} &        -\cos{\delta_3} & \cos{\beta} \sin{\delta_4} \\
+\sin{\beta} \sin{\delta_1} &  \sin{\beta} \sin{\delta_2} &  \sin{\beta} \sin{\delta_3} & \sin{\beta} \sin{\delta_4}
+
+\end{pmatrix}
+\end{equation*}
+\begin{equation*}
+A\hat{g} = 
+\begin{pmatrix}
+ -\sin{}\beta &      0 & \sin{\beta} &       0 \\
+       0 & \sin{\beta} &      0 & -\sin{\beta} \\
+  \cos{\beta} & \cos{\beta} & \cos{\beta} &  \cos{\beta}
+\end{pmatrix}
+\end{equation*}
+
+
+
+\begin{comment}
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+\begin{figure}[ht]
+\centering
+\input{figures/tikCMG2}
+\caption{Single Gimble Control Moment Gyroscope basis vectors, initialy each SGCMG's wheel spin axis is facing towards x of pyramid, gimble axis is aligned with z axis}
+\label{fig:sgcmg}
+\end{figure}
+\end{comment}
+\subsection{Satellite Attitude Dynamics}
+\subsection{RW}
+\subsection{CMG}
+\subsection{VSCMG}

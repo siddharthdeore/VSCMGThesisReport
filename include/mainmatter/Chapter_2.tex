@@ -1,77 +1,13 @@
 \chapter{Equation(s) of Motion}
+\label{chap:2}
 This chapter elaborates mathematical definition and generalized nonlinear equations of motion of a rigid spacecraft equipped with array of SGCMG units.
 
-\section{Kinematics}
-\subsection{Euler Angles}
-\subsection{Quaternions}
-Quaternion is a commonly used 3D rotation parameterization. It is written like $\mathbf{q}=q_0 + q_1 i + q_2 j + q_3 k$, in which $i, j, k$ forms the three bases of the imaginary part (analogous to the imaginary part of a complex number) and $i^2=j^2=k^2=-1$. Usually a rotation is represented by a unit quaternion (a quaternion whose norm is 1).
-\[i^2=j^2=k^2=ijk=-1\]
+\input{include/mainmatter/CH2_Kinematics}
 
-\[{\bf R}=\begin{bmatrix} 1-2q_2^2-2q_3^2 & 2q_1q_2-2q_0q_3 & 2q_1q_3+2q_0q_2 \\ 2q_1q_2+2q_0q_3 & 1-2q_1^2-2q_3^2 & 2q_2q_3-2q_0q_1 \\ 2q_1q_3-2q_0q_2 & 2q_2q_3+2q_0q_1 & 1-2q_1^2-2q_2^2 \end{bmatrix}\]
-
-while JPL defines
-
-\[i^2=j^2=k^2=ijk=1\]
-
-
-\section{Dynamics}
-\subsection{System Identification}
-\subsection{CMG Modeling}
-
-\begin{figure}[!h]
-    \centering
-    \include{figures/tikCMG}
-    \caption{Axis definition for Control Moment Gyroscope}
-    \label{fig:tikCMG}
-\end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \include{figures/tikCMGFrame}
-    \caption{Axis definition for Spacecraft Body with \acrfull{vscmg}}
-    \label{fig:tikCMG}
-\end{figure}
-\usetikzlibrary{shapes}
-\tdplotsetmaincoords{60}{120}
-
-
-\begin{equation*}
-A\hat{s} =
-\begin{bmatrix}
-\cos(\beta) \cos(\delta_1) & -\sin(\delta_2) & -\cos(\beta) \cos(\delta_3) &  \sin(\delta_4) \\
--\sin(\delta_1) & -\cos(\beta) \cos(\delta_2) &  \sin(\delta_3) &  \cos(\beta) \cos(\delta_4) \\
-\sin(\beta) \cos(\delta_1) &  \sin(\beta) \cos(\delta_2) &  \sin(\beta) \cos(\delta_3) &  \sin(\beta) \cos(\delta_4) 
-\end{bmatrix}
-\end{equation*}
-\begin{equation*}
-A\hat{t} =
-\begin{bmatrix}
-\cos(\beta) \sin(\delta_1) &         \cos(\delta_2) & -\cos(\beta) \sin(\delta_3) &       -\cos(\delta_4) \\
-       \cos(\delta_1) & -\cos(\beta) \sin(\delta_2) &        -\cos(\delta_3) & \cos(\beta) \sin(\delta_4) \\
-\sin(\beta) \sin(\delta_1) &  \sin(\beta) \sin(\delta_2) &  \sin(\beta) \sin(\delta_3) & \sin(\beta) \sin(\delta_4)
-
-\end{bmatrix}
-\end{equation*}
-\begin{equation*}
-A\hat{g} = 
-\begin{bmatrix}
- -\sin(\beta) &      0 & \sin(\beta) &       0 \\
-       0 & \sin(\beta) &      0 & -\sin(\beta) \\
-  \cos(\beta) & \cos(\beta) & \cos(\beta) &  \cos(\beta)
-\end{bmatrix}
-\end{equation*}
+%\input{include/mainmatter/CH2_Dynamics}
 
 
 
-\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-\begin{figure}[ht]
-\centering
-\input{figures/tikCMG2}
-\caption{Single Gimble Control Moment Gyroscope basis vectors, initialy each SGCMG's wheel spin axis is facing towards x of pyramid, gimble axis is aligned with z axis}
-\label{fig:sgcmg}
-\end{figure}
 
-\subsection{Satellite Attitude Dynamics}
-\subsection{RW}
-\subsection{CMG}
-\subsection{VSCMG}
+
+

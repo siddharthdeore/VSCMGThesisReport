@@ -1,4 +1,5 @@
 \chapter{Introduction}
+\label{chap:1}
 \section{Motivation}
 
 \newacronym{ai}{AI}{Artificial Intelligence}
@@ -11,7 +12,7 @@ Although machine learning based models are widely used in everyday applications 
 
 \subsubsection*{The Test Bench}
 It is difficult to evaluate the performance of the control law on real hardware and always been challenging to carry out hardware in the loop simulation of the attitude control system on the ground. Implementing complete 360 degrees of angular freedom of three body axes observed in orbit is indispensably difficult to attain inside ground-based laboratory. There has been a wide variety of technological solutions proposed and implemented since the beginning of the space age. Compromising with a reduced degree of freedom a platform balancing on sharp pin with its center of mass kept closer to pivot is chosen to keep the cost of the entire test setup as low as possible. 
-Accessibility of 3D printing technology provides leverage for rapid prototyping of comlex geometries. Goal behind hardware setup design is to provide an educational platform for preliminary evaluation and hardware in loop simulation of spacecraft attitude control system.
+Accessibility of 3D printing technology provides leverage for rapid prototyping of complex geometries. Goal behind hardware setup design is to provide an educational platform for preliminary evaluation and hardware in loop simulation of spacecraft attitude control system.
 
 \vspace*{20px}
 \begin{center}
@@ -68,10 +69,10 @@ Lorenzo Arena et. al. produced a research on use of platform balancing on sharp 
 
 
 \section{Thesis Outline}
-Scope of this thesis is divided in three parts. First part deals with Mathematical Background. Starting from formulation kinematics and rigid body dynamics, reference frame and axis definition of CMG and complete nonlinear model \acrshort{vscmg} is realized in Chapter 2. Singularity analysis, momentum envelope and singular surface of \acrshort{vscmg} is discussed in Chapter 3. Controller design, Lyapunov stability analysis and pseudo inverse based steering law is derived in Chapter 4. Finally, computer simulations performed for preliminary verification of control algorithm and sizing of hardware component and.\\
+Scope of this thesis is divided in three parts. First part deals with Mathematical Background. Starting from formulation kinematics and rigid body dynamics, reference frame and axis definition of CMG and complete nonlinear model \acrshort{vscmg} is realized in \autoref{chap:2}. Singularity analysis, momentum envelope and singular surface of \acrshort{vscmg} is discussed in \autoref{chap:3}. Controller design, Lyapunov stability analysis and pseudo inverse based steering law is derived in \autoref{chap:4}. Finally, computer simulations performed for preliminary verification of control algorithm and sizing of hardware component and.\\
 
 
-\noindent Second part of this thesis is discussion of AI based controller methods, Neural Network and Reinforcement Learning. Machine learning approach especially Deep Neural Network and policy gradient training algorithms are discussed in chapter 6. Complete policy has been implemented and verified on simulation of spacecraft with VSCMG.\\
+\noindent Second part of this thesis is discussion of AI based controller methods, Neural Network and Reinforcement Learning. Machine learning approach especially Deep Neural Network and policy gradient training algorithms are discussed in \autoref{chap:5}. Complete policy has been implemented and verified on simulation of spacecraft with VSCMG.\\
 
 
-\noindent Mechanical Design, Fabrication and electronics and embedded system for hardware in Loop simulation of complete VSCMG Test Bench is implemented in third part of thesis described in Chapter 6 - 9.
+\noindent Mechanical Design, Fabrication and electronics and embedded system for hardware in Loop simulation of complete VSCMG Test Bench is implemented in third part of thesis described in \autoref{chap:6} to \autoref{chap:9}.

@@ -4,6 +4,7 @@
 
 \documentclass[oneside,LaM,binding=0.0cm]{sapthesis}
 
+\usepackage{amssymb}
 \usepackage{microtype}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenx}
@@ -11,6 +12,7 @@
 \hypersetup{
 	pdftitle={Neural Network Based steering of Variable Speed Control Moment Gyroscope},
 	pdfauthor={Siddharth Nimbajirao Deore}}
+
 
 % I guess for biblio
 \usepackage[nottoc]{tocbibind}
@@ -108,15 +110,23 @@ Sab ki dua
 % List of Glossary
 \printglossary[title=List of Terms]
 \addcontentsline{toc}{chapter}{List of Terms}
+\end{comment}
+
 
 % List of Nomenclature renamed as Abbreviations
 \renewcommand{\nomname}{List of Abbreviations}
 \printnomenclature
 \addcontentsline{toc}{chapter}{List of Abbreviations}
+% \mbox{}
+% add nomenclatures as you write latter it will update here
+\nomenclature{$\mathcal{F}_i$}{Inertial reference frame}
+\nomenclature{$\mathcal{F}_b$}{Body fixed reference frame}
+\nomenclature{$\mathbf{q}$}{Quaternion}
+\nomenclature{$q_i$}{Components of Quaternion $i\in\{1,2,3,4\}$}
+\nomenclature{$\mathbf{q}$}{Quaternion}
 
-
-
-
+\nomenclature{$\mathbf{\omega}$}{Angular velocity vector}
+\begin{comment}
 
 
 
@@ -134,10 +144,6 @@ In this manual you can skip the gray text because it is just dummy text.%
 \section*{Paragrafo non numerato}
 In this manual you can skip the gray text because it is just dummy text.
 
-% \mbox{}
-% add nomenclatures as you write latter it will update here
-\nomenclature{$c$}{Speed of light in a vacuum inertial frame}
-\nomenclature{$h$}{Planck constant}
 
 
 The \Gls{maths} typesetting markup language is specially suitable 
