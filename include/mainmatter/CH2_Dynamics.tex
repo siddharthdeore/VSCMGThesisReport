@@ -1,63 +1,407 @@
 \section{Dynamics}
-\subsection{System Identification}
-\subsection{CMG Modeling}
+In order to archive complete system dynamics of spacecraft with array of N - VSCMGs, physical properties such as inertia and angular momentum of a single control moment gyroscope is evaluated. Body fixed frame $\displaystyle \mathcal{F}_{b}$with basis vector $\displaystyle \{\hat{b}_{1} ,\hat{b}_{2} ,\hat{b}_{3}\}$ attached to center of mass of continuum rigid body at distance $\displaystyle \vec{r}_{0}$ from $\displaystyle \mathcal{F}_{i}$ as shown in \autoref{fig:tikRigidBody}. Body is rotating at angler velocity $\displaystyle \vec{\omega } =[ \omega _{1} \ \omega _{2} \ \omega _{3}]^{T}$ as shown in fig. The angler momentum $\displaystyle \gamma \vec{\mathbf{h}}$ of infinitesimally small mass $\displaystyle \gamma m$ at position $\displaystyle \vec{r} =[ x_{1} \ y_{2} \ z_{3}]^{T}$ in body, moving at velocity $\displaystyle \mathbf{\vec{v}} =\vec{\mathbf{\omega }} \times \vec{r}$ is expressed as
+\begin{equation*}
+\gamma \vec{\mathbf{h}} =\ \vec{r} \times \gamma m\mathbf{\vec{v}}
+\end{equation*}
+\begin{figure}[!h]
+    \centering
+    \input{figures/rigid_body}
+    \caption{Representation of Rigid body rotation in space}
+    \label{fig:tikRigidBody}
+\end{figure}
+Total angular momentum for rigid body is given by
+\begin{equation*}
+\begin{aligned}
+\vec{\mathbf{h}} & =\int _{\mathcal{B}}(\vec{r} \times \mathbf{\vec{v}} \ ) \gamma m\\
+\vec{\mathbf{h}} & =\int _{\mathcal{B}}[\vec{r} \times (\vec{\mathbf{\omega }} \times \vec{r})] \ \gamma m
+\end{aligned}
+\end{equation*}
+Expanding the vector quantities we get
+\begin{equation*}
+\vec{\mathbf{h}} =h_{1}\hat{\mathbf{e}}_{1} +h_{2}\hat{\mathbf{e}}_{2} +h_{3}\hat{\mathbf{e}}_{3}
+\end{equation*}
+Thus angular momentum vector in body frame is given by
+\begin{equation}
+\begin{aligned}
+\vec{\mathbf{h}}_{B} & =\mathbf{I\ \omega }_{B}\\
+\overrightarrow{\mathbf{h}_{B}} & =\begin{pmatrix}
+I_{x} & -I_{xy} & -I_{xz}\\
+-I_{y} & I_{y} & -I_{yz}\\
+I_{z} & -I_{zy} & I_{z}
+\end{pmatrix}\begin{pmatrix}
+\omega _{1}\\
+\omega _{2}\\
+\omega _{3}
+\end{pmatrix}
+\end{aligned}
+\end{equation}
+here components of inertia tensor $\displaystyle \mathbf{I}$ are moment of inertia $\displaystyle I_{x} ,I_{y} ,I_{z}$ and product of inertia $\displaystyle I_{xy} ,I_{yz} ,I_{xz}$are
 
+
+\begin{gather*}
+ \begin{aligned}
+I_{x} =\int _{\mathcal{B}}\left( y^{2} +z^{2}\right) \gamma m; & & I_{y} =\int _{\mathcal{B}}\left( x^{2} +z^{2}\right) \gamma m; & & I_{z} =\int _{\mathcal{B}}\left( x^{2} +y^{2}\right) \gamma m\\
+I_{xy} =\int _{\mathcal{B}}( xy) \gamma m; & & I_{xz} =\int _{\mathcal{B}}( xz) \gamma m; & & I_{yz} =\int _{\mathcal{B}}( yz) \gamma m
+\end{aligned} \ \ \\
+\end{gather*}
+Total rotational kinetic energy is evaluated as:
+
+
+
+\begin{equation}
+\mathcal{T} =\frac{1}{2}\vec{\mathbf{\omega }} \cdotp \hat{\mathbf{h}} =\frac{1}{2}\vec{\mathbf{\omega }}^{T}_{B} \cdotp \hat{\mathbf{h}}_{B}
+\end{equation}
+
+
+\subsection{System Representation}
+Let us consider a generic CMG attached to rigid free floating spacecraft body with respect to inertial frame $\displaystyle \mathcal{F}_{i}$ having basis $\displaystyle \{\hat{e}_{1} ,\hat{e}_{2} ,\hat{e}_{2}\}$ as shown in \autoref{fig:tikSGCMGFrame}. Body frame $\displaystyle \mathcal{F}_{b}$ with basis vector $\displaystyle \{\hat{b}_{1} ,\hat{b}_{2} ,\hat{b}_{2}\}$ is used to represent attitude of spacecraft with respect to \ $\displaystyle \mathcal{F}_{i}$. Another reference frame $\displaystyle \mathcal{F}_{g}$ attached to the center of mass having basis vector $\displaystyle \{\hat{g} ,\hat{s} ,\hat{t}\}$. Gimbal axis is aliened with unit vector $\displaystyle \hat{g}$ and spin axis attached to $\displaystyle \hat{s}$ and orthogonal to gimbal axis. Transverse axis $\displaystyle \hat{t}$ is described as $\displaystyle \hat{t} =\hat{g} \times \hat{s}$ making it mutually perpendicular to $\displaystyle \hat{g}$ and $\displaystyle \hat{s}$. Gimbal motor rotates $\displaystyle \hat{s}$ and $\displaystyle \hat{t}$ with respect to $\displaystyle \mathcal{F}_{b}$
 
 \begin{figure}[!h]
     \centering
-    \input{figures/tikCMG2}
-    \caption{Axis definition for Control Moment Gyroscope}
-    \label{fig:tikCMG}
+    \input{figures/tikSGCMGFrame}
+    \caption{Schematic illustration of Spacecraft with Momentum exchange device}
+    \label{fig:tikSGCMGFrame}
 \end{figure}
 
+\subsection{Control Moment Gyro Model}
+A generic CMG contains a flywheel spinning at constant rate $\displaystyle \Omega $, spin axis is rotated about fixed axis (gimbal axis), this action exerts gyroscopic torque on spacecraft body. Rotation angle $\displaystyle \gamma $ is referred as gimbal angle. \autoref{fig:tikCMG} shows generic control moment gyroscope and its axis representation.
 \begin{figure}[!h]
     \centering
-    \include{figures/tikCMGFrame}
-    \caption{Frame of reference definition for Spacecraft Body with \acrfull{vscmg}}
+    \input{figures/tikSGCMG}
+    \caption{Axis definition for generic Control Moment Gyroscope}
     \label{fig:tikCMG}
 \end{figure}
-\usetikzlibrary{shapes}
-\tdplotsetmaincoords{60}{120}
 
 
-\begin{equation*}
-A\hat{s} =
+Starting from initial gimbal angle $\displaystyle \gamma _{0}$ spin and transverse axis as function of $\displaystyle \gamma $ are evaluated in $\displaystyle \mathcal{F}_{b}$ as
+\begin{equation}
+\mathbf{R}( \gamma ) =\cos \gamma \ \mathbf{1} \ +\ ( 1-\cos \gamma ) \ \hat{\mathbf{g}} \otimes \hat{\mathbf{g}} +\sin( \gamma ) \ \hat{\mathbf{g}}^{\times }
+\end{equation}
+\begin{gather}
+\hat{s}( t) =\ \mathbf{R}( \gamma ) \ \hat{s}( t_{0})\\
+\hat{t}( t) =\ \mathbf{R}( \gamma ) \ \hat{t}( t_{0}) \notag
+\end{gather}
+\begin{equation}
 \begin{pmatrix}
-\cos{\beta} \cos{\delta_1} & -\sin{\delta_2} & -\cos{\beta} \cos{\delta_3} &  \sin{\delta_4} \\
--\sin{\delta_1} & -\cos{\beta} \cos{\delta_2} &  \sin{\delta_3} &  \cos{\beta} \cos{\delta_4} \\
-\sin{\beta} \cos{\delta_1} &  \sin{\beta} \cos{\delta_2} &  \sin{\beta} \cos{\delta_3} &  \sin{\beta} \cos{\delta_4} 
+\hat{s}( t)\\
+\hat{t}( t)
+\end{pmatrix} =\begin{pmatrix}
+\cos( \gamma -\gamma _{0}) & \sin( \gamma -\gamma _{0})\\
+-\sin( \gamma -\gamma _{0}) & \cos( \gamma -\gamma _{0})
+\end{pmatrix}\begin{pmatrix}
+\hat{s}( t_{0})\\
+\hat{t}( t_{0})
 \end{pmatrix}
-\end{equation*}
-\begin{equation*}
-A\hat{t} =
-\begin{pmatrix}
-\cos{\beta} \sin{\delta_1} &         \cos{\delta_2} & -\cos{\beta} \sin{\delta_3} &       -\cos{\delta_4} \\
-       \cos{\delta_1} & -\cos{\beta} \sin{\delta_2} &        -\cos{\delta_3} & \cos{\beta} \sin{\delta_4} \\
-\sin{\beta} \sin{\delta_1} &  \sin{\beta} \sin{\delta_2} &  \sin{\beta} \sin{\delta_3} & \sin{\beta} \sin{\delta_4}
+\end{equation}
+Angular velocity vector gimbal frame $\displaystyle \mathcal{F}_{g}$ with respect to $\displaystyle \mathcal{F}_{b}$ is 
+\begin{equation}
+\omega _{\mathcal{F}_{g} /\mathcal{F}_{b}} =\dot{\gamma }\hat{g}
+\end{equation}
+and angular velocity vector of reaction wheel frame $\displaystyle \mathcal{F}_{w}$ in $\displaystyle \mathcal{F}_{g}$ is represented as
+\begin{equation}
+\omega _{\mathcal{F}_{W} /\mathcal{F}_{g}} =\dot{\gamma }\hat{g}
+\end{equation}
+Gimbal inertia matrix expressed in $\displaystyle \mathcal{F}_{g}$ as diagonal matrix with $\displaystyle J^{*}_{g}$ are gimbal frame inertia along superscript * represented as spin $\displaystyle \hat{s} \ $transverse $\displaystyle \hat{t}$ and $\displaystyle \hat{g}$ axis Subscript $G$ and $W$  $CMG$are used to identify gimbal, RW and CMG respectively.
 
+
+\begin{gather}
+J_{G} =\begin{pmatrix}
+J^{s}_{G} & 0 & 0\\
+0 & J^{t}_{G} & 0\\
+0 & 0 & J^{g}_{G}
+\end{pmatrix} \notag
+\end{gather}
+Flywheel inertia $\displaystyle J^s_{W}$ is much larger than gimbal inertia and is symmetric about $\displaystyle \hat{g}$ therefore $\displaystyle ^{\mathcal{F}_{W}} J_{W} =^{\mathcal{F} g} J_{s}$ thus reaction wheel inertia about spin axis are given by $\displaystyle J^{s}_{W}$ and $\displaystyle J^{t}_{W} =J^{g}_{W}$
+
+\begin{equation}
+J_{W} =\begin{pmatrix}
+J^{s}_{W} & 0 & 0\\
+0 & J^{t}_{W} & 0\\
+0 & 0 & J^{t}_{W}
 \end{pmatrix}
-\end{equation*}
+\end{equation}
+Constant diagonal matrix $\displaystyle J_{g}$ and $\displaystyle J_{s}$ are expressed in $\displaystyle \mathcal{F}_{b}$ as
+\begin{gather}
+J_{G} =J^{s}_{G} \ \hat{s} \ \hat{s}^{T} +J^{t}_{G}\hat{t} \ \hat{t}^{T} +\ J^{g}_{G} \ \hat{g} \ \hat{g}^{T}\\
+J_{W} =J^{s}_{W} \ \hat{s} \ \hat{s}^{T} +J^{t}_{W}\hat{t} \ \hat{t}^{T} +\ J^{g}_{W} \ \hat{g} \ \hat{g}^{T} \notag
+\end{gather}
+and tensor of inertia for CMG system is sum of gimbal and reaction wheel inertia and written in $\displaystyle \mathcal{F}_{b}$ \ as
+\begin{equation}
+J_{CMG} =J^{s}_{CMG} \ \hat{s} \ \hat{s}^{T} +J^{t}_{CMG}\hat{t} \ \hat{t}^{T} +\ J^{g}_{CMG} \ \hat{g} \ \hat{g}^{T}
+\end{equation}
+CMG as asymmetric moving masses, note that center of mass of reaction wheel does may have offset from gimbal axis inertia property of spacecraft change with gamble rotation and are function of $\displaystyle \gamma ( t)$. Using axis angle rotation matrix $\displaystyle \mathbf{R}( \gamma )$
+\begin{equation}
+J_{CMG}( \gamma ) =J^{s}_{CMG} \ \mathbf{R}( \gamma )\hat{s}_{0} \ \hat{s}^{T}_{0}\mathbf{R}( \gamma )^{T} +J^{t}_{CMG}\mathbf{R}( \gamma )\hat{t} \ \hat{t}^{T}\mathbf{R}( \gamma )^{T} +\ J^{g}_{CMG} \ \hat{g} \ \hat{g}^{T}
+\end{equation}
+We can see that $\displaystyle J_{CMG}$ is not constant and in order to realize angular momentum of CMG in body frame we need to evaluate derivative of CMG inertia tensor
+
+\begin{equation}
+\begin{aligned}
+\dot{J}_{CMG} & =J^{s}_{CMG} \ \left[\dot{\hat{s}} \ \hat{s} +\hat{s} \ \dot{\hat{s}}\right] +J^{t}_{CMG}\left[\dot{\hat{t}} \ \hat{t} +\hat{t} \ \dot{\hat{t}}\right]\\
+ & =\dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)[\hat{t} \ \hat{s} +\hat{s} \ \hat{t}]
+\end{aligned}
+\label{eqn:Jcmg_dot}
+\end{equation}
+
+From \autoref{eqn:Jcmg_dot} we can say that derivative of CMG inertia tensor is function of gimbal velocity and difference in moment of inertia about spin and transverse axis. Since these are very small compared and $\displaystyle \dot{J}_{CMG}$ is also very low compared to spacecraft inertia.
+
+We have velocity $\displaystyle \omega $ of spacecraft body frame $\displaystyle \mathcal{F}_{b}$ measured in inertial frame $\displaystyle \mathcal{F}_{i}$ now angular velocity $\displaystyle \omega _{G}$ and $\displaystyle \omega_{w}$of gimbal and flywheel are represented in terms  gimbal angular velocity $\displaystyle \Omega_{G}$ and RW angular velocity $\displaystyle \Omega _{W}$ is
+
+
+\begin{equation}
+\begin{aligned}
+\omega _{G} & =\omega +\Omega _{G} =\omega +\dot{\gamma }\hat{g}\\
+\omega _{W} & =\omega +\Omega _{W} =\omega +\dot{\gamma }\hat{g} +\Omega \hat{s}
+\end{aligned}
+\label{eqn:omega_inG}
+\end{equation}
+
+From \autoref{eqn:Jcmg_dot} and \autoref{eqn:omega_inG} Gimbal angular momentum $\displaystyle\mathcal{H}_{G}$, RW angular momentum $\displaystyle \mathcal{H}_{W}$, \ and CMG angular momentum $\displaystyle \mathcal{H}_{CMG}$ \ are evaluated as
+
+
+\begin{equation}
+\begin{aligned}
+\mathcal{H}_{G} & =J_{G} \cdotp \omega _{G}\\
+ & =\omega +\dot{\gamma }\hat{g}\\
+ & =J_{G} \cdotp \omega +J^{g}_{G} \ \dot{\gamma \ }\hat{g}
+\end{aligned}
+\end{equation}
+RW Momentum,
+\begin{equation}
+\begin{aligned}
+\mathcal{H}_{W} & =J_{W} \cdotp \omega _{W}\\
+ & =\omega +\dot{\gamma }\hat{g} +\Omega \hat{s}\\
+ & =J_{W} \cdotp \omega +J^{g}_{W} \ \dot{\gamma } \ \hat{g} +J^s_{W} \ \Omega \hat{s}
+\end{aligned}
+\end{equation}
+CMG Momentum is sum of RW abd Gimbal momentum as,
+\begin{equation}
+\begin{aligned}
+\mathcal{H}_{CMG} & =\mathcal{H}_{G} +\mathcal{H}_{W}\\
+ & =( J_{G} +J_{W}) \cdotp \omega +\ \left( J^{g}_{G} +J^{g}_{W}\right)\dot{\gamma } \ \hat{g} +J_{W} \ \Omega \ \hat{s}\\
+ & =J_{CMG}( \gamma ) \cdotp \omega +\ J^{g}_{CMG} \ \dot{\gamma } \ \hat{g} +J^s_{W} \ \Omega \ \hat{s}
+\end{aligned}\\
+\label{eqn_Hcmg}
+\end{equation}
+From \autoref{eqn_Hcmg} we can say that CMG angular momentum is function of body, gimbal, RW angular velocity and gimbal angle $\gamma$
+
+\section{Spacecraft Attitude Dynamics}
+Rigid body having angular momentum $\displaystyle \mathcal{H}$ with respect to center of mass and applied torque $\displaystyle \mathbf{\tau }$, From newton Euler rigid body dynamics we know that rate of change of angular momentum of body is equal to torque applied to it. Time rate of change of angular momentum in body frame is
+\begin{gather}
+\frac{d\mathcal{H}}{dt} =\mathbf{\tau }\\
+\dot{\mathcal{H}} =\mathbf{\tau } \notag
+\end{gather}
+Using transport theorem derivative of angular momentum expressed in $\displaystyle \mathcal{F}_{I}$ gives us Newton Euler equation for attitude dynamics.
+\begin{equation}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} =\tau 
+\label{eqn:NewtonEulerB}
+\end{equation}
+
+\noindent Assuming the hypothesis of rigid body and neglecting all elastic properties of spacecraft in free falling orbit we can expand the torque $\displaystyle \tau $ as combination of disturbance torque $\displaystyle \tau _{d}$ external environmental torque $\displaystyle \tau _{e}$ and control torque $\displaystyle \mathbf{u}$ thus \autoref{eqn:NewtonEulerB} becomes
+\begin{equation}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} =\tau _{d} +\tau _{e} +\mathbf{u}
+\label{eqn:NewtonEulerI}
+\end{equation}
+Environmental torques $\displaystyle \tau _{e}$ are the major source of external disturbances that influence dynamics of spacecraft. Gravity gradient torques acting on spacecraft due to variation in gravitational pull acting on distributed mass, they provide small but have significant contribution over the period of time. Due to center of pressure is not coincident with center of mass presence of very small air density at Low Earth Orbit, variation in aerodynamic forces distribution causes couple around center of mass. Magnetic materials and current flowing through electrical systems interacts with earths magnetic field causing contributes to external torque. Solar radiation pressure on spacecraft surface exposed to sun produces torque generally significant amount at Geostationary Orbits. These torques $\displaystyle \tau _{e}$ are known and can be modeled. On the other hand those which are not modeled are disturbance torques $\displaystyle \tau _{d}$ these are due to elastic modes, thruster misalignment, uncertainty in center of gravity and rotating parts.
+
+\noindent The demand control torque $\displaystyle \mathbf{u}$ is provided by actuators such as thrusters, momentum devices, magnetotorquer in order to reorient the spacecraft in desired states or to maintain its attitude based on mission requirements. Following section discuss the modeling of momentum deceives to produce $\displaystyle \mathbf{u}$. Bearing in mind that momentum exchange devices operate on the principle of distributing angular momentum among parts of system keeping total angular momentum conserved as a consequence $\displaystyle \mathbf{u}$ is zero as long as any external saturation system is not present. Other torques $\displaystyle \tau _{e}$ and $\displaystyle \tau _{d}$ are disregarded for preliminary modeling. Accordingly equation becomes
+\begin{equation}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} = 0
+\label{eqn:TorqueFreeEOM}
+\end{equation}
+For the spacecraft equipped with CMG $\displaystyle \mathcal{H}$ is sum of angular momentum of spacecraft platform $\displaystyle \mathcal{H}_{P}$ and CMG $\displaystyle \mathcal{H}_{CMG}$. Whereas Inertia tensor of platform is
+\begin{equation}
+J_{P} =J_{P,0} +m\sum ^{n}_{k=1}( ||\vec{\mathbf{d}}_{k} ||\ \vec{\mathbf{1}} -\vec{\mathbf{d}}_{k}\vec{\mathbf{d}}_{k})
+\end{equation}
+Here, $\displaystyle J_{P,0}$ is inertia of platform without CMG and $\displaystyle m$ is mass of $\displaystyle k^{th}$ CMG whose center of mass is at distance $\displaystyle \vec{\mathbf{d}}_{k}$ from center of mass of entire system. The angular momentum of platform is
+\begin{equation}
+\mathcal{H}_{P} =J_{P} \cdotp \omega 
+\end{equation}
+
+Total system angular momentum of spacecraft equipped \ with $\displaystyle n$ number of SGCMGs is 
+\begin{equation}
+    \begin{aligned}
+\mathcal{H} & =\mathcal{H}_{P} +\sum ^{n}_{k=1}\mathcal{H}^{k}_{CMG}\\
+ & =J_{P} \cdotp \omega +\sum ^{n}_{k=1}\left( J^{k}_{CMG}( \gamma _{k}) \cdotp \omega +\ J^{g}_{CMG} \ \dot{\gamma }_{k} \ \hat{g}_{k} +J^{s}_{W} \ \Omega _{k} \ \hat{s}_{k}\right)\\
+ & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega +\ J^{g}_{CMG} \ \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k} +J^{s}_{W}\sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}
+\end{aligned}\\
+\label{eqn:H_Total}
+\end{equation}
+And rate of change of angular momentum in body frame is expressed as
+
+\begin{equation}
+\begin{aligned}
+\frac{d\mathcal{H}}{dt} & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega } +\\
+ & +\sum ^{n}_{k=1}\dot{J}^{k}_{CMG}( \gamma _{k}) \cdotp \omega +\\
+ & +\ J^{g}_{CMG}\sum ^{n}_{k=1} \ \ddot{\gamma }_{k} \ \hat{g}_{k} +J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k}
+\end{aligned}
+\end{equation}Substituting inertia derivative from \autoref{eqn:Jcmg_dot} we have
+\begin{equation}
+\begin{aligned}
+\dot{\mathcal{H}} & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega } +\\
+ & +\dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}(\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}) \cdotp \omega +\\
+ & +\ J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} +J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k}
+\end{aligned}
+\label{eqn:TorqueFreeEOM_H}
+\end{equation}
+Gyroscopic part of Euler attitude equation is
+\begin{equation}
+\begin{aligned}
+\omega \times \mathcal{H} & =\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega \\
+ & +\ J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k}\\
+ & +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}
+\end{aligned}
+\label{eqn:TorqueFreeEOM_xH}
+\end{equation}
+Substituting \autoref{eqn:TorqueFreeEOM_xH} and \autoref{eqn:TorqueFreeEOM_xH} in to \autoref{eqn:TorqueFreeEOM} we have Generalized attitude dynamics of a rigid satellite equipped with a cluster of $\displaystyle n$ identical single gimbal VSCMGs
+\begin{equation}
+\begin{aligned}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} & =
+\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega }+\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega \\
+ & +\ \dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}(\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}) \cdotp \omega \\
+ & +\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\\
+ & +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} +J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k}
+\end{aligned}
+\label{eqn:EOM_FULL}
+\end{equation}
+%/////////////////////EOM/////////////////////
+Dynamical equation \autoref{eqn:EOM_FULL} is composition of contribution effects due to spacecraft angular velocity, gyroscopic effects due to o the angular momentum of the entire system, variation of moment of inertia flywheel and gimbal velocities explained in \autoref{tab:vscmg_eom_explain} as reasoning \ of each terms contribution in entire system dynamics.A generalized dynamics for a satellite equipped with generic number of momentum exchange devices. We can see that this equation of motion comprises dynamics of reaction wheel, CMG and VSCMG 
+\begin{table}[!h]
+\centering
+\begin{tabular}{p{0.25\textwidth}||p{0.75\textwidth}}
+\toprule
+\begin{center} Contribution rationale  \end{center}& \begin{center}
+     Term
+ \end{center} \\
+\midrule
+Variation of satellite angular velocity & 
 \begin{equation*}
-A\hat{g} = 
+\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega }
+\vspace{-1em}\end{equation*} \\
+\hline 
+ Gyroscopic effects due to angular momentum of entire system & 
+\begin{equation*}
+\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega 
+\vspace{-1em}\end{equation*} \\
+\hline 
+ variation of the tensor of inertia & 
+\begin{equation*}
+\dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}(\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}) \cdotp \omega 
+\vspace{-1em}\end{equation*} \\
+\hline 
+variation reaction wheel velocities & 
+\begin{equation*}
+\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}
+\vspace{-1em}\end{equation*} \\
+\hline 
+ variation of gimbals velocities & 
+\begin{equation*}
+J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} +J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k}
+\vspace{-1em}\end{equation*} \\
+\bottomrule
+\end{tabular}
+    \caption{Explanation of complete satellite with VSCMG}
+    \label{tab:vscmg_eom_explain}
+\end{table}
+
+\subsection{Reaction Wheel (RW)}
+If we freeze the gimbal, i.e. $\displaystyle \dot{\gamma } =0$ in \autoref{eqn:EOM_FULL}, resultant equation is satellite with reaction wheels simplified as
+\begin{equation}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} =J \cdotp \dot{\omega } +\omega \times J \cdotp \omega +\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k} =0
+\end{equation}
+here $\displaystyle J=J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}$ and derivative of $\displaystyle \dot{J}$ is zero. For regulation maneuver which conveys maintain fixed attitude counteracting the external disturbance making body rate $\displaystyle \omega =0$ becomes.
+\begin{equation}
+J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} =\tau _{d}
+\end{equation}
+Three reaction wheels with their spin axis mutually perpendicular are sufficient to counteract disturbance in any axis as long as saturation (maximum limit of angular momentum) does not occurs. Output torque is torque is proportional to rate of change of RW angular velocity and moment of inertia.
+
+\subsection{Control Moment Gyroscope (CMG)}
+Keeping angular velocity of RW \ $\displaystyle \Omega $ constant in \autoref{eqn:EOM_FULL} we get e attitude equation of a satellite equipped with control moment gyros as 
+\begin{equation}
+\begin{aligned}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega } +\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega \\
+ & +\ \dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}(\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}) \cdotp \omega \\
+ & +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\\
+ & +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} +J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k}
+\end{aligned}
+\end{equation}
+
+
+For regulation maneuver disturbance torque can be counteracted as
+\begin{equation}
+J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} =\tau _{d}
+\label{eqb:cmg_tau_d}
+\end{equation}
+Torque produced through CMG is sum of gyroscopic couple due to variation in RW axis variation and acceleration of gimbal frame. Since moment of inertia of CMG and acceleration along gimbal axis is very small \autoref{eqb:cmg_tau_d} is simplified as
+\begin{equation}
+J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} =\tau _{d}
+\label{eqn:cmg_tau}
+\end{equation}
+\autoref{eqn:cmg_tau} is torque amplification due to gyroscopic effects of RW in body frame which is larger compared to RW. CMG torques are along transverse axis $\displaystyle \hat{t}$ moving in $\displaystyle \mathcal{F}_{b}$ and cannot produce orthogonal torque known as singularity.
+\begin{equation}
+\begin{aligned}
+\dot{\mathcal{H}} +\omega \times \mathcal{H} & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \dot{\omega } +\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \gamma _{k})\right] \cdotp \omega \\
+ & +\ \dot{\gamma }\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}(\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}) \cdotp \omega \\
+ & +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +\ J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\\
+ & +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} +J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\gamma }_{k} \ \hat{g}_{k}
+\end{aligned}
+\end{equation}
+For regulation maneuver torque is evaluated as
+\begin{equation}
+J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} =\tau _{d}
+\end{equation}
+Simplified for small gimbal acceleration, regulation maneuver torque
+\begin{equation}
+J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} =\tau _{d}
+\end{equation}
+\subsection{Variable Speed Control Moment Gyroscope (VSCMG)}
+
+Taking advantage from both reaction wheel and CMG for regulation maneuver to neutralize external disturbance $\displaystyle \tau _{d}$ we have
+\begin{equation}
+\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\gamma }_{k} \ \hat{t}_{k} +J^{g}_{CMG} \ \sum ^{n}_{k=1}\ddot{\gamma }_{k} \ \hat{g}_{k} =\tau _{d}
+\end{equation}
+is combination of RW and torque amplification due to CMG. Trivial presence in CMG can be escaped with RW and high torques are generated with gyroscopic forces. This thesis focuses on VSCMG with pyramid cluster. In order to simplify numerical computation direction vectors can be arranged in matrix form. For n-VSCMG, Unit direction vectors of Gimbal, Spin and Transverse axis axis are evaluated based on their initial orientation
+
+\begin{gather}
+\mathcal{G}_{g} =[\hat{g}_{1} \cdots \ \hat{g}_{n}]_{3\times n} =\mathcal{G}_{g0} \notag\\
+\mathcal{G}_{s} \ =\ [\hat{s}_{1} \cdots \ \hat{s}_{n}]_{3\times n} =\mathcal{G}_{s0}\cos \gamma +\mathcal{G}_{t0}\sin \gamma  \notag\\
+\mathcal{G}_{t} \ =[\hat{t}_{1} \cdots \ \hat{t}_{n}]_{3\times n} =\mathcal{- G_{s0}\sin \gamma +G}_{t0}\cos \gamma 
+\end{gather}
+
+This thesis is focused on pyramid cluster of four VSCMG units. Single Gimbal Control Moment Gyroscope basis vectors, initially orientation of each CMG is shown in \autoref{fig:VSCMGPyramid} with gimbal axes skewed by angle $\beta$.
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt
+\begin{figure}[h]
+\centering
+\input{figures/tikPyramid2}
+\caption{VSCMG Pyramid Cluster initial orientation}
+\label{fig:VSCMGPyramid}
+\end{figure}
+
+Evaluation of commutative gimbal, spin and transverse axis in represented as $\mathcal{G}_g$,$\mathcal{G}_s$ and $\mathcal{G}_t$ respectively about body frame $\mathcal{G}_b$ with basis vector ${b_1,b_2,b_3}$ alinged with ${x,y,x}$. Gimbale axis of all CMGs are oriented by Skew angle $\beta$ is given as
+\begin{equation}
+\mathcal{G}_g = 
 \begin{pmatrix}
  -\sin{}\beta &      0 & \sin{\beta} &       0 \\
        0 & \sin{\beta} &      0 & -\sin{\beta} \\
   \cos{\beta} & \cos{\beta} & \cos{\beta} &  \cos{\beta}
 \end{pmatrix}
-\end{equation*}
+\end{equation}
+\begin{equation}
+\mathcal{G}_s =
+\begin{pmatrix}
+\cos{\beta} \cos{\gamma_1} & -\sin{\gamma_2} & -\cos{\beta} \cos{\gamma_3} &  \sin{\gamma_4} \\
+-\sin{\gamma_1} & -\cos{\beta} \cos{\gamma_2} &  \sin{\gamma_3} &  \cos{\beta} \cos{\gamma_4} \\
+\sin{\beta} \cos{\gamma_1} &  \sin{\beta} \cos{\gamma_2} &  \sin{\beta} \cos{\gamma_3} &  \sin{\beta} \cos{\gamma_4} 
+\end{pmatrix}
+\end{equation}
+\begin{equation}
+\mathcal{G}_t =
+\begin{pmatrix}
+\cos{\beta} \sin{\gamma_1} &         \cos{\gamma_2} & -\cos{\beta} \sin{\gamma_3} &       -\cos{\gamma_4} \\
+       \cos{\gamma_1} & -\cos{\beta} \sin{\gamma_2} &        -\cos{\gamma_3} & \cos{\beta} \sin{\gamma_4} \\
+\sin{\beta} \sin{\gamma_1} &  \sin{\beta} \sin{\gamma_2} &  \sin{\beta} \sin{\gamma_3} & \sin{\beta} \sin{\gamma_4}
 
-
-
-\begin{comment}
-\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-\begin{figure}[ht]
-\centering
-\input{figures/tikCMG2}
-\caption{Single Gimble Control Moment Gyroscope basis vectors, initialy each SGCMG's wheel spin axis is facing towards x of pyramid, gimble axis is aligned with z axis}
-\label{fig:sgcmg}
-\end{figure}
-\end{comment}
-\subsection{Satellite Attitude Dynamics}
-\subsection{RW}
-\subsection{CMG}
-\subsection{VSCMG}
+\end{pmatrix}
+\end{equation}

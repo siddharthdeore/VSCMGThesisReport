@@ -19,6 +19,11 @@
 % for multi line comment
 \usepackage{verbatim}
 
+% for subfigures
+\usepackage{graphicx}
+\usepackage{subcaption}
+
+
 \usepackage{nomencl}
 \makenomenclature
 
@@ -44,7 +49,7 @@
 \advisor{Prof. Fabio Santoni}
 \advisor{Dr. Paolo Marzioli}
 \coadvisor{Prof. Fabrizio Piergentili}
-\authoremail{siddharthdeor@gmail.com}
+\authoremail{deore.1823670@studenti.uniroma1.it}
 \website{http://deore.in}
 
 \examdate{16 January 2020}
@@ -121,15 +126,35 @@ Sab ki dua
 % add nomenclatures as you write latter it will update here
 \nomenclature{$\mathcal{F}_i$}{Inertial reference frame}
 \nomenclature{$\mathcal{F}_b$}{Body fixed reference frame}
+\nomenclature{$\mathcal{F}_{g}$}{Gimbal Reference frame}
+\nomenclature{$\mathbf{R}$}{Rotation matrix}
 \nomenclature{$\mathbf{q}$}{Quaternion}
 \nomenclature{$q_i$}{Components of Quaternion $i\in\{1,2,3,4\}$}
-\nomenclature{$\mathbf{q}$}{Quaternion}
-
 \nomenclature{$\mathbf{\omega}$}{Angular velocity vector}
+\nomenclature{$\mathcal{T}$}{Kinetic Energy}
+\nomenclature{$\displaystyle \mathcal{H}$}{Angular momentum}
+\nomenclature{$\mathbf{\tau_e}$}{Environmental Torques}
+\nomenclature{$\mathbf{\tau_d}$}{Disturbance Torques}
+\nomenclature{$\mathbf{u}$}{Control Torque}
+\nomenclature{$\displaystyle \mathbf{\sigma}$}{vector component of quaternion}
+\nomenclature{$\displaystyle J_p$}{Platform inertia tensor}
+\nomenclature{$J_{W}$}{Reaction Wheel inertia}
+\nomenclature{$J_{G}$}{Gimbal inertia}
+\nomenclature{$J_{CMG}$}{CMG inertia tensor}
+\nomenclature{$\hat{\mathbf{g}}$}{Gimbal Axis}
+\nomenclature{$\hat{\mathbf{s}}$}{Spin Axis}
+\nomenclature{$\hat{\mathbf{t}}$}{Transverse Axis}
+\nomenclature{$\Omega$}{Reaction Wheel angular velocity}
+\nomenclature{$\gamma$}{Gimbal Angle}
+\nomenclature{$\beta$}{VSCMG pyramid skew angle}
+
+
+
+
+
+
+
 \begin{comment}
-
-
-
 
 
 
@@ -165,12 +190,12 @@ process is similar to that used for the \acrfull{lcm}.
 \input{include/mainmatter/Chapter_1}
 % Equation of Motion
 \input{include/mainmatter/Chapter_2}
-
-\begin{comment}
 % Singularities
 \input{include/mainmatter/Chapter_3}
 %  Controller Design
 \input{include/mainmatter/Chapter_4}
+
+\begin{comment}
 %  Numerical Sims
 \input{include/mainmatter/Chapter_5}
 % Neural Network
