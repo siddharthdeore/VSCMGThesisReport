@@ -1,0 +1,36 @@
+\begin{tikzpicture}[mindmap, grow cyclic, every node/.style=concept, concept color=gray!10, 
+	level 1/.append style={font=\small,level distance=5cm,sibling angle=120},
+	level 2/.append style={font=\tiny,level distance=3cm,sibling angle=70},
+	level 3/.append style={font=\tiny,font=\tiny,level distance=3cm,sibling angle=30},]
+
+
+\node{Machine Learning}
+child { node {Supervised Learning}
+    child { node {Regression}
+        child { node {Decision Tree}}
+        child { node {Linear Regression}}
+        child { node {Logistic Regression}} }
+    child { node {Classification}
+        child { node {Support Vector Machine}}
+        child { node {Navie Bayes}}
+        child { node {K-Nearest Neighbor}} }
+    }
+child { node {Unsupervised Learning}
+    child { node {Clustering}
+        child { node {K-Means}}
+        child { node {Mean Shift}}
+        child { node {K-Medoids}} }
+    child { node {Dimensionality Reduction}
+        child { node {Principle Component Analysis (PCA)}}
+        child { node {Feature Selection}}
+        child { node {Linear Discriminant Analysis (LDA)}} }
+    }
+child { node {Reinforcement Learning}
+        child { node {Real time decisions}}
+        child { node {Robot Navigation}}
+        child { node {Learning Task}}
+        child { node {Skill Acquisition}}
+        child { node {Game AI}}
+    };
+
+\end{tikzpicture}

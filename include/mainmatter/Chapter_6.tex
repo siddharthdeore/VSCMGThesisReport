@@ -1,15 +1,432 @@
-\chapter{Neural Network Based Learning Agent}
+\chapter{Neural Network based Learning Agent}
 \label{chap:6}
+In this chapter Artificial Intelligence based agent particularly Neural Network strategy is proposed to evaluate steering of variable speed control moment gyroscope. Machine learning scheme especially reinforcement learning with combination of supervised learning is followed to train neural network \ From equations of motion and control architecture derived in it is evident that spacecraft attitude dynamics is nonlinear function of its states. Moreover singularity avoidance steering mechanism is complex and computationally expensive. Neural network are capable of approximating nonlinear functions and produce sub-optimal solution which is beneficial to reduce computational loads moreover steering is possible without matrix inversion. To design complete neural network based ACS following sections are discussed to clear some concepts. Starting with a brief introduction about machine learning types, particular interest of this thesis is focused on policy gradient method especially Proximal Policy Optimisation is discussed in detail.
 
-\section{Neural Network}
-\section{Learning Policy}
-\section{Supervised Learning}
-\section{Reinforcement Learning}
+\section{Machine Learning}
+Machine learning is sub domain of AI is strategy to solve specific task without explicitly programming details of system. Strategy or plan is learned through available labeled data sets. Basically a black box model is approximated \ by studying large amount of input associated output, exploring unlabeled data or by enumerating inputs and outputs of black box function. Based on strategy machine learning is classified in three major parts and their a
+application is shown in figure.
+\begin{figure}
+    \centering
+    \scalebox{.5}{\input{figures/tikz/tik_ml_mindmap}}
+    \caption{Machine Learning Classifications}
+    \label{fig:ML_Mindmap}
+\end{figure}
+\subsection{Supervised Learning}
+In this strategy labeled output for particular inputs are known and agent learns relation from input and output mostly used in predictive analysis. Explicitly defined labels are needed hence the name. Model predicts output based on current input and later compare it with labeled output. Two types of supervised learning are classification with categorical output and reparation with numerical output such as fitting a curve. In this thesis supervised learning is used to partially learn strategy from data set produced using steering law discussed in previous chapter in order to reduce training time.
+
+\subsection{Unsupervised Learning}
+Machine learns by exploring large chunk of unlabeled data set. Clustering and dimensionality reduction are two sub-classes of unsupervised learning. In this case information is retrieved from data set with keeping simpler and spars representation than original data, can be used to discover pasterns in given data-set. In pattern recognition similar data samples are clustered together.
+
+\newacronym{mdp}{MDP}{Markov Decision Processes}
+\subsection{Reinforcement Learning}
+Reinforcement learning is a close loop problem where agent takes action, each action is associated with reward or penalty, and based on outcome agent tries to maximize reward or minimize the penalty by exploring in to environment or exploiting past experiences through trial and error along with received feedback. \autoref{fig:ai_agent_env_mdp} shows architecture of agent-environment interaction in \acrlong{mdp}.\cite{russell2010artificial}
+
+\begin{figure}[H]
+    \centering
+
+\tikzset{
+  frame/.style={
+    rectangle, draw,
+    text width=6em, text centered,
+    minimum height=4em,drop shadow,fill=white,
+    rounded corners,
+  },
+  line/.style={
+    draw, -{Latex},rounded corners=0.5mm,
+  }
+}
+\begin{tikzpicture}[font=\small\sffamily\bfseries,very thick,node distance = 4cm]
+\node [frame] (agent) {Agent};
+\node [frame, below=1.2cm of agent] (environment) {Environment};
+\draw[line] (agent) -- ++ (3.5,0) |- (environment)
+node[right,pos=0.25,align=left] {action\\ $a_t$};
+\coordinate[left=8mm of environment] (P);
+\coordinate[above=3mm of environment.west] (ENW);
+\coordinate[below=3mm of environment.west] (ESW);
+\coordinate[above=3mm of agent.west] (ANW);
+\coordinate[below=3mm of agent.west] (ASW);
+\draw[thin,dashed] (P|-environment.north) -- (P|-environment.south);
+\draw[line] (ESW) -- (P |- ESW)
+node[midway,above]{$s_{i+1}$};
+\draw[line,thick] (ENW) -- (P |- ENW)
+node[midway,above]{$a_{i+1}$};
+\draw[line] (P |- ESW) -- ++ (-1.4,0) |- (ANW)
+node[left, pos=0.25, align=right] {state\\ $s_t$};
+\draw[line,thick] (P |- ENW) -- ++ (-0.8,0) |- (ASW)
+node[right,pos=0.25,align=left] {reward\\ $r_t$};
+\end{tikzpicture}
+
+    \caption{The agent-environment interaction in  interaction in a Markov Decision Process. \cite{sutton2018reinforcement}}
+    \label{fig:ai_agent_env_mdp}
+\end{figure}
+
+\noindent\textbf{Agent} is any entity that perceives environment using sensors and acts on it using actuators. A rational agent should take appropriate actions based on strategy to reach goal. Success of agent is determined by performance measure.
+Agent function that maps precept history to action is given as:
+\begin{equation}
+    f: \mathcal{P}^*\longrightarrow \mathcal{A}
+\end{equation}
+\textbf{Environment} is a real situation or simulated plant dynamics and may have properties such fully or partially observable, deterministic or stochastic, discrete or continuous.
+\textbf{Perceptions} are observed states $s\in \mathcal{S}$ in the environment through sensors whereas \textbf{actions} $a\in \mathcal{A}$ are performed by agent through actuators
+Agent at state $s$ inside environment, chooses one action $a$ among many choices in order to evolve its state and evolution is determined by state transition probability. For each action, environment provides reward $r \in \mathcal{R}$ as feedback. The \acrfull{mdp} consists of set of states $\mathcal{S}$, set of actions $\mathcal{A}$, transition probability function $P$ reward function $R$, discounting factor for future rewards $\gamma$
+\begin{equation*}
+    \mathcal{M} = \langle \mathcal{S}, \mathcal{A}, P, R, \gamma \rangle
+\end{equation*}
+\noindent A \textbf{Policy} $\pi(s)$  is, therefore, a strategy that an agent uses in pursuit of goals.\cite{russell2010artificial} Policy determines actions that has to be taken by agent at state $s$. Policy can be deterministic: $\pi(s)=a$ or stochastic:$\pi(a \vert s) = \mathbb{P}_\pi [A=a \vert S=s]$
+
+Each state is associated with a \textbf{Value} $V(s)$ function which is probability of future rewards than can be received by acting on policy at given state. With future reward as total some of rewards going forward from time t noted as $G_t$
+\begin{equation}
+    G_t = R_{t+1} + \gamma R_{t+2} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+\end{equation}
+Here discount factor $\gamma \in [0,1]$ is introduced to  penalize the future rewards since propagation of uncertainty becomes larger for long time. The state value is expected return at given state:
+\begin{equation}
+    V_{\pi}(s) = \mathbb{E}_{\pi}[G_t \vert S_t = s] = \sum_{a \in \mathcal{A}} Q_{\pi}(s, a) \pi(a \vert s)
+\end{equation}
+Where, action-value of state action pair
+\begin{equation}
+Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_t \vert S_t = s, A_t = a]    
+\end{equation}
+Advantage function is difference between state-value and action value
+\begin{equation}
+    A_{\pi}(s, a) = Q_{\pi}(s, a) - V_{\pi}(s)
+\end{equation}
+An optimum value function that produces maximum returns is
+\begin{equation}
+    V_{*}(s) = \max_{\pi} V_{\pi}(s),
+Q_{*}(s, a) = \max_{\pi} Q_{\pi}(s, a)
+\end{equation}
+and the policy that achieves optimum value function is optimal policy given as
+\begin{equation}
+    \pi_{*} = \arg\max_{\pi} V_{\pi}(s),
+\pi_{*} = \arg\max_{\pi} Q_{\pi}(s, a)
+\end{equation}
+The agent-environment interaction is produces series of state, action and reward each time step evolved from $t=0,1,2,\dots,T$. Hence, evolution is sequence state $S_t \in \mathcal{S}$, action $A_t \in \mathcal{A}(s)$ and rewards $R_{t+1} \in \mathcal{R}$ taken at each time $t$ to end of an episode at terminal time $T$.
+\acrlong{mdp} shown in \autoref{fig:ai_agent_env_mdp} gives rise to sequence:
+\begin{equation*}
+    S_0, A_0, R_1,S_1, A_1, R_2, \dots S_{T}, A_{T}, R_{T+1},
+\end{equation*}
+The model is function that describes environment with associated transition probability $P$ and reward function $R$. Evaluation from state $s$ to next state $s'$ fro action $a$ and associated reward $r$ is transition step and represented as tuple $(s,a,s',r)$. The probability of transition ${\displaystyle s\xrightarrow[a]{} s'}$ is given as
+\begin{equation}
+P(s',r|s,a)=\mathbb{P} [S_{t+1} =s',R_{t+1} =r|S_{t} =s,A_{t} =a]
+\end{equation}
+state transition matrix as function of $\displaystyle P(s',r|s,a)$:
+\begin{equation}
+P^{a}_{ss'} =P(s'|s,a)=\mathbb{P} [S_{t+1} =s'|S_{t} =s,A_{t} =a]=\sum _{r\in \mathcal{R}} P(s',r|s,a)
+\end{equation}
+and reward function that predicts next reward upon action is
+\begin{equation*}
+R(s,a)=\mathbb{E} [R_{t+1} |S_{t} =s,A_{t} =a]=\sum _{r\in \mathcal{R}} r\sum _{s'\in \mathcal{S}} P(s',r|s,a)
+\end{equation*}
+
+
+In MDP future only depends on current state and does not have effects of history.
+\begin{equation}
+\mathbb{P} [S_{t+1} |S_{t} ]=\mathbb{P} [S_{t+1} |S_{1} ,\dotsc ,S_{t} ]
+\end{equation}
+
+Decomposition of value function in to immediate reward and the discounted future values using Bellman Equations as
+\begin{equation}
+\begin{aligned}
+V(s) & =\mathbb{E} [G_{t} |S_{t} =s]\\
+ & =\mathbb{E} [R_{t+1} +\gamma R_{t+2} +\gamma ^{2} R_{t+3} +\dotsc |S_{t} =s]\\
+ & =\mathbb{E} [R_{t+1} +\gamma (R_{t+2} +\gamma R_{t+3} +\dotsc )|S_{t} =s]\\
+ & =\mathbb{E} [R_{t+1} +\gamma G_{t+1} |S_{t} =s]\\
+ & =\mathbb{E} [R_{t+1} +\gamma V(S_{t+1} )|S_{t} =s]
+\end{aligned}
+\end{equation}
+and action value also referred as Q value is 
+\begin{equation}
+\begin{aligned}
+Q(s,a) & =\mathbb{E} [R_{t+1} +\gamma V(S_{t+1} )\mid S_{t} =s,A_{t} =a]\\
+ & =\mathbb{E} [R_{t+1} +\gamma \mathbb{E}_{a\sim \pi } Q(S_{t+1} ,a)\mid S_{t} =s,A_{t} =a]
+\end{aligned}
+\end{equation}
+
+
 \section{Policy Gradient Methods}
-\subsection{ACR}
-\subsection{PPO}
-\subsection{GAIL}
-\section{Training}
-\subsection{Boost C++}
-\subsection{Python}
-\subsection{Java}
+In order to solve RL problem that is to find optimal strategy with which agent achieves optimal rewards. Policy Gradient Method learns with parametrized function of $\displaystyle \theta ,\pi _{\theta } (a|s)$. The reward value depends on the policy and learning is done through optimizing $\displaystyle \theta $ for best rewards. The reward function is defined as:
+\begin{equation}
+J(\theta )=\sum _{s\in \mathcal{S}} d^{\pi } (s)V^{\pi } (s)=\sum _{s\in \mathcal{S}} d^{\pi } (s)\sum _{a\in \mathcal{A}} \pi _{\theta } (a|s)Q^{\pi } (s,a)
+\end{equation}
+here \ $\displaystyle d^{\pi }$ is the stationary distribution of Markov chain for $\displaystyle \pi _{\theta }$. The idea is for by exploring states of
+
+Markov chain for long period of time, probability of conversing to one state becomes constant and known as stationary probability for $\displaystyle \pi _{\theta }$. Starting from initial state $\displaystyle s_{0}$ up to state $\displaystyle s_{t}$ with using policy $\displaystyle \pi _{\theta }$ the stationary distribution \ $\displaystyle d^{\pi }$ is given as:
+\begin{equation}
+d^{\pi } (s)=\lim _{t\rightarrow \infty } P(s_{t} =s|s_{0} ,\pi _{\theta } )
+\end{equation}
+
+
+Now with using gradient ascent search for best $\displaystyle \theta $ that gives maximum rewards.
+
+\subsection{Policy Gradient Theorem}
+Consider the $\displaystyle \theta $ with $\displaystyle k$ dimensions is to be optimized, numerical gradient of $\displaystyle \theta $ can be found with \ introducing small perturbation $\displaystyle \epsilon $ 
+\begin{equation}
+\frac{\partial J(\theta )}{\partial \theta _{k}} \approx \frac{J(\theta +\epsilon u_{k} )-J(\theta )}{\epsilon }
+\end{equation}
+ and for analytical gradient of \ $\displaystyle J(\theta )$
+\begin{equation}
+\begin{aligned}
+J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )Q_{\pi } (s,a)\\
+\nabla J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \nabla \pi (a|s;\theta )Q_{\pi } (s,a)\\
+ & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )\frac{\nabla \pi (a|s;\theta )}{\pi (a|s;\theta )} Q_{\pi } (s,a)\\
+ & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )\nabla \ln \pi (a|s;\theta )Q_{\pi } (s,a)\\
+ & =\mathbb{E}_{\pi _{\theta }} [\nabla \ln \pi (a|s;\theta )Q_{\pi } (s,a)]
+\end{aligned}
+\end{equation}
+and finally, we get policy gradient theorem as
+\begin{equation}
+\nabla J(\theta )=\mathbb{E}_{\pi _{\theta }} [\nabla \ln \pi (a|s,\theta )Q_{\pi } (s,a)]
+\end{equation}
+Since probabilities of each actions are not computed,policy gradient methods are suitable for continuous action space.
+
+\subsection{Proximal Policy Optimization (PPO)}
+Proposed by John et. al. PPO\cite{schulman2017proximal} which optimizes a clipped/surrogate objective function using stochastic gradient ascent. In this method multiple epochs of mini batch updates are used instead of one update per batch. Let consider probability ratio of old and new policies as:
+\begin{equation}
+r(\theta )=\frac{\pi _{\theta } (a|s)}{\pi _{\theta _{\text{old}}} (a|s)}
+\end{equation}
+
+\noindent then objective function of TRPO\footnote{Trust Region Policy Optimization\cite{schulman2015trust} avoids parameter updates that change the policy rapidly} is reduced to
+\begin{equation}
+J^{TRPO} (\theta )=\mathbb{E}[ r(\theta )\hat{A}_{\theta _{old}} (s,a)]
+\end{equation}
+if distance between $\displaystyle \theta _{old}$ and $\displaystyle \theta $ is not limited, extremely large parameter updates will be made to optimize $\displaystyle J^{TRPO}( \theta )$, leading to instability. In PPO $\displaystyle r( \theta )$ is bounded close to $\displaystyle 1\pm \epsilon $, here $\displaystyle \epsilon $ is hyperparameter and minimum of either same objective or clipped objective is selected.
+\begin{equation}
+J^{CLIP} (\theta )=\mathbb{E} [\min (r(\theta )\hat{A}_{\theta _{old}} (s,a),clip(r(\theta ),1-\epsilon ,1+\epsilon )\hat{A}_{\theta _{old}} (s,a))]
+\end{equation}
+ratio $\displaystyle r( \theta )$ is clipped between $\displaystyle 1-\epsilon $ and $\displaystyle 1+\epsilon $ as shown in \autoref{fig:ppo_cliped} surrogate $J^{CLIP}(\theta)$ as function of probability ratio $r$ for one step starting from $r=1$. since ratio is clipped and does not vary rapidly large policy updates are skipped hence increasing stability. \autoref{algo_PPO_AC} is actor critic style parallel implementation of PPO.
+
+\begin{figure}[H]
+    \centering
+    \input{figures/tikz/tikPPO_cliped}    \caption{Surrogate $J^{CLIP}(\theta)$as function of probability ratio for positive (left) and negative (right) advantage, figure reconstructed from original paper. \cite{schulman2017proximal}}
+    \label{fig:ppo_cliped}
+\end{figure}
+
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Write here the result }
+\For{iteration=$1,2,\dots$} {
+\For{actor=$1,2,\dots,N$} {
+Run policy $\displaystyle \pi_{\theta_{old}}$ in environment for $T$ time steps.\\
+Compute advantage estimates $\hat{A}_1,\dots,\hat{A}_T$
+}
+Optimize surrogate $L$ wrt $\theta$, with $K$ epochs and minibatch size $M \leq NT$ \\
+$\theta_{old} \xleftarrow[]{} \theta$
+}
+ \caption{PPO,Actor-Critic Style}
+    \label{algo_PPO_AC}
+\end{algorithm}
+\begin{figure}[H]
+    \centering
+    \scalebox{0.75}{\input{figures/AI/tik-actor-critic-ppo}}
+    \caption{Flowchart of actor critic based PPO learning model \cite{LimHun_ppo_flowchart}}
+    \label{fig:ppo_flowchart}
+\end{figure}
+\section{Neural Network}
+Neural networks were first introduced  in 1944 by Warren McCullough and Walter Pitts. Inspired by human brain neural networks are large graphs made up of densely connected processing nodes. Theses processing nodes are referred as neurons, It may take multiple inputs and produce one output. Each input $x_i$ is associated with some weight $w_i$, neuron produces weighted some of inputs adds bias to it and squeezes the results with pre-selected activation function. As shown in \autoref{fig:neuron} neuron functions as
+\begin{equation}
+    y_{out} = f(b+\sum ^{n}_{i=1} x_i,w_i)
+\end{equation}
+\begin{figure}[H]
+    \centering
+    \input{figures/tikz/tik_neuron1}
+    \caption{Components of individual Neuron.The activation function is denoted by $f$ and applied on the weighted sum of inputs with added bias}
+    \label{fig:neuron}
+\end{figure}
+\noindent Activation function is basically squeezing of weighted sum in to some allowable values, sometimes activation can be just an trigger which occurs after reaching decided threshold. Shapes of commonly used activation functions are shown in \autoref{fig:act_func}. Apart from its shape most important property of activation function is its derivative which has crucial role for training a neural network. Few commonly used activation functions are mentioned in \autoref{tbl_act_func}
+
+\begin{figure}[H]
+\centering
+ \begin{subfigure}[t]{0.45\columnwidth}
+ \centering
+         
+\begin{tikzpicture}[scale = 0.5]
+\begin{axis}[
+    axis lines=middle,
+    xmax=10,
+    xmin=-10,
+    ymin=-0.05,
+    ymax=1.05,
+    xlabel={$x$},
+    ylabel={$y$}
+]
+\addplot [domain=-9.5:9.5, samples=100,
+          thick, black] {1/(1+exp(-x)};
+\end{axis}
+\end{tikzpicture}
+
+ \caption{Sigmoid}
+ \label{fig:act_sigmoid}
+ \end{subfigure}
+~ 
+ \begin{subfigure}[t]{0.45\columnwidth}
+ \centering
+
+\begin{tikzpicture}[scale = 0.5]
+\begin{axis}[
+    axis lines=middle,
+    xmax=10,
+    xmin=-10,
+    ymin=-1.05,
+    ymax=1.05,
+    xlabel={$x$},
+    ylabel={$y$}]
+\addplot [domain=-9.5:9.5, samples=100,
+     thick, black] {(exp(x) - exp(-x))/(exp(x) + exp(-x))};
+\end{axis}
+\end{tikzpicture}
+
+ \caption{tanh}
+ \label{fig:act_tanh}
+ \end{subfigure}
+~ 
+ \begin{subfigure}[t]{0.45\columnwidth}
+ \centering
+
+\begin{tikzpicture}[scale = 0.5]
+\begin{axis}[
+    axis lines=middle,
+    xmax=6,
+    xmin=-6,
+    ymin=-0.05,
+    ymax=5.05,
+    xlabel={$x$},
+    ylabel={$y$}]
+\addplot [domain=-5.5:5.5, samples=100, thick, black] {max(0, x)};
+\end{axis}
+\end{tikzpicture}
+
+ \caption{ReLu}
+ \label{fig:act_relu}
+ \end{subfigure}
+~ 
+ \begin{subfigure}[t]{0.45\columnwidth}
+ \centering
+\begin{tikzpicture}[scale = 0.5]
+\begin{axis}[
+    axis lines=middle,
+    xmax=6,
+    xmin=-6,
+    ymin=-1.05,
+    ymax=5.05,
+    xlabel={$x$},
+    ylabel={$y$}]
+\addplot [domain=-5.5:5.5, samples=100,
+          thick, black] {max(0.1 * x, x)};
+\end{axis}
+\end{tikzpicture}
+\caption{Leaky ReLu}
+\label{fig:act_leackrelu}
+     \end{subfigure}
+     
+\caption{Commonly used activation functions}
+\label{fig:act_func}
+\end{figure}
+
+
+\begin{table}[H]
+        \centering
+\begin{tabular}{p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}}
+\toprule
+ Activation Function & Function $\displaystyle f(z)$ & Derivative $\displaystyle f'(z)$ \\
+\midrule
+ Sigmoid & {\small $\displaystyle f(z)=\frac{1}{1+e^{-z}}$} & {\small $\displaystyle f'( z) \ =\ f( z) \ \cdotp ( 1\ -\ f( z))$} \\
+\hline 
+ Tanh & {\small $\displaystyle f(z)=\frac{e^{z} -e^{-z}}{e^{z} +e^{-z}}$} & {\small $\displaystyle f'(z)=1-\tanh (z)^{2}$} \\
+\hline 
+ Linear & {\small $\displaystyle f( z) =z\alpha $} & {\small $\displaystyle f'( z) =\alpha $} \\
+\hline 
+ Exponential Linear Unit (ELU) & {\small $\displaystyle f( z) =\begin{cases}
+z & z >0\\
+\alpha \left( e^{z} -1\right) & z\leq 0
+\end{cases}$} & {\small $\displaystyle f'( z) =\begin{cases}
+1 & z >0\\
+\alpha e^{z} & z\leq 0
+\end{cases}$} \\
+\hline 
+ Rectified Linear Units (ReLU) & {\small $\displaystyle fR( z) =\begin{cases}
+z & z >0\\
+0 & ,z\leq 0
+\end{cases}$} & {\small $\displaystyle f'( z) =\begin{cases}
+z & z >0\\
+0 & z\leq 0
+\end{cases}$} \\
+\hline 
+ LeakyRelu & {\small $\displaystyle f( z) =\begin{cases}
+z & z >0\\
+\alpha z & z\leq 0
+\end{cases}$} & {\small $\displaystyle f'( z) =\begin{cases}
+z & z >0\\
+\alpha  & z\leq 0
+\end{cases}$} \\
+\hline 
+ Arctan & {\small $\displaystyle f( z) =\tan^{-1}( z)$} & {\small $\displaystyle f'( z) =\frac{1}{1+z^{2}}$} \\
+\hline 
+ Swish & {\small $\displaystyle f(z)=\frac{z}{1+e^{-z}}$} & {\small $\displaystyle f'(z)=\frac{f( z)( 1-f( z))}{1+e^{-z}}$} \\
+\hline 
+ Soft Plus & {\small $\displaystyle f(z)=\ln\left( 1+e^{z}\right)$} & {\small $\displaystyle f'(z)=\frac{1}{1+e^{-z}}$} \\
+
+\bottomrule
+\end{tabular}
+\caption{Commonly used activation functions and their derivative}
+\label{tbl_act_func}
+\end{table}
+
+\newacronym{mlp}{MLP}{Multi Layer Perceptron (MLP)}
+\subsection{Multi Layer Perceptron}
+\acrlong{mlp} is a complex network of perceptrons connected based on various architectures. Most common method is feed forward neural network. Neurons are grouped in a single stage called a layers. Every unit in a layer is connected to all units of previous layers. Three distinct layers are Input, Hidden and Output. Data enters from input and passes thorough hidden layers finally emitted from output layer. Hidden layers are not accessible to external world hence the name. Shallow neural network has one hidden layer as opposed to Deep neural networks, which may have multiple hidden layers, an example shown in \autoref{fig:mlp}. With properly chosen weights, Neural network can approximate any nonlinear function. Process of finding weights is called training an iterative process where data is passed from input layer and based on error between evaluated and expected output weights are updated in backward direction layer by layer, process referred as propagation.
+\begin{figure}
+    \centering
+    \scalebox{0.65}{\input{figures/tikz/tikMLP}}
+    \caption{Multi Layer Perceptron}
+    \label{fig:mlp}
+\end{figure}
+Lets recall operation of each neuron with $n$ inputs. 
+\begin{equation}
+    \hat{y}=f_{act}(b+W_{n\times1}^TX_{n\times1})
+\end{equation}
+
+\begin{equation*}
+\hat{y} =f_{act}(\vec{w} \cdotp \vec{x} +b)
+\end{equation*}
+for input vector $\displaystyle \vec{x}$ error between output $\displaystyle \hat{y}$ and expected output $\displaystyle y$ can be computed using Mean Square Error (MSE) for set of $\displaystyle N$ input output pair $\displaystyle X=\{\vec{x}_{i} ,y_{i}\} ,i\in \{1,N\}$as:
+
+\begin{equation}
+E( X) =\frac{1}{2N}\sum ^{N}_{i=1}(\hat{y}_{i} -y_{i})^{2} =\frac{1}{2N}\sum ^{N}_{i=1}( f_{act}(\vec{w} \cdotp \vec{x} +b) -y_{i})^{2}
+\end{equation}Objective of training is to minimize the error $\displaystyle E( X)$ which can be done with gradient descent
+\begin{equation}
+\begin{aligned}
+\vec{w}_{i+1} & =\vec{w}_{i} -\alpha \frac{\partial E( X)}{\partial \vec{w}_{i}}\\
+b_{i+1} & =b_{i} -\alpha \frac{\partial E( X)}{\partial b_{i}}
+\end{aligned}
+\end{equation}
+Here $\displaystyle \alpha $ is learning rate, typically a small value the weight deviation $\displaystyle \Delta \vec{w} =\vec{w}_{i+1} -\vec{w}_{i}$ bias deviation $\displaystyle \Delta b=b_{i+1} -b_{i}$ for iteration is calculated as:
+\begin{equation}
+\begin{aligned}
+\Delta \vec{w} & =\frac{1}{N}\sum ^{N}_{i=1} \alpha (\vec{y}_{i} -\hat{y}_{i}) f'_{act}(\vec{w} \cdotp \vec{x} +b)\vec{x}_{i}\\
+\Delta b & =\frac{1}{N}\sum ^{N}_{i=1} \alpha (\vec{y}_{i} -\hat{y}_{i}) f'_{act}(\vec{w} \cdotp \vec{x} +b)
+\end{aligned}
+\end{equation}
+\section{Neural Network based VSCMG steering Law}
+Starting with fundamentals discussed in earlier sections, a neural network is trained to solve problem of VSCMG steering. Idea is, for required torque at particular state of spacecraft, what signals should be given to the gimbal and flywheel motors are evaluated from neural network described in \autoref{fig:nn_control_architecture}. 
+
+\begin{figure}[H]
+    \centering
+    \input{figures/tikFeedbackControlArch}
+    %\includegraphics{}
+    \caption{Neural Network based VSCMG Spacecraft Steering and Control Architecture}
+    \label{fig:nn_control_architecture}
+\end{figure}
+\subsection{RL Agent}
+As previously reported Reinforcement Learning based strategy has an ``Agent'' learns a policy in this case a \acrshort{mlp} policy by interacting with environment in order to maximize the received reward. The observation space of agent is states that agent can precept and action space is actuators that agent can act on. \acrshort{mlp} policy is designed such a way that input layer is observation space and output layer is action space. In order to train the model a critic network is required, input layer of critic is sum observation space and action space while only one output.
+\subsubsection{Training Procedure}
+With regard to \autoref{fig:ppo_flowchart} an environment with complete VSCMG dynamical equation of motion stepper is developed in python. This environment evolves predefined time-step at each call, although time-steps considered are order of magnitude of milliseconds environment takes multiple intermediate time-steps based on adaptive  Runge–Kutta Cash–Karp method in order to preserve accuracy of numerical integration. After integrating for one step environment returns observations, action, reward and few status parameters for monitoring learning process. 
+
+
+\subsubsection{Action Space}
+
+\subsubsection{Observation Space}
+
+\subsubsection{Reward Function}
+Selection of reward function is crucial process, with a good reward function agent quickly learns policy, with bad reward function, may stuck in to local maxima. Perhaps agent finds certain sequence of action which might not be the solution but still prefers since it is increasing reward.
+although there is no general method to find best reward function and it is chosen based on information about system with few iteration of trial and error.
+

@@ -22,7 +22,22 @@
 % for subfigures
 \usepackage{graphicx}
 \usepackage{subcaption}
+% for box color box
+\usepackage{tcolorbox}
+% forced figure placement
+\usepackage{float}
 
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,shadows,positioning,mindmap,backgrounds}
+\usetikzlibrary{fadings}
+\usepackage[ruled,vlined]{algorithm2e}
+% for activation functions
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+% for neuron
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
 
 \usepackage{nomencl}
 \makenomenclature
@@ -47,7 +62,6 @@
 \AcademicYear{2020/2021}
 \copyyear{2020}
 \advisor{Prof. Fabio Santoni}
-\advisor{Dr. Paolo Marzioli}
 \coadvisor{Prof. Fabrizio Piergentili}
 \authoremail{deore.1823670@studenti.uniroma1.it}
 \website{http://deore.in}
@@ -74,15 +88,15 @@
 \begin{abstract}
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
-This document is an example which shows the main features of
-the \LaTeXe\ class \texttt{sapthesis.cls} developed by Siddharth Nimbajirao Deore
-with the help of GuIT (Gruppo Utilizzatori Italiani di \TeX).
-\end{abstract}
 
+\end{abstract}
+Derived EOM, studied singularity, made some simulations, rl thinngs are done, for testing made some c++ based things, traing code, ground station, mech desing, electronic , firmware
 \begin{acknowledgments}
+
 \phantomsection
 \addcontentsline{toc}{chapter}{Acknowledgments}
 Sab ki dua
+
 \end{acknowledgments}
 
 % Some Glossaries/Terms
@@ -90,6 +104,7 @@ Sab ki dua
     name = policy,
     description = neural network which produces appropriate actions.
 }
+\end{comment}
 
 
 
@@ -115,7 +130,6 @@ Sab ki dua
 % List of Glossary
 \printglossary[title=List of Terms]
 \addcontentsline{toc}{chapter}{List of Terms}
-\end{comment}
 
 
 % List of Nomenclature renamed as Abbreviations
@@ -123,37 +137,43 @@ Sab ki dua
 \printnomenclature
 \addcontentsline{toc}{chapter}{List of Abbreviations}
 % \mbox{}
+
+
+
 % add nomenclatures as you write latter it will update here
-\nomenclature{$\mathcal{F}_i$}{Inertial reference frame}
-\nomenclature{$\mathcal{F}_b$}{Body fixed reference frame}
-\nomenclature{$\mathcal{F}_{g}$}{Gimbal Reference frame}
-\nomenclature{$\mathbf{R}$}{Rotation matrix}
-\nomenclature{$\mathbf{q}$}{Quaternion}
-\nomenclature{$q_i$}{Components of Quaternion $i\in\{1,2,3,4\}$}
-\nomenclature{$\mathbf{\omega}$}{Angular velocity vector}
-\nomenclature{$\mathcal{T}$}{Kinetic Energy}
-\nomenclature{$\displaystyle \mathcal{H}$}{Angular momentum}
-\nomenclature{$\mathbf{\tau_e}$}{Environmental Torques}
-\nomenclature{$\mathbf{\tau_d}$}{Disturbance Torques}
-\nomenclature{$\mathbf{u}$}{Control Torque}
-\nomenclature{$\displaystyle \mathbf{\sigma}$}{vector component of quaternion}
-\nomenclature{$\displaystyle J_p$}{Platform inertia tensor}
-\nomenclature{$J_{W}$}{Reaction Wheel inertia}
-\nomenclature{$J_{G}$}{Gimbal inertia}
-\nomenclature{$J_{CMG}$}{CMG inertia tensor}
-\nomenclature{$\hat{\mathbf{g}}$}{Gimbal Axis}
-\nomenclature{$\hat{\mathbf{s}}$}{Spin Axis}
-\nomenclature{$\hat{\mathbf{t}}$}{Transverse Axis}
-\nomenclature{$\Omega$}{Reaction Wheel angular velocity}
-\nomenclature{$\gamma$}{Gimbal Angle}
-\nomenclature{$\beta$}{VSCMG pyramid skew angle}
+\nomenclature[01]{$\mathcal{F}_i$}{Inertial reference frame}
+\nomenclature[02]{$\mathcal{F}_b$}{Body fixed reference frame}
+\nomenclature[03]{$\mathcal{F}_{g}$}{Gimbal Reference frame}
+\nomenclature[04]{$\mathbf{R}$}{Rotation matrix}
+\nomenclature[05]{$\mathbf{q}$}{Quaternion}
+\nomenclature[07]{$q_i$}{Components of Quaternion $i\in\{0,1,2,3\}$}
+\nomenclature[08]{${q_v}$}{vector component of quaternion}
+\nomenclature[09]{$\mathbf{q_d}$}{Desired attitude quaternion}
+\nomenclature[10]{$\mathbf{q_e}$}{Attitude error quaternion}
+\nomenclature[11]{$\mathbf{\omega}$}{Angular velocity vector}
+\nomenclature[12]{$\mathcal{T}$}{Kinetic Energy}
+\nomenclature[13]{$\mathcal{H}$}{Angular momentum}
+\nomenclature[14]{$\mathcal{H}_P$}{Angular momentum of platform}
+\nomenclature[15]{$\mathcal{H}_{CMG}$}{Angular momentum of CMG system}
+\nomenclature[16]{$\mathcal{H_{W}}$}{Angular momentum of Reaction wheel}
+\nomenclature[17]{$\mathcal{H}_{u}$}{Angular momentum component along singular direction}
+\nomenclature[18]{$\mathbf{\tau_e}$}{Environmental Torques}
+\nomenclature[19]{$\mathbf{\tau_d}$}{Disturbance Torques}
+\nomenclature[20]{$\mathbf{u}$}{Control Torque}
+\nomenclature[21]{$ J_p$}{Platform inertia tensor}
+\nomenclature[22]{$J_{W}$}{Reaction Wheel inertia}
+\nomenclature[23]{$J_{G}$}{Gimbal inertia}
+\nomenclature[24]{$J_{CMG}$}{CMG inertia tensor}
+\nomenclature[25]{$\hat{\mathbf{g}}$}{Gimbal Axis}
+\nomenclature[26]{$\hat{\mathbf{s}}$}{Spin Axis}
+\nomenclature[27]{$\hat{\mathbf{t}}$}{Transverse Axis}
+\nomenclature[28]{$\Omega$}{Reaction Wheel angular velocity}
+\nomenclature[29]{$\delta$}{Gimbal angle}
+\nomenclature[30]{$\beta$}{VSCMG pyramid skew angle}
 
 
 
-
-
-
-
+%//////////////////////////////////////////////////////////////
 \begin{comment}
 
 
@@ -186,20 +206,27 @@ process is similar to that used for the \acrfull{lcm}.
 
 
 \mainmatter
+\begin{comment}
+\end{comment}
 % Introduction
 \input{include/mainmatter/Chapter_1}
+
+%\part{Fundamentals}
 % Equation of Motion
 \input{include/mainmatter/Chapter_2}
 % Singularities
 \input{include/mainmatter/Chapter_3}
+
 %  Controller Design
 \input{include/mainmatter/Chapter_4}
 
-\begin{comment}
 %  Numerical Sims
 \input{include/mainmatter/Chapter_5}
+%\part{Artificial Intelligence}
 % Neural Network
+
 \input{include/mainmatter/Chapter_6}
+%\part{Testbed}
 % Mechanical Design
 \input{include/mainmatter/Chapter_7}
 % Electrical Design
@@ -208,6 +235,7 @@ process is similar to that used for the \acrfull{lcm}.
 \input{include/mainmatter/Chapter_9}
 % Conclusion
 \input{include/mainmatter/Chapter_10}
+\begin{comment}
 
 %\include{filename}
 \end{comment}

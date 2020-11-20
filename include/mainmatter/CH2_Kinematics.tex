@@ -32,7 +32,7 @@ Euler rotation theorem states If $ \mathbf{R}$ satisfies \autoref{eqn:rotmat} th
 \begin{equation}
 \mathbf{R}(\hat{\mathbf{a}} ,\varphi ) =\cos \varphi \ \mathbf{I} \ +\ ( 1-\cos \varphi ) \ \hat{\mathbf{a}} \otimes \hat{\mathbf{a}} +\sin( \varphi ) \ \hat{\mathbf{a}}^{\times }
 \end{equation}
-Here $\mathbf{I}$ is identity matrix and vector with superscript $\times$ is a skew symmetric matrix equivalent for for cross product of vector denoted with $a^{\times}$ represented as
+Here $\mathbf{I}$ is identity matrix and vector with superscript $\times$ is a skew symmetric matrix equivalent for cross product of vector, commonly referred as "Hat-Map" transformation denoted with $a^{\times}$ represented as
 
 \begin{equation*}
 a^{\times } =\begin{pmatrix}
@@ -103,7 +103,7 @@ The term $\displaystyle \mathbf{i} ,\mathbf{j} ,\mathbf{k}$ represents three uni
 \mathbf{jk} =\mathbf{i} \ \quad \mathbf{jk} =-\mathbf{i}\\
 \mathbf{ki} =\mathbf{j} \ \quad \mathbf{ki} =-\mathbf{j}
 \end{gather*}
-A quaternion $\displaystyle \mathbf{q} \in \mathbb{H}$ is represented as vector with scalar $\displaystyle q_{0}$ and $\displaystyle \mathbf{\sigma } =[ q_{1} \ q_{2} \ q_{3}]^{T}$as
+A quaternion $\displaystyle \mathbf{q} \in \mathbb{H}$ is represented as vector with scalar $\displaystyle q_{0}$ and $\displaystyle \mathbf{q_v} =[ q_{1} \ q_{2} \ q_{3}]^{T}$as
 
 
 \begin{equation*}
@@ -111,7 +111,7 @@ A quaternion $\displaystyle \mathbf{q} \in \mathbb{H}$ is represented as vector 
 q_{0} & q_{1} & q_{2} & q_{3}
 \end{bmatrix}^{T} =\begin{bmatrix}
 q_{0}\\
-\mathbf{\sigma }
+\mathbf{q_v}
 \end{bmatrix}
 \end{equation*}
 Quaternion norm conjugate and inverse is computed as
@@ -120,7 +120,7 @@ Quaternion norm conjugate and inverse is computed as
 \begin{gather}
 \mathbf{q}^{*} =\begin{bmatrix}
 q_{0}\\
--\mathbf{\sigma }
+-\mathbf{q}
 \end{bmatrix} \ \\
 \| \mathbf{q} \| =\sqrt{\mathbf{qq}^{*}} =\sqrt{q^{2}_{0} +q^{2}_{1} +q^{2}_{2} +q^{2}_{3}}\\
 \mathbf{q}^{-1} =\frac{\mathbf{q}^{*}}{\| \mathbf{q} \| ^{2}}
@@ -129,16 +129,16 @@ Quaternion product is noncommutative, defined in terms of scalar and vector part
 \begin{equation}
 \label{quatProduct}
 \begin{aligned}
-\mathbf{q_{1} \otimes q}_{2} & =\begin{bmatrix}
-q\mathbf{_{1,0}}\\
-{\mathbf{\sigma }_{1}}
+\mathbf{q_{1} \otimes q_{2}} & =\begin{bmatrix}
+q_{1,0}\\
+q_{1,v}
 \end{bmatrix} \otimes \begin{bmatrix}
-{q\mathbf{_{2}}}_{2,0}\\
-{\mathbf{\sigma }_{2}}
+q_{2,0}\\
+{\mathbf{q}_{2,v}}
 \end{bmatrix}\\
  & =\ \begin{bmatrix}
-q\mathbf{_{1,0}} q\mathbf{_{2,0}} -\sigma _{1} \cdot \sigma _{2}\\
-q\mathbf{_{1,0} \sigma _{2}} +q\mathbf{_{2,0} \sigma }_{1} +\mathbf{\sigma ^{\times }_{1} \sigma }_{2}
+q_{1,0} q_{2,0} - q_{1,v} \cdot q_{2,v}\\
+q_{1,0} q_{2,v} +q_{2,0} q_{1} +\mathbf{q ^{\times }_{1} q}_{2,v}
 \end{bmatrix}
 \end{aligned} \ 
 \end{equation}
@@ -170,7 +170,7 @@ Rotation in three dimensions can be represented with unit quaternions, they have
 where rotation matrix $\displaystyle \mathbf{R}$ as function of $\displaystyle \mathbf{q}$ shown below.
 \begin{equation}
 \ \begin{aligned}
-\mathbf{R}(\mathbf{q}) & =\left( q^{2}_{0} -\mathbf{\sigma ^{T} \sigma }\right)\mathbf{I}_{3\times 3} +2\mathbf{\sigma \sigma }^{T} +2q_{0}\mathbf{\sigma }^{\times }\\
+\mathbf{R}(\mathbf{q}) & =\left( q^{2}_{0} -\mathbf{q_v ^{T} q_v}\right)\mathbf{I}_{3\times 3} +2\mathbf{q_v q_v}^{T} +2q_{0}\mathbf{q}^{\times }\\
 \mathbf{R}(\mathbf{q}) & =\begin{pmatrix}
 1-2q^{2}_{2} -2q^{2}_{3} & 2q_{1} q_{2} -2q_{0} q_{3} & 2q_{1} q_{3} +2q_{0} q_{2}\\
 2q_{1} q_{2} +2q_{0} q_{3} & 1-2q^{2}_{1} -2q^{2}_{3} & 2q_{2} q_{3} -2q_{0} q_{1}\\
@@ -186,7 +186,7 @@ Relation ship with axis angle $\displaystyle \hat{\mathbf{e}} =[ e_{1} \ e_{2} \
 \hat{\mathbf{e}} \ \sin\frac{\varphi }{2}
 \end{bmatrix}
 \end{equation}
-Let us write spacecraft attitude quaternion having body fix frame $\displaystyle \mathcal{F}_{b}$ with respect to inertial frame frame $\displaystyle \mathcal{F} i$ as $\displaystyle \mathbf{q}$ and desired attitude in body frame $\displaystyle \mathcal{F}_{d}$ is $\displaystyle \mathbf{q}_{d}$. Magnitude of angular displacement between frame $\displaystyle \mathcal{F}_{b}$ and frame $\displaystyle \mathcal{F}_{d}$ is described by angle $\displaystyle \varepsilon $ by eigenaxis rotation about $\displaystyle \hat{e}$ is error between current and desired attitude attitude $\displaystyle \mathbf{q}_{e} =\left[\mathbf{q}_{e,0} ,\mathbf{\sigma }^{T}_{e}\right]^{T}$.
+Let us write spacecraft attitude quaternion having body fix frame $\displaystyle \mathcal{F}_{b}$ with respect to inertial frame frame $\displaystyle \mathcal{F} i$ as $\displaystyle \mathbf{q}$ and desired attitude in body frame $\displaystyle \mathcal{F}_{d}$ is $\displaystyle \mathbf{q}_{d}$. Magnitude of angular displacement between frame $\displaystyle \mathcal{F}_{b}$ and frame $\displaystyle \mathcal{F}_{d}$ is described by angle $\displaystyle \varepsilon $ by eigenaxis rotation about $\displaystyle \hat{e}$ is error between current and desired attitude attitude $\displaystyle \mathbf{q}_{e} =\left[\mathbf{q}_{e,0} ,\mathbf{q}^{T}_{e,v}\right]^{T}$.
 \begin{equation*}
 \mathbf{q_{d} q}_{e} =\mathbf{q}
 \end{equation*}
@@ -197,19 +197,19 @@ premultyplying by conjugate $\displaystyle \mathbf{q}^{*}_{d}$, we get error qua
 \begin{equation}
 \begin{pmatrix}
 \mathbf{q}_{e,0}\\
-\mathbf{\sigma }_{e}
+\mathbf{q}_{e,v}
 \end{pmatrix} =\begin{pmatrix}
 \cos( \varepsilon /2) \ \\
 \mathbf{\hat{e}}\sin( \varepsilon /2)
 \end{pmatrix} =\begin{pmatrix}
 q_{0} q_{d,0} +\mathbf{q}^{T}\mathbf{q}_{d}\\
--q_{0}\mathbf{\sigma }_{d} +q_{d,0}\mathbf{\sigma } -\mathbf{\sigma } \times \mathbf{\sigma }_{d}
+-q_{0}\mathbf{q}_{d,v} +q_{d,0}\mathbf{q_{v}} -\mathbf{q_{d,v}} \times \mathbf{q}_{v}
 \end{pmatrix}
 \end{equation}
 \section{Kinematics}
 Kinematic relation of rigid body describes changing attitude over time of body fixed reference frame $\displaystyle \mathcal{F}_{b}$ with inertial reference frame $\displaystyle \mathcal{F}_{i}$.To identify kinematic differential equation, let us consider instantaneous angular velocity vector $\displaystyle \mathbf{\omega }$ of frame $\displaystyle \mathcal{F}_{b}$ with respect to frame $\displaystyle \mathcal{F} i$ as viewed from $\displaystyle \mathcal{F}_{b}$ frame orthogonal components described as
 \begin{equation*}
-\mathbf{\omega } =\omega _{1}\hat{\mathbf{b}}_{1} +\omega _{2}\hat{\mathbf{b}}_{2} +\omega _{3}\hat{\mathbf{b}}_{3}
+\mathbf{\omega } =\omega_{1}\hat{\mathbf{b}}_{1} +\omega_{2}\hat{\mathbf{b}}_{2} +\omega_{3}\hat{\mathbf{b}}_{3}
 \end{equation*}
 Then $\displaystyle ^{\mathcal{F}_{i}} d/dt\{\hat{\mathbf{b}}\}$ is derivative of $\displaystyle \mathcal{F}_{b}$ base vectors taken in $\displaystyle \mathcal{F} i$, applying transport theorem
 \begin{equation}
@@ -229,25 +229,25 @@ amusing very small angle $\displaystyle \Delta \varphi =\mathbf{\omega } \Delta 
 \begin{aligned}
 \dot{\mathbf{q}} & =\frac{1}{2}
 \begin{bmatrix}
--\mathbf{\omega } \cdot \mathbf{\sigma }\\
- q_{0}\mathbf{\omega } -\mathbf{\sigma }^{\times }
+-\mathbf{\omega } \cdot \mathbf{q}\\
+ q_{0}\mathbf{\omega } -\mathbf{q}^{\times }
 \end{bmatrix}\\
  & =\frac{1}{2}\begin{bmatrix}
 0 & -\mathbf{\omega^T }\\
 \mathbf{\omega } & -\mathbf{\omega }^{\times }
 \end{bmatrix}\begin{bmatrix}
 q_{0}\\
-\mathbf{\sigma }
+\mathbf{q}
 \end{bmatrix}
 \end{aligned}
 \end{equation}
 Considering constant angular velocity for small time step evaluation in body frame a quaternion kinematics equation for rigid body derived as follows.
 \begin{equation}
 \dot{\mathbf{q}} =\frac{1}{2}\begin{pmatrix}
-0 & -\omega _{1} & -\omega _{2} & -\omega _{3}\\
-\omega _{1} & 0 & -\omega _{3} & \omega _{2}\\
-\omega _{2} & \omega _{3} & 0 & -\omega _{1}\\
-\omega _{3} & -\omega _{2} & \omega _{1} & 0
+0 & -\omega^b_{1} & -\omega^b_{2} & -\omega^b_{3}\\
+\omega^b_{1} & 0 & -\omega^b_{3} & \omega^b_{2}\\
+\omega^b_{2} & \omega^b_{3} & 0 & -\omega^b_{1}\\
+\omega^b_{3} & -\omega^b_{2} & \omega^b_{1} & 0
 \end{pmatrix}\begin{pmatrix}
 q_{0}\\
 q_{1}\\
@@ -257,14 +257,14 @@ q_{3}
 \end{equation}
 As seen from inertial frame quaternion derivative in terms of angular velocity can be evaluated by
 \begin{equation*}
-\Omega =\mathbf{q}^{*}\mathbf{\omega \ q} \ \quad or\ \mathbf{\quad \omega } =\mathbf{q}^{*}\mathbf{\omega \ q}
+\omega^i =\mathbf{q}^{*}\mathbf{\omega^i \ q} \ \quad or\ \mathbf{\quad \omega^b } =\mathbf{q}^{*}\mathbf{\omega^b \ q}
 \end{equation*}
 \begin{equation}
-\dot{\mathbf{q}} =\frac{1}{2}\mathbf{\Omega }(\mathbf{\omega })\mathbf{q} =\frac{1}{2}\begin{pmatrix}
-0 & -\Omega _{1} & -\Omega _{2} & -\Omega _{3}\\
-\Omega _{1} & 0 & \Omega _{3} & -\Omega _{2}\\
-\Omega _{2} & -\Omega _{3} & 0 & \Omega _{1}\\
-\Omega _{3} & \Omega _{2} & -\Omega _{1} & 0
+\dot{\mathbf{q}} =\frac{1}{2}\mathbf{\omega^i }(\mathbf{\omega^b })\mathbf{q} =\frac{1}{2}\begin{pmatrix}
+0 & -\omega^i_{1} & -\omega^i_{2} & -\omega^i_{3}\\
+\omega^i_{1} & 0 & \omega^i_{3} & -\omega^i_{2}\\
+\omega^i_{2} & -\omega^i_{3} & 0 & \omega^i_{1}\\
+\omega^i_{3} & \omega^i_{2} & -\omega^i_{1} & 0
 \end{pmatrix}\begin{pmatrix}
 q_{0}\\
 q_{1}\\

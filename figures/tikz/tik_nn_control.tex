@@ -1,0 +1,40 @@
+\tikzstyle{block} = [draw, fill=blue!0, rectangle, 
+    minimum height=3em, minimum width=5em,align=center]
+\tikzstyle{sum} = [draw, fill=blue!0, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{tmp} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+% Boxing and labelling noise shapers
+	\draw [color=black,thick,fill={rgb:black,1;white,30}](6.2,1.2) rectangle (11.2,-0.8);
+	\node at (6,1) [below=1mm, right=2mm] {{Spacecraft Bus}};
+	
+    \node [input, name=input] {};
+    \node [sum, right of=input](sum) {};
+    \node [block, right of=sum, name=ctrl,node distance=1.5cm]
+        {Control \\ Law};
+    \node [block, right of=ctrl, name=str,node distance=2.5cm]
+        {Steering \\ Law};
+    \node [block, right of=str,node distance=2.5cm] (cmg)
+        {VSCMG \\ Cluster};
+    \node [block, right of=cmg,node distance=2.5cm] (sys)
+        {Platform \\ Dynamics};
+    \node [output,right of=sys,node distance=2cm] (output){};
+    
+    
+    \draw [draw,->] (input) -- node {$r$} (sum);
+    \draw[->](sum)--node {$e$}(ctrl);
+    \draw[->](ctrl)--node {$\tau_c$}(str);
+    \draw[->](str)--node {}(cmg);
+    \draw[->](cmg)--node {$\tau_{a}$}(sys);
+    \draw[->](sys)-- node [name=y] {$y$}(output);
+    \node[tmp,below of=sys,node distance=1.5cm](fo1){};
+    \node[tmp,below of=y,node distance=2.5cm](fo2){};
+    \draw[->](y)--(fo2)-|node[pos=0.99] {$-$} 
+        node [near start] {Spacecraft State feedback}(sum);
+    \draw[->](sys)--(fo1)-|node [near start] {VSCMG State feedback}(str);
+
+
+\end{tikzpicture}

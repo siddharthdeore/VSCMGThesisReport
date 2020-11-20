@@ -1,13 +1,546 @@
 \chapter{Controller Design}
 \label{chap:4}
+In the interest of trajectory tracking and regulation maneuver during mission life cycle of spacecraft, suitable controller law is crucial choice ensuring accuracy and stability in presence of disturbances. Bearing in mind that the equation of motion for a spacecraft equipped with VSCMG units are highly complex and nonlinear in nature. It is clear that \autoref{eqn:EOM_FULL} is time varying function of change in moment of inertia, gimbal angle, reaction wheel and gimbal angular velocity and acceleration. Nested control architecture is realized. As shown in \autoref{fig:control_architecture}, Outer feedback loop deals with evaluation of torques $\tau_{c}$ based on state error with the intention of regulation or trajectory tracking. Furthermore, inner control loop to produce required torque from individual actuators. RW generates torque by accelerating flywheel whereas in case CMG, torque is proportional to angular momentum of RW and gimbal velocity. The idea is to find out particular combination of gimbal velocities and RW accelerations in order to produce required torque demanded by outer loop with strong emphasis on avoiding singularity.
+\begin{figure}[!h]
+    \centering
+    \input{figures/tikFeedbackControlArch}
+    %\includegraphics{}
+    \caption{VSCMG Spacecraft Control Architecture}
+    \label{fig:control_architecture}
+\end{figure}
 
-\section{Lyapunov Direct Method}
-\subsection{System Identification}
-\subsection{The Lyapunov Function}
-\section{Inner Control Loop}
-\subsection{Matrical Definations}
-\subsection{Acceleration Based MWs Control Law}
+\section{Lyapunov Stability Method}
+Lyapunov stability is widely used methods for continuous time nonlinear systems, two methods proposed by Aleksandr Lyapunov in1892 are indirect method in which behavior linearized system about equilibrium point is examined whereas direct method to verify stability of nonlinear system by inspecting evaluation of "lyapunov function" an energy like positive definite function composed of \ system states. If the carefully constructed scalar function decreases over time, the system under study is proved to be stable. It is possible to realize controller which dissipates selected scalar function.
+
+Consider continuous, time-invariant nonlinear system with state $\displaystyle x$ and control input $\displaystyle u$.
+\begin{equation*}
+\dot{x} =f( x,u)
+\end{equation*}
+The idea behind Lyapunov direct method is crafting positive definite scalar function $\displaystyle \mathcal{V}( x)$ and substituting $\displaystyle u=u( x)$ making it closed loop dynamical system such a way that with derived controller the derivative $\displaystyle \dot{\mathcal{V}}( x)$ becomes negative. Stability critaria is
+\begin{equation}
+ \begin{aligned}
+\mathcal{V}( x)  >0 & & \\
+\dot{\mathcal{V}}( x) < 0 & & \\
+\mathcal{V}( x)\rightarrow \infty , & & ||x||\rightarrow \infty 
+\end{aligned}
+\label{eqn:lyp_cond}
+\end{equation}
+
+
+If selected scalar function with derived controller satisfies \autoref{eqn:lyp_cond} then system is said to be asymptotically stable. 
+
+
+
+\section{Model based Controller Design}
+A control law must be designed in such a way that it guaranties asymptotic stability of states, by shifting global equilibrium to desired state. For external feedback control loop let $\displaystyle \mathcal{F}_{d}$ be desired body fixed rotating frame and spacecraft current state body fixed reference frame $\displaystyle \mathcal{F}_{b}$ described with respect to inertial frame $\displaystyle \mathcal{F}_{i}$. As described in \autoref{chap:2} let $\displaystyle \omega $ be the angular velocity of $\displaystyle \mathcal{F}_{b}$ and $\displaystyle q=q_{0} +q_{v}$ be current attitude of $\displaystyle \mathcal{F}_{b}$. Lets recall rotation matrix from $\displaystyle \mathcal{F}_{i}$ to $\displaystyle \mathcal{F}_{b}$
+
+\begin{equation}
+\mathbf{R} (\mathbf{q} )=\left( q^{2}_{0} -\mathbf{q}^{T}_{v}\mathbf{q}_{v}\right)\mathbf{I}_{3\times 3} +2\mathbf{q}_{v}\mathbf{q}^{T}_{v} +2q_{0}\mathbf{q}^{\times }
+\end{equation}Similarly, \ $\displaystyle q_{d} =q_{d,0} +q_{d,v}$ the attitude quaternion of $\displaystyle \mathcal{F}_{d}$ and $\displaystyle ^{i} \omega _{d}$ be angular velocity of desired reference frame. The rotation matrix which transforms $\displaystyle \mathcal{F}_{i}$ to $\displaystyle \mathcal{F}_{b}$ is
+
+\begin{equation}
+\mathbf{R} (\mathbf{q}_{d} )=\left( q^{2}_{0,d} -\mathbf{q}^{T}_{v,d}\mathbf{q}_{v,d}\right)\mathbf{I}_{3\times 3} +2\mathbf{q}_{v,d}\mathbf{q}^{T}_{v,d} +2q_{0,d}\mathbf{q}^{\times }_{d}
+\end{equation}Attitude of $\displaystyle \mathcal{F}_{b}$ described with respect to $\displaystyle \mathcal{F}_{b}$ can be considered as deviation in tracking, hence with tracking error quaternion $\displaystyle q_{e} =q_{e,0} +q_{e,v}$ rotation matrix among body and desired frame is expressed as\begin{equation}
+\mathbf{R} (\mathbf{q}_{e} )=\left( q^{2}_{0,e} -\mathbf{q}^{T}_{e,d}\mathbf{q}_{e,d}\right)\mathbf{I}_{3\times 3} +2\mathbf{q}_{e,d}\mathbf{q}^{T}_{e,d} +2q_{0,e}\mathbf{q}^{\times }_{e}
+\end{equation}recalling from chap error quaternion representation in vectorial and eigen axis from
+\begin{equation}
+\begin{pmatrix}
+\mathbf{q}_{e,0}\\
+q_{v,e}
+\end{pmatrix} =\begin{pmatrix}
+\cos( \varepsilon /2) \ \\
+\mathbf{\hat{e}}\sin( \varepsilon /2)
+\end{pmatrix} =\begin{pmatrix}
+q_{0} q_{d,0} +\mathbf{q}^{T}\mathbf{q}_{d}\\
+-q_{0} q_{d,v} +q_{d,0} q_{v} -q_{v} \times q_{d,v}
+\end{pmatrix}
+\end{equation}
+When current attitude and desired attitude are same, angular displacement is $\displaystyle \varepsilon $ becomes zero making error quaternion
+
+\begin{equation}
+\mathbf{q}_{e} =\begin{pmatrix}
+q_{e,0}\\
+q_{v,e}
+\end{pmatrix} =\begin{pmatrix}
+1\\
+\mathbf{0}
+\end{pmatrix}
+\end{equation}Angular velocity tracking error $\displaystyle \omega _{e}$ is angular velocity of body frame with respect to desired frame $\displaystyle \mathcal{F}_{d}$ can be expressed in $\displaystyle \mathcal{F}_{b}$ as 
+\label{eqn:qe_zero}
+\begin{equation*}
+\omega _{e} =\omega -\mathbf{R} (\mathbf{q}_{e} )^{i} \omega _{d} =\omega -\omega _{d}
+\end{equation*}
+here $\displaystyle \omega _{d}$ is angular velocity of desired frame with respect to current body frame. The quaternion kinematics for error tracking expressed in body frame
+\begin{equation}
+\begin{aligned}
+\dot{\mathbf{q}_{e}} & =\frac{1}{2}\begin{bmatrix}
+-\mathbf{\omega }_{e} \cdot q_{e,v}\\
+q_{e,0}\mathbf{\omega }_{e} -q^{\times }_{e,v}
+\end{bmatrix}\\
+\mathbf{q}_{e} & =\frac{1}{2}\begin{bmatrix}
+0 & -\mathbf{\omega }_{e}\\
+\mathbf{\omega }_{e} & -\mathbf{\omega }^{\times }_{e}
+\end{bmatrix}\begin{bmatrix}
+q_{e,0}\\
+q_{e,v}
+\end{bmatrix}
+\end{aligned}
+\end{equation}
+Similar approach will be used to derive ``Reward Function'' for training Neural Netrwork policy with \acrfull{rl} methods.
+\subsection{The Lyapunov Candidate Function}
+Based on previously developed analogy of quaternion tracking error and angular velocity tracking error, for shifted target equilibrium candidate Lyapunov function is selected as
+
+\begin{equation}
+\mathcal{V} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1} J\omega _{e} +q_{e,v} q^{T}_{e,v} +( q_{e,0} -1)^{2}
+\label{eqn:lyp_first}
+\end{equation}
+Here. $\displaystyle J$ is inertia tensor of complete spacecraft and function and $\displaystyle \mathbf{K}^{-1}_{3\times 3}$ is positive definite matrix. consequently $\displaystyle \mathcal{V}$ guaranties to be positive definite since all the terms in \autoref{eqn:lyp_first} are in quadratic form. From \autoref{eqn:qe_zero} we can deduce that that Candidate becomes zero when velocity tracking error and quaternion error becomes zero. With unit norm quaternion property
+\begin{equation}
+q^{2}_{e,0} +q_{e,v} q^{T}_{e,v} =1
+\end{equation}
+\begin{equation}
+( q_{e,0} -1)^{2} +q_{e,v} q^{T}_{e,v} =( q_{e,0} -1)^{2} +1-q^{2}_{e,0} =2( 1-q_{e,0})
+\label{eqn:unit_norm_quat_rearanged}
+\end{equation}
+Using above relation Lyapunov Candidate function is reduced to
+\begin{equation}
+\mathcal{V} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1} J\omega _{e} +2( 1-q_{e,0})
+\label{eqn:lyp_first_reduced}
+\end{equation}
+Another popular candidate function selected for regulation is purely based on kinetic energy of spacecraft which is
+\begin{equation}
+\mathcal{V} =\frac{1}{2} \omega ^{T} J\omega 
+\end{equation}
+
+\subsection{Stability Analysis}
+In order to evaluate stability of system, Candidate function derivative $\displaystyle \dot{\mathcal{V}}$ should be negative which guaranties asymptotic stability of system, in this case chosen function is
+\begin{equation}
+\mathcal{V} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1}_{q} J\omega _{e} +2( 1-q_{e,0})
+\end{equation}
+taking time derivative of candidate function
+\begin{equation}
+\dot{\mathcal{V}} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\dot{J} \omega _{e} +\omega ^{T}_{e}\mathbf{K}^{-1}_{q} J\dot{\omega }_{e} -2\dot{q}_{e,0}
+\end{equation}
+Substituting derivative of inertia tensor in above expression we have
+\begin{equation}
+\begin{aligned}
+\dot{\mathcal{V}} & =\frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right) \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\sum ^{n}_{k=1}\dot{\delta }_{k}[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp \omega _{e}\\
+ & -\ \left( J^{s}_{CMG} -J^{t}_{CMG}\right) \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\sum ^{n}_{k=1}\dot{\delta }_{k}[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp \omega \\
+ & -\ \omega ^{T}_{e}\mathbf{K}^{-1}_{q}[ \omega \times J\omega ]\\
+ & -\ \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\left[ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\delta }_{k} \ \hat{t}_{k} +J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\right]\\
+ & -\ \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\left[ J^{g}_{CMG}\sum ^{n}_{k=1} \ \ddot{\delta }_{k} \ \hat{g}_{k} +\ J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\delta }_{k} \ \hat{g}_{k}\right]\\
+ & -\ \omega ^{T}_{e}\mathbf{K}^{-1}_{q} J\dot{\omega }_{d} +\omega _{e} q^{T}_{e}
+\end{aligned}
+\label{eqn:lyp_deriv_expanded1}
+\end{equation}
+In order to ensure $\displaystyle \dot{\mathcal{V}} < 0$, from expression above taking $\displaystyle \omega _{e}$ common and introducing new positive definite matrix $\displaystyle \mathbf{K}_{w}$ such a way that \autoref{eqn:lyp_deriv_expanded1} becomes
+\begin{equation}
+\dot{\mathcal{V}} =-\ \omega ^{T}_{e}\mathbf{K}^{-1}_{q}\mathbf{K}_{w} \omega _{e}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+-\mathbf{K}^{-1}_{q}\mathbf{K}_{w} \omega _{e} & =-\frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\mathbf{K}^{-1}_{q}\sum ^{n}_{k=1}\dot{\delta }_{k}[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp ( \omega +\omega _{d})\\
+ & -\ \mathbf{K}^{-1}_{q}[ \omega \times J\omega ]\\
+ & -\ \mathbf{K}^{-1}_{q}\left[ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\delta }_{k} \ \hat{t}_{k} +J^{s}_{W} \omega \times \sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\right]\\
+ & -\ \mathbf{K}^{-1}_{q}\left[ J^{g}_{CMG}\sum ^{n}_{k=1} \ \ddot{\delta }_{k} \ \hat{g}_{k} +\ J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\delta }_{k} \ \hat{g}_{k}\right]\\
+ & -\ \mathbf{K}^{-1}_{q} J\dot{\omega }_{d} +q_{e}
+\end{aligned}
+\label{eqn:lyp_deriv_withK}
+\end{equation}
+Since $\displaystyle \mathbf{K}^{-1}_{q}$ appears in both sides, \autoref{eqn:lyp_deriv_withK} can be expressed as 
+\begin{equation}
+\begin{aligned}
+ & \frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}\dot{\delta }_{k}[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp ( \omega +\omega _{d})\\
+ & +\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\delta }_{k} \ \hat{t}_{k}\\
+ & +\ J^{g}_{CMG}\sum ^{n}_{k=1} \ \ddot{\delta }_{k} \ \hat{g}_{k} +\ J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\delta }_{k} \ \hat{g}_{k}\\
+ & =\ \mathbf{K}_{w} \omega _{e} +\mathbf{K}_{q} q_{e} -J\dot{\omega }_{d} -\omega \times \left[ J\omega +J^{s}_{W}\sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\right]
+\end{aligned}
+\label{eqn:lyp_deriv_fin1}
+\end{equation}
+Substituting \autoref{eqn:lyp_deriv_fin1} in  \autoref{eqn:EOM_FULL} complete nonlinear dynamical equation
+\begin{equation}
+J\dot{\omega _{e}} +\dot{J} \omega _{e} =\ -\mathbf{K}_{w} \omega _{e} -\mathbf{K}_{q} q_{e}
+\label{eqn:error_tracking_eom}
+\end{equation}
+\autoref{eqn:error_tracking_eom} is error tracking control of VSCMG, we can see it resembles proportional derivative control, $\displaystyle \mathbf{K}_{q}$ being proportional gain while $\displaystyle \mathbf{K}_{w}$ can be considered as derivative gain matrix.In terms of control torque $\displaystyle u$ expression is 
+\begin{tcolorbox}
+\begin{equation}
+u=-\mathbf{K}_{w} \omega _{e} -\mathbf{K}_{q} q_{e}
+\end{equation}
+\end{tcolorbox}
+
+Expression assures asymptotic stability of $\displaystyle \omega _{e}$, In order to make sure \autoref{eqn:lyp_first} satisfies Lyapunov criterion, and guarantying asymptotic stability of all the states as we know $\displaystyle \omega _{e,\infty }\rightarrow 0$ thus $\displaystyle \dot{\omega }_{e,\infty }\rightarrow 0$ we can demonstrate the quaternion vector components tends to zero and scalar becomes 1 thus making 
+\begin{equation}
+\mathbf{K}_{q} q_{e,\infty } =0
+\end{equation}
+From argument above we can ensure that \ $\displaystyle q_{e,\infty }$ tends to zero thus \autoref{eqn:lyp_first} satisfies  Lyapunov  criterion for all states. Now, rearranging control variables in order to have control torque that can be generated internally all momentum exchange devices is expressed as
+\begin{equation*}
+\begin{aligned}
+u & =\frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\sum ^{n}_{k=1}\dot{\delta }_{k}[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp ( \omega +\omega _{d})\\
+ & +\ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} +\ J^{s}_{W} \ \sum ^{n}_{k=1} \Omega _{k}\dot{\delta }_{k} \ \hat{t}_{k}\\
+ & +\ J^{g}_{CMG}\sum ^{n}_{k=1} \ \ddot{\delta }_{k} \ \hat{g}_{k} +\ J^{g}_{CMG} \ \omega \times \sum ^{n}_{k=1}\dot{\delta }_{k} \ \hat{g}_{k}
+\end{aligned}
+\end{equation*}
+Consequently. demand torque required to make $\displaystyle \omega _{e,\infty }$ and $\displaystyle q_{e,\infty }$ tends to zero is
+\begin{equation}
+u =\mathbf{K}_{w} \omega _{e} +\mathbf{K}_{q} q_{e} -J\dot{\omega }_{d} -\ \omega \times \left[ J\omega +J^{s}_{W}\sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\right]
+\end{equation}
+Making close loop dynamics of Spacecraft with VSCMG suitable for both trajectory tracking and regulation becomes
+\begin{equation}
+\dot{J\omega } +\frac{1}{2}\dot{J} \omega _{e} +\omega \times \left[ J\omega +^{s}_{W}\sum ^{n}_{k=1} \ \Omega _{k} \ \hat{s}_{k}\right] =-u
+\end{equation}
+
+\section{Steering Law}
+In order to generate torque required to reach desired state, appropriate signal must be provided to momentum exchange devices present in spacecraft. VSCMG produce torque using reaction wheel angular acceleration $\displaystyle \dot{\Omega }$, gimbal velocity $\displaystyle \dot{\delta }$ and gimbal acceleration $\displaystyle \ddot{\delta }$. In the interest of evaluating precise values taking into consideration for particular arrangement of generic number of VSCMG cluster.
+
+Demand torque expression written in terms of momentum exchange devices given in equation can be expressed in matrix form for generic number of VSCMG units as
+\begin{equation}
+u=B\ddot{\delta } +C\dot{\delta } +D\dot{\Omega }
+\label{eqn:steering_controller}
+\end{equation}
+here coefficient matrices $\displaystyle B_{3\times n}$, $\displaystyle C_{3\times n}$ and $\displaystyle D_{3\times n}$ are composed of 3 rows and $\displaystyle n$ columns as
+\begin{equation}
+\begin{aligned}
+B & =J^{g}_{CMG}\sum ^{n}_{k=1} \ \hat{g}_{k}\\
+B & =J^{g}_{CMG}\mathcal{G}_{g}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+C & =\sum ^{n}_{k=1}\left[ J^{s}_{W} \ \Omega _{k} \ \hat{t}_{k} +\frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right)[\hat{t}_{k} \ \hat{s}_{k} +\hat{s}_{k} \ \hat{t}_{k}] \cdotp ( \omega +\omega _{d}) +\ J^{g}_{CMG} \ \omega \times \ \hat{g}_{k}\right]\\
+C & =J^{s}_{W} \ [ \Omega ]^{d}\mathcal{G}_{t} +\frac{1}{2}\left( J^{s}_{CMG} -J^{t}_{CMG}\right)\mathcal{G}_{st\omega ^{+}} +J^{g}_{CMG} \ \omega \times \mathcal{G}_{g}
+\end{aligned}
+\label{eqn:steerC_full}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+D & =\sum ^{n}_{k=1} J^{s}_{W}\hat{s}_{k}\dot{\Omega }_{k}\\
+D & =J^{s}_{W}\mathcal{G}_{s}
+\end{aligned}
+\end{equation}
+where, direction cosines of gimbal spin and transverse axis are written as
+\begin{equation*}
+\mathcal{G}_{g} =\begin{bmatrix}
+| & | &  & |\\
+\hat{g}_{1} & \hat{g}_{2} & \dotsc  & \hat{g}_{n}\\
+| & | &  & |
+\end{bmatrix}_{3\times n}  \mathcal{G} t=\begin{bmatrix}
+| & | &  & |\\
+\hat{t}_{1} & \hat{t}_{2} & \dotsc  & \hat{t}_{n}\\
+| & | &  & |
+\end{bmatrix}_{3\times n}  \mathcal{G} s=\begin{bmatrix}
+| & | &  & |\\
+\hat{s}_{1} & \hat{s}_{2} & \dotsc  & \hat{s}_{n}\\
+| & | &  & |
+\end{bmatrix}_{3\times n}
+\end{equation*}
+\begin{equation*}
+\mathcal{G} st\omega ^{+} =\begin{bmatrix}
+| &  & |\\
+[\hat{t}_{1}\hat{s}_{1} +\hat{s}_{1}\hat{t}_{1}] \cdotp ( \omega +\omega _{d}) & \dotsc  & [\hat{t}_{1}\hat{s}_{1} +\hat{s}_{1}\hat{t}_{1}] \cdotp ( \omega +\omega _{d})\\
+| &  & |
+\end{bmatrix}_{3\times n}
+\end{equation*}Diagonal matrix is represented by brackets with superscript $\displaystyle [ \ ]^{d}$ as
+\begin{equation*}
+[ \Omega ]^{d} =\begin{bmatrix}
+\Omega _{1} &  &  & 0\\
+ & \Omega _{2} &  & \\
+ &  & \ddots  & \\
+0 &  &  & \Omega _{n}
+\end{bmatrix}_{3\times n}
+\end{equation*}
+Neglecting smaller terms in \autoref{eqn:steerC_full}, $\displaystyle C$ becomes
+\begin{equation}
+C=J^{s}_{W}[ \Omega ]^{d}\mathcal{G}_{t}
+\end{equation}
+And for momentum wheel portion, keeping constant gimbal angle at all times makes $\displaystyle D$ constant, thus \autoref{eqn:steering_controller} is simplified as
+\begin{equation}
+\begin{aligned}
+u & =\sum ^{n}_{k=1} J^{s}_{W}\hat{s}_{k}\dot{\Omega }_{k}\\
+u & =D\dot{\Omega }_{k}
+\end{aligned}
+\label{eqn:mw_ik}
+\end{equation}
+\autoref{eqn:mw_ik} is considering only reaction wheel based control torques.Whereas keeping RW angular velocity $\displaystyle \dot{\Omega }$ constant and neglecting very small gimbal acceleration term, CMG based control is achieved as 
+\begin{equation}
+u=C[\dot{\delta }]^{d}
+\label{eqn:cmg_control_only}
+\end{equation}
+\subsection{Reaction Wheel Optimization}
+As seen earlier sections, VSCMG clusters gives ability to produced torques by only using Reaction Wheels as torque producing unit, and required torques can be realized by
+\begin{equation}
+u=D\dot{\Omega }
+\end{equation}
+Since number of equations 3 and are more than number of unknown variables due to the fact that more that there will be more than three reaction wheels present for the purpose redundancy. The solution has dimension $\displaystyle \mathcal{N}( D) =m-n$ degrees of freedom. Where number of equations $\displaystyle n=3$ and number of unknown variables $\displaystyle m >3$. There is no trivial solution for such problem and required solution can only be found with optimization criteria. In this case minimum norm criteria is used for RW acceleration. Let us define Lagrangian $\displaystyle \mathcal{L}$ and Lagrangian 
+\begin{equation}
+\mathcal{L}(\dot{\Omega }) =||\dot{\Omega } ||=\dot{\Omega }^{T}\dot{\Omega }
+\end{equation}
+In order to minimize $\displaystyle \min \ ||\dot{\Omega } ||$ for $\displaystyle u=D\dot{\Omega }$ by introducing Lagrangian multiplier $\displaystyle \lambda $
+\begin{equation}
+f=\dot{\Omega }^{T}\dot{\Omega } +\lambda ^{T}( u-D\dot{\Omega })
+\label{eqn:min_norm_Omega}
+\end{equation}
+Conditions for minimum norm solutions is partial differentiation above function with respect to $\displaystyle \dot{\Omega }$ and $\displaystyle \lambda $ must be equal to zero
+\begin{equation}
+\begin{aligned}
+\frac{\partial f}{\partial \dot{\Omega }} & =0\\
+\frac{\partial f}{\partial \lambda } & =0
+\end{aligned}
+\label{eqn:min:norm_Omega_lagrange}
+\end{equation}
+Thus from \autoref{eqn:min_norm_Omega} and \autoref{eqn:min:norm_Omega_lagrange} optimum Lagrangian multiplier $\displaystyle \lambda ^{*}$ is
+\begin{gather}
+\dot{\Omega }^{*} =\frac{1}{2} D^{T} \lambda ^{*}\\
+\begin{aligned}
+u & =D\dot{\Omega }^{*}\\
+u & =\frac{1}{2} DD^{T} \lambda ^{*}
+\end{aligned}
+\end{gather}
+Matrix $\displaystyle DD^{T}$ is full rank making it invertible thus equation for optimum acceleration $\displaystyle \dot{\Omega }$ for $\displaystyle u$ is
+\begin{gather}
+\dot{\Omega }^{*} =D^{T}\left( DD^{T}\right)^{-1} u\\
+\dot{\Omega }^{*} =D^{\dagger } u
+\label{eqn:pinvD}
+\end{gather}
+here $\displaystyle D^{\dagger } =D^{T}\left( DD^{T}\right)^{-1}$ is pseudo inverse of matrix $\displaystyle D$ commonly used in inverse kinematics of robotics manipulator. Although \autoref{eqn:pinvD} guaranties optimum solution, but does not address the saturation problem involved with RW. Since we know that $\displaystyle \ker D\neq 0$, Extra degree of freedom gives ability to employ reaction null method which basically distributing momentum among flywheels without producing torque. As a result angular momentum of RWs can be minimized with taking minimum norm as
+\begin{equation}
+\mathcal{L}(\mathcal{H}) =\mathcal{HH}^{T}
+\end{equation}
+and thus angular momentum can be minimized for required $\displaystyle \mathcal{H}_{r}$ by optimum angular momentum expression
+\begin{equation}
+\mathcal{H}^{*} =S^{T}\left( SS^{T}\right)^{-1}\mathcal{H}_{r} =S^{\dagger }\mathcal{H}_{r}
+\end{equation}
+Equation above gives optimum steering of MW for desaturation, \autoref{eqn:pinvD} gives power optimized RW control law. In order to minimize both power consumption with desaturation, requited command torque is written with introducing vector $\displaystyle x$ such that $\displaystyle Sx=0$ that is $\displaystyle x\in \ker\{S\}$
+\begin{equation}
+u =S\left[ J^{s}_{W}\dot{\Omega }^{*} +\mathbf{x}\right]
+\label{eqn:OptiRW_and_disat}
+\end{equation}
+Optimum angular momentum by introducing Lagrange multiplier $\displaystyle \lambda $ is
+\begin{equation}
+\mathcal{H}^{*} =\frac{1}{2} S^{T} \lambda ^{*}
+\label{eqn:OptimumMomentum}
+\end{equation}
+\newacronym{svd}{SVD}{Singular Value Decomposition}
+Let us rewrite the expression by \acrfull{svd} of $\displaystyle S$ as $\displaystyle S=\mathbf{U\Sigma V}^{T}$, where left singular vector $\displaystyle \mathbf{UU}^{T} =\mathbf{I}_{3\times 3}$ and right singular vector $\displaystyle \mathbf{VV}^{T} =\mathbf{I}_{4\times 4}$ and $\displaystyle \mathbf{\Sigma }_{3\times 4}$ is rectangular diagonal matrix with non negative real numbers on diagonal $\displaystyle \sigma _{i}$ are singular values
+\begin{equation}
+\mathbf{\Sigma } =\begin{pmatrix}
+\sigma _{1} & 0 & 0 & 0\\
+0 & \sigma _{2} & 0 & 0\\
+0 & 0 & \sigma _{3} & 0
+\end{pmatrix}
+\end{equation}
+applying \acrshort{svd} to $\displaystyle S$ and multiplying by $\displaystyle \mathbf{V}^{T}$ \autoref{eqn:OptiRW_and_disat} becomes
+\begin{equation}
+\begin{aligned}
+\mathbf{V}^{T}\mathcal{H}^{*} & =\frac{1}{2}\mathbf{V}^{T}\mathbf{V\Sigma }^{T}\mathbf{U}^{T} \lambda ^{*}\\
+ & =\frac{1}{2}\mathbf{\Sigma }^{T}\mathbf{U}^{T} \lambda ^{*}\\
+ & =\mathbf{\Sigma }^{T}\mathbf{U}^{T}\overline{\lambda }^{*}
+\end{aligned}
+\end{equation}
+Forth column $\displaystyle \mathbf{v}_{4}$ of \autoref{eqn:OptimumMomentum}  is null vector thus
+\begin{equation}
+\gamma =\mathbf{v}^{T}_{4}\mathcal{H}^{*} =0
+\label{opti_index_1}
+\end{equation}
+\autoref{opti_index_1} denotes that if angular momentum is optimum $\displaystyle \gamma $ becomes zero thus can be considered as optimality index for angular momentum distribution. Similarly, $\displaystyle \mathbf{v}^{T}_{4}\dot{\Omega }$ becomes zero only if $\displaystyle \dot{\Omega }$ is optimal. Introducing optimality index, torque required is
+\begin{equation}
+u =S\tau =S\left[ J^{s}_{W}\dot{\Omega } -\gamma \mathbf{k}\right]
+\label{eqn:opt_tau_c1}
+\end{equation}
+multiplying \autoref{eqn:opt_tau_c1} by $\displaystyle \mathbf{v}^{T}_{4}$ and rate of change of angular momentum $\displaystyle \dot{\mathcal{H}} =\tau $
+\begin{equation*}
+\begin{aligned}
+\mathbf{v}^{T}_{4}\dot{\mathcal{H}} & =J^{s}_{W}\dot{\Omega }^{*} -\gamma \mathbf{v}^{T}_{4}\mathbf{k}\\
+ & =-\gamma \mathbf{v}^{T}_{4}\mathbf{k}
+\end{aligned}
+\end{equation*}
+we can deduce that
+\begin{equation}
+\dot{\gamma } =-\mathbf{v}^{T}_{4}\mathbf{k} \gamma 
+\end{equation}
+$\displaystyle \mathbf{k} =\beta \mathbf{v}_{4}$ for nonzero positive $\displaystyle \beta $, consequently $\displaystyle \mathbf{v}^{T}_{4}\mathbf{v}_{4} =1$ we get
+\begin{equation}
+\dot{\gamma } +\beta \gamma =0
+\end{equation}
+as a result $\displaystyle \gamma $ tends to zero distributing angular momentum in optimal way. Again using SVD and taking $\displaystyle S\mathbf{k} =\beta S\mathbf{v}_{4}$ \autoref{eqn:opt_tau_c1} can be written as 
+\begin{equation}
+\begin{aligned}
+\beta S\mathbf{v}_{4} & =\beta \mathbf{U\Sigma V^{T} v}_{4}\\
+ & =\beta \mathbf{U\Sigma }\begin{pmatrix}
+0\\
+0\\
+0\\
+1
+\end{pmatrix}\\
+ & =0
+\end{aligned}
+\end{equation}
+From above expression, it is clear that $\displaystyle \mathbf{v}_{4}$ belongs to null space of matrix $\displaystyle S$, thus does not contribute to produce output torque but useful to redistribute angular momentum. Finally, torque produced by Reaction Wheel is
+\begin{equation}
+u =J^{s}_{W}\dot{\Omega } -\beta \gamma \mathbf{v}_{4}
+\end{equation}
+
+\subsection{Acceleration-Based Gimbal Tracking}
+Since signal given to the electric motors are superposed to be proportional to acceleration another feedback loop is needed for gimbal velocity $\displaystyle \dot{\delta }$. Once required gimbal velocity $\displaystyle \dot{\delta }_{r}$ is determined by steering law then gimbal acceleration can approximated to
+\begin{equation}
+\ddot{\delta } =\mathbf{K}_{\dot{g}}(\dot{\delta } -\dot{\delta }_{r}) +\ddot{\delta } \approx \mathbf{K}_{\dot{g}}(\dot{\delta }\dot{+\delta }_{r})
+\end{equation}
+by selecting appropriate gain matrix $\displaystyle \mathbf{K}_{\dot{g}}$ tracking $\displaystyle \dot{\delta }_{r}$ is possible and $\displaystyle \ \ \dot{\delta }\rightarrow \dot{\delta }_{r}$ as $\displaystyle t\rightarrow \infty $.
+
+
 \subsection{Velocity Based VSCMGs Steering Law}
-\section{Robustness Analysis}
-\subsection{Rest-to-Rest and Regulation Maneuver}
-\section{Trajectory Tracking Maneuvers}
+As discussed earlier, minimum three Reaction Wheels arranged in each body axis are capable of producing torque in any direction but amplitude is small. On the other hand CMGs gives ability to amplify the torque but also come with singularity problem, i.e. when all transverse \ axis are in same plane and demand torque is normal to this plane. Combining ability of both CMG and RW we get Variable Speed Control moment gyroscope in which ability to produce torque with RW can be used to escape or avoid singular states. Consequently feedback law for VSCMG is
+\begin{equation}
+\mathbf{\tau }_{r} =B\ddot{\delta } +C\dot{\delta } +D\dot{\Omega }
+\end{equation}
+In this case $\displaystyle B$ is very small thus can be neglected, otherwise $\displaystyle \ddot{\delta }$ becomes very large an unseasonable to produce demand torque, thus VSCMG equation becomes
+\begin{equation}
+\mathbf{\tau }_{r} =C\dot{\delta } +D\dot{\Omega }
+\label{eqn:vsscmg_torque_full}
+\end{equation}
+This thesis is focused on pyramid cluster of VSCMG units, let us define variables as
+\begin{equation}
+x=\begin{pmatrix}
+\dot{\delta }\\
+\dot{\omega }
+\end{pmatrix}
+\end{equation}
+\begin{equation}
+\mathbf{Q} =\begin{bmatrix}
+C & D
+\end{bmatrix}
+\end{equation}
+thus \autoref{eqn:vsscmg_torque_full} becomes
+\begin{equation}
+\mathbf{\tau }_{r} =\mathbf{Q} x
+\label{eqn:vscmg_small}
+\end{equation}
+we know that $\displaystyle C$ tends singular as its determinant reaches zero, thus to have some sense of singularity, can be measured as
+\begin{equation}
+m_{w} =\sqrt{\det \ CC^{T}} 
+\end{equation}
+in \autoref{eqn:vscmg_small} we have more unknowns than equations, hence problem can be solved with optimization method, let weighted Lagrangian function be
+\begin{equation}
+\mathcal{L}( x) =x^{T} W^{-1} x
+\end{equation}
+here weight matrix is diagonal matrix with positive scalar weights $\displaystyle \alpha _{i}$ are associated with gimbal rates, and $\displaystyle \beta _{i} =k_{0} e^{-k_{1} m_{w}}$ are associated with reaction wheel accelerations, as $\displaystyle m_{w}$ becomes larger more weight is given to gimbal velocities, contrary to this more RWs are weighted more as $\displaystyle m_{w}$ tends to zero.
+
+\begin{equation}
+W=\begin{pmatrix}
+\alpha _{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & \alpha _{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \alpha _{3} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & \alpha _{4} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & \beta _{1} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & \beta _{2} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & \beta _{3} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \beta _{4}
+\end{pmatrix}
+\end{equation}
+scalar quantities $\displaystyle k_{0}$ and $\displaystyle k_{1}$ are chosen carefully for desired performance. The optimization problem formulated as
+
+
+\begin{equation}
+\begin{cases}
+\min\{\mathcal{L}( x)\}\\
+Qx=u
+\end{cases}
+\end{equation}
+Using Lagrange multiplier let the function be
+\begin{equation}
+f=x^{T} W^{-1} x+\lambda ^{T}( u -Qx)
+\end{equation}
+Conditions to solve above mentioned optimization functions are
+\begin{equation}
+\begin{cases}
+\frac{\partial f}{\partial x} & =0\\
+\frac{\partial f}{\partial \lambda } & =0
+\end{cases}
+\end{equation}
+thus to have optimum acceleration for required torque relation becomes
+\begin{equation}
+x^{*} =\frac{1}{2} WQ^{T} \lambda ^{*}
+\end{equation}
+\begin{equation}
+u =\frac{1}{2} QWQ^{T} \lambda ^{*}
+\end{equation}
+$\displaystyle QWQ^{T}$guaranties to be invertible hence we have optimal acceleration vector in the form of
+\begin{equation}
+x^{*} =WQ^{T}\left( QWQ^{T}\right)^{-1} u
+\end{equation}
+
+\begin{equation}
+\begin{pmatrix}
+\dot{\delta }\\
+\dot{\omega }
+\end{pmatrix}^{*} =WQ^{T}\left( QWQ^{T}\right)^{-1} u
+\label{eqn:vscmg_steering_1}
+\end{equation}
+It is clear that scalar component $\displaystyle \beta _{i}$ of weight matrix $\displaystyle W_{i}$ depends on singularity measure $\displaystyle m_{c}$ of CMG. When CMG are not singular $\displaystyle m_{c}$ is large making $\displaystyle \beta _{i}$ very small but in case of CMG singularity beta becomes larger intern making smooth transition to reaction wheel based control. Although this steering law works well in order to avoid CMG singularities, we also need to introduce $\displaystyle m_{w}$ the singularity measure for Reaction Wheels. To consider both RW and CMG singularities weights are determined as
+\begin{gather}
+\beta =k_{0}\exp( -k_{1} m_{c} /m_{w})\\
+m_{w} =\sqrt{\det \ DD^{T}} \notag
+\end{gather}
+
+where $\displaystyle m_{w}$ is singularity measure of reaction wheel cluster. These weights takes care of both CMG and RW singularities. Although there are certain conditions where both $\displaystyle m_{w}$ and $\displaystyle m_{c}$ are very small, this may occur when wheel spin rate is zero for all RWs and CMGs are in singular state. To deal with this issue let us take \acrlong{svd} of $\displaystyle Q=\mathbf{U\Sigma V}^{T}$
+\begin{equation*}
+\begin{aligned}
+\mathbf{\Sigma } & =\begin{pmatrix}
+\sigma _{1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & \sigma _{2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \sigma _{3} & 0 & 0 & 0 & 0 & 0
+\end{pmatrix}_{3\times 8}\\
+\mathbf{U} & =\begin{pmatrix}
+u_{1} & u_{2} & u_{3}
+\end{pmatrix}_{3\times 3}\\
+\mathbf{V} & =\begin{pmatrix}
+v_{1} & v_{2} & v_{3} & v_{4} & v_{5} & v_{6} & v_{7} & v_{8}
+\end{pmatrix}_{8\times 8}
+\end{aligned}
+\end{equation*}
+$\displaystyle Q$ can be represented with singular values $\displaystyle \sigma _{i}$, right singular matrix $\displaystyle \mathbf{V}$ and left singular matrix $\displaystyle \mathbf{U}$ as
+\begin{equation}
+Q=\sum ^{3}_{i=1} \sigma _{i} u_{i} v^{T}_{i}
+\end{equation}
+in this way $\displaystyle Q^{-1}$ can be computed as
+
+ 
+\begin{equation}
+Q^{-1} =\sum ^{3}_{i=1}\frac{1}{\sigma _{i}} v_{i} u^{T}_{i}
+\end{equation}
+Introducing singularity measure of complete VSCMG cluster $\displaystyle m_{v} =\sqrt{\det \ QQ^{T}}$ in \autoref{eqn:vscmg_steering_1} we have SVD based steering law to escape singularity as
+\begin{equation}
+\begin{pmatrix}
+\dot{\delta }\\
+\dot{\omega }
+\end{pmatrix}^{*} =WQ^{T}\left( QWQ^{T}\right)^{-1} u+\kappa v_{1}
+\label{eqn:vscmg_steering_full_1}
+\end{equation}
+
+where 
+\begin{gather}
+\beta =k_{0}\exp( -k_{1} m_{c} /m_{w}) \notag\\
+\kappa =k_{3}\exp( -k_{4} m_{v})
+\end{gather}
+for large $\displaystyle m_{v}$ \autoref{eqn:vscmg_steering_full_1} approaches \autoref{eqn:vscmg_steering_1} otherwise to escape singular state, maximum torque applied orthogonal to singular surface through vector $\displaystyle v_{1}$.
+Hybrid of \autoref{eqn:vscmg_steering_full_1} with Off diagonal Singularity Robust steering law is given as
+\begin{tcolorbox}
+\begin{equation}
+\begin{pmatrix}
+\dot{\delta }\\
+\dot{\omega }
+\end{pmatrix} =WQ^{T}\left( QWQ^{T} +\lambda \mathbf{E}\right)^{-1} u+\kappa v_{1}
+\label{eqn:vscmg_steering_full_HSR}
+\end{equation}
+\end{tcolorbox}
+
+$\textbf{E}$ is not a diagonal metrics instead symmetric metrics with non diagonal elements.
+\begin{equation}
+\mathbf{E} =\begin{pmatrix}
+1 & \epsilon _{3} & \epsilon _{2}\\
+\epsilon _{3} & 1 & \epsilon _{1}\\
+\epsilon _{2} & \epsilon _{1} &  1
+\end{pmatrix}
+\end{equation}
+weights of non diagonal elements of $E$ are harmonics composed as
+$\displaystyle \epsilon _{i} =\epsilon _{0}\sin( nt+\varphi ) ,\ \varphi _{i} =\{0,\pi /2,\pi \}$ 

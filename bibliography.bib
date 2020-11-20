@@ -1,3 +1,17 @@
+@article{Santoni1996,
+	abstract = {An explicit guidance system based on neural networks is proposed.  The steering law is a function of parameters that are set up according to some optimal criterion.  Optimization can be carried out either by semi-analytical approximated methods or by numerical methods.  By optimization a guidance function is defined p = G (X,t) which transforms the current state of the system X into the optimal parameters value p.  In general calculation of p is rather long and involved, and it is not allowed by an on-board computer.Neural networks can fit any nonlinear function with very high accuracy, so the basic idea is to train a neural network in order to fit some tabulated data of the optimal guidance function G.  If the algorithm for finding the optimal function is replaced on-board by the sub-optimal   neural   approximationp = N (X,t), this system can reduce the on-board computer memory storage and the computing loads for the optimal steering program.In this article the neural guidance is described in some detail.  The performances of this guidance system are investigated by application to some test cases.  Even if the neural guidance is sub-optimal, the launcher gets to the final state with very high accuracy in the presence of relatively high disturbances.},
+	affiliation = {Università degli Studi di Roma &ldquo;la Sapienza&rdquo;, Scuola di Ingegneria Aerospaziale, Via Eudossiana 1800184, RomaItaly},
+	author = {Santoni, Fabio and Graziani, Filippo},
+	journal = {Space Technology},
+	language = {English},
+	number = {5-6},
+	pages = {303-306},
+	title = {Guidance of small launchers using neural networks},
+	volume = {16},
+	year = {1996},
+}
+
+
 @article{Silver2016,
 abstract = {The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses ‘value networks' to evaluate board positions and ‘policy networks' to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks. Using this search algorithm, our program AlphaGo achieved a 99.8{\%} winning rate against other Go programs, and defeated the human European Go champion by 5 games to 0. This is the first time that a computer program has defeated a human professional player in the full-sized game of Go, a feat previously thought to be at least a decade away.},
 author = {Silver, David and Huang, Aja and Maddison, Chris J and Guez, Arthur and Sifre, Laurent and van den Driessche, George and Schrittwieser, Julian and Antonoglou, Ioannis and Panneershelvam, Veda and Lanctot, Marc and Dieleman, Sander and Grewe, Dominik and Nham, John and Kalchbrenner, Nal and Sutskever, Ilya and Lillicrap, Timothy and Leach, Madeleine and Kavukcuoglu, Koray and Graepel, Thore and Hassabis, Demis},
@@ -314,7 +328,16 @@ title = {{Miniaturized attitude control system for nanosatellites}},
 volume = {81},
 year = {2012}
 }
-
+@inproceedings{LamThetaD,
+author = {Lam, Quang and Anderson, Bruce and Xin, Ming},
+year = {2010},
+month = {04},
+pages = {},
+title = {Preserving Spacecraft Attitude Control Accuracy Using Theta-D Controller Subject to Reaction Wheel Failures},
+isbn = {978-1-60086-963-1},
+journal = {AIAA Infotech at Aerospace 2010},
+doi = {10.2514/6.2010-3522}
+}
 
 @article{doi:10.1061/(ASCE)AS.1943-5525.0000754,
 author = {Lorenzo Arena  and Fabrizio Piergentili  and Fabio Santoni },
@@ -412,4 +435,59 @@ doi = {10.2514/1.2946}
   author = {Kyle A. Baker},
   title = {Control Moment Gyroscope Skew Angle Variation and Singularity Penetration},
   booktitle = {Advances in Spacecraft Attitude Control}
+}
+
+@misc{Molniya,
+    title = {{Molniya 1-86} COMSAT Description},
+    author = { Dr. David R. Williams},
+    publisher = {NASA Space Science Data Coordinated Archive},
+    howpublished = {\url{https://web.archive.org/web/20201118021318/https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1993-035A},
+    note = {Accessed: 2020-11-18}
+}
+}
+
+@book{sutton2018reinforcement,
+  title={Reinforcement learning: An introduction},
+  author={Sutton, Richard S and Barto, Andrew G},
+  year={2018},
+  publisher={MIT press}
+}
+
+@book{russell2010artificial,
+  title={Artificial Intelligence: A Modern Approach},
+  author={Russell, S.J. and Russell, S.J. and Norvig, P. and Davis, E.},
+  isbn={9780136042594},
+  lccn={2011288031},
+  series={Prentice Hall series in artificial intelligence},
+  url={https://books.google.it/books?id=8jZBksh-bUMC},
+  year={2010},
+  publisher={Prentice Hall}
+}
+
+
+@inproceedings{schulman2015trust,
+  title={Trust region policy optimization},
+  author={Schulman, John and Levine, Sergey and Abbeel, Pieter and Jordan, Michael and Moritz, Philipp},
+  booktitle={International conference on machine learning},
+  pages={1889--1897},
+  year={2015}
+}
+@misc{schulman2017proximal,
+    title={Proximal Policy Optimization Algorithms},
+    author={John Schulman and Filip Wolski and Prafulla Dhariwal and Alec Radford and Oleg Klimov},
+    year={2017},
+    eprint={1707.06347},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+
+@article{LimHun_ppo_flowchart,
+author = {Lim, Hyun-Kyo and Kim, Ju-Bong and Heo, Joo-Seong and Han, Youn-Hee},
+year = {2020},
+month = {03},
+pages = {1359},
+title = {Federated Reinforcement Learning for Training Control Policies on Multiple IoT Devices},
+volume = {20},
+journal = {Sensors},
+doi = {10.3390/s20051359}
 }
