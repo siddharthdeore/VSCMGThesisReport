@@ -215,12 +215,6 @@ $\theta_{old} \xleftarrow[]{} \theta$
  \caption{PPO,Actor-Critic Style}
     \label{algo_PPO_AC}
 \end{algorithm}
-\begin{figure}[H]
-    \centering
-    \scalebox{0.75}{\input{figures/AI/tik-actor-critic-ppo}}
-    \caption{Flowchart of actor critic based PPO learning model \cite{LimHun_ppo_flowchart}}
-    \label{fig:ppo_flowchart}
-\end{figure}
 \section{Neural Network}
 Neural networks were first introduced  in 1944 by Warren McCullough and Walter Pitts. Inspired by human brain neural networks are large graphs made up of densely connected processing nodes. Theses processing nodes are referred as neurons, It may take multiple inputs and produce one output. Each input $x_i$ is associated with some weight $w_i$, neuron produces weighted some of inputs adds bias to it and squeezes the results with pre-selected activation function. As shown in \autoref{fig:neuron} neuron functions as
 \begin{equation}
@@ -419,14 +413,146 @@ Starting with fundamentals discussed in earlier sections, a neural network is tr
 \subsection{RL Agent}
 As previously reported Reinforcement Learning based strategy has an ``Agent'' learns a policy in this case a \acrshort{mlp} policy by interacting with environment in order to maximize the received reward. The observation space of agent is states that agent can precept and action space is actuators that agent can act on. \acrshort{mlp} policy is designed such a way that input layer is observation space and output layer is action space. In order to train the model a critic network is required, input layer of critic is sum observation space and action space while only one output.
 \subsubsection{Training Procedure}
-With regard to \autoref{fig:ppo_flowchart} an environment with complete VSCMG dynamical equation of motion stepper is developed in python. This environment evolves predefined time-step at each call, although time-steps considered are order of magnitude of milliseconds environment takes multiple intermediate time-steps based on adaptive  Runge–Kutta Cash–Karp method in order to preserve accuracy of numerical integration. After integrating for one step environment returns observations, action, reward and few status parameters for monitoring learning process. 
-
-
-\subsubsection{Action Space}
-
+With regard to \autoref{fig:ppo_flowchart} an environment with complete VSCMG dynamical equation of motion stepper is developed in python. This environment evolves predefined time-step at each call, although time-steps considered are order of magnitude of milliseconds environment takes multiple intermediate time-steps based on adaptive  Runge–Kutta Cash–Karp method in order to preserve accuracy of numerical integration. After integrating for one step environment returns observations, action, reward and few status parameters for monitoring learning process. It is realised that python based ode integrator is slow and knowing the fact that simulation time must be in magnitude of millions of seconds, entire equation of motion is developed in C++ with Boost library for high performance ode integrator. The developed Dynamical Linked Library(DLL) has exported interface with python consequently increasing performance and speed of simulation. Tensorflow and Open Source machine learning library has been used to train the agent. Along with plots of system states, OpenGL based real time 3D visualization of VSCMG is devolved in order to have better understanding of system dynamics. Some core components of VSCMG Environment are 
 \subsubsection{Observation Space}
+Choice of observation can be a vector of states comprising quaternion error, body rate error, RW velocities and gimbals angles. Since outer loop is of control remains same, for steering law observation which is input layer of policy layer is selected as vector comprising demand torque, gimbal angles and RW velocities. This reduced length observation space from $\displaystyle 15$ to 11, keeping information of attitude error and rate error in the form of required torque. Selecting reduced observation space also played important role for redaction in storage requirements. Since for supervised learning, large amount of trajectory with input output pairs need to be stored.
+\begin{equation}
+s_{11\times 1} =\begin{pmatrix}
+\mathbf{\tau }_{c}\\
+\mathbf{\dot{\delta }}\\
+\mathbf{\dot{\Omega }}
+\end{pmatrix}
+\end{equation}
+\subsubsection{Action Space}
+All Reaction wheel angular accelerations, and gimbal velocities are considered as action space which is output layer of Policy network.
 
+\begin{equation}
+a_{8\times 1} =\begin{pmatrix}
+\mathbf{\dot{\delta }}\\
+\mathbf{\dot{\Omega }}
+\end{pmatrix}
+\end{equation}
+
+
+here gimbal velocity and angular acceleration bounded by actuator limit within $\displaystyle \mathbf{\dot{\delta }}_{4\times 1} \in \ [ -5,5] \ rad/\sec^{2}$ and \ $\displaystyle \mathbf{\dot{\Omega }}_{4\times 1} \in \ [ -30,30] \ rad/\sec$
 \subsubsection{Reward Function}
-Selection of reward function is crucial process, with a good reward function agent quickly learns policy, with bad reward function, may stuck in to local maxima. Perhaps agent finds certain sequence of action which might not be the solution but still prefers since it is increasing reward.
-although there is no general method to find best reward function and it is chosen based on information about system with few iteration of trial and error.
+Selection of reward function is crucial process, with a good reward function agent quickly learns policy, with bad reward function, may stuck in to local maxima.Perhaps agent finds certain sequence of action which might not be the solution but still prefers since it is increasing reward. although there is no general method to find best reward function and it is chosen based on information about system with few iteration of trial and error. \ An example of torque based reward function with distance to singularity is shown below gives tenancy to move away from singularities.
+
+\begin{equation}
+\begin{aligned}
+r & =k_{0} \ \exp\left( -\mathbf{\tau }^{T}_{c}\mathbf{\tau }_{c}\right)\\
+ & +\ k_{1}\det\left( QQ^{T}\right) \ \\
+ & +\ k_{2} \ \ln\left(\det\left( CC^{T}\right)\right)\\
+ & +\ k_{3}\ln\left(\det\left( DD^{T}\right)\right)
+\end{aligned}
+\end{equation}with $\displaystyle k_{1} ,k_{2} \ and\ k_{3}$ are positive constants to weight distance from VSCMG, CMG and RW singularities.
+\section{Training}
+Initially trajectories of state action pairs are generated using Monte-Carlo Simulation of VSCMG based steering l (expert agent) for 3000 episodes with 1000 steps of time $\Delta t=0.01sec$ each eposode starting with random initial states and attitude error. Supervised learning is used to pretrain the agent in order to reduce training time. Pre trained model is later trained with PPO algorithm shown in \autoref{fig:ppo_flowchart} with hyper parameters configuration set as \autoref{tbl_hyperparam_PPO}. Apart from 11 neurons in input and 8 neurons in output Policy network has 7 fully connected hidden layers having architecture of neurons in each layer as [32,64,64,64,64,32,16] with tanh activation. Value function has same hidden layer configuration as policy network.
+
+\begin{figure}[H]
+    \centering
+    \scalebox{0.75}{\input{figures/AI/tik-actor-critic-ppo}}
+    \caption{Flowchart of actor critic based PPO learning model \cite{LimHun_ppo_flowchart}}
+    \label{fig:ppo_flowchart}
+\end{figure}
+
+\begin{table}[H]
+\centering
+        
+\begin{tabular}{p{0.75\textwidth}|p{0.1\textwidth}}
+\toprule
+ Hyper-parameter & Value \\
+\midrule
+ Clipping parameter ($\displaystyle \epsilon $) & 0.2 \\
+\hline 
+ Optimization algorithm & Adam \\
+\hline 
+ Learning rate ($\displaystyle \eta _{\mu } ,\eta _{\theta }$) & 0.0001 \\
+\hline 
+ Discount factor ($\displaystyle \gamma $) & 0.99 \\
+\hline 
+ The number of steps to run for each environment per update & 1000 \\
+\hline 
+ Entropy coefficient for the loss calculation & 0.01 \\
+\hline 
+ Number of training mini batches per update & 4 \\
+ \bottomrule
+\end{tabular}
+\caption{PPO Algorithm Hyper-parameter configuration}
+\label{tbl_hyperparam_PPO}
+\end{table}
+
+\noindent After pre training, model is trained for $16\cdotp10^6$ time steps with 1000 steps per episode using PPO algorithm. \autoref{fig:PPO_LOG_16M} shows reward per episode and rolling average. Notice how model learned within 5000 episodes, and later reward is saturated within 500 to 600.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/PPOlog16M.eps}
+    \caption{Averaged episode reward for 16000 episodes of PPO training}
+    \label{fig:PPO_LOG_16M}
+\end{figure}
+\subsection{Test Results}
+Let us consider a test case, Neural Network based steering has to cancel attitude error in terms of Euler angles $\displaystyle \phi ,\theta ,\psi =[ -179\ ,\ -37,\ \ 140] \ \deg$ considering initial and final state shown in \autoref{tbl:nn_vscmg_states}
+\begin{table}[H]
+        \centering
+        
+\begin{tabular}{p{0.16\textwidth}|p{0.50\textwidth}|p{0.2\textwidth}}
+\toprule 
+ Parameter & Value & Unit \\
+\midrule 
+ $\displaystyle q$ & $\displaystyle [ 0.3036\ \ \ \ 0.3228\ \ \ -0.8891\ \ \ -0.1146]^{T}$ & - \\
+\hline 
+ $\displaystyle \omega $ & $\displaystyle [ 0\ 0\ 0]^{T}$ & $\displaystyle \deg /\sec$ \\
+\hline 
+ $\displaystyle q_{d}$ & $\displaystyle [ 1\ 0\ 0\ 0]^{T}$ & - \\
+\hline 
+ $\displaystyle \omega _{d}$ & $\displaystyle [ 0\ 0\ 0]^{T}$ & $\displaystyle rad/\sec$ \\
+\hline 
+ $\displaystyle \delta $ & $\displaystyle [ -0.7729\ \ \ \ 1.2424\ \ \ \ 0.6058\ \ \ \ 2.6412]^{T}$ & $\displaystyle rad$ \\
+\hline 
+ $\displaystyle \Omega $ & $\displaystyle [ 0\ 0\ 0\ 0]^{T}$ & $\displaystyle rad/\sec$ \\
+ \bottomrule
+\end{tabular}
+        \caption{Initial and desired states for Attitude error tracking with Neural Network based VSCMG steering Law }
+        \label{tbl:nn_vscmg_states}
+        \end{table}
+Results of error canceling maneuver using Neural network based steering are in \autoref{fig:nn__Torque_1} to \autoref{fig:nn__Omega_dot}. Being long slew maneuver, initial attitude error was large as consequence large demand torque variation can seen in first few seconds although after 10 seconds.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/nn__Torque.eps}
+    \caption{NN based steering: Required torques}
+    \label{fig:nn__Torque_1}
+\end{figure}
+Variations in reaction wheels spins are more than that compared to gimbal angles, hence we can infer neural network has prioritized RWs over CMGs for this maneuver.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/nn__delta.eps}
+    \caption{NN based steering: Gimbal angles}
+    \label{fig:nn__delta}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/nn__Omega.eps}
+    \caption{NN based steering: RW velocities}
+    \label{fig:nn__Omega}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/nn__Delta_dot.eps}
+    \caption{NN based steering: Gimbal Velocities}
+    \label{fig:nn__Delta_dot}
+\end{figure}
+\autoref{fig:nn__Delta_dot} and \autoref{fig:nn__Omega_dot} are control action performed by agent. Notice order of magnitude of RW accelerations and gimbal velocities are within permissible range and no large variation occurred.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/plots/RL/nn__Omega_dot.eps}
+    \caption{NN based steering: RW Accerlations}
+    \label{fig:nn__Omega_dot}
+\end{figure}
+Output data of neural network can be amplified or attenuated based on steady state requirements, moreover different activation functions at output layer can be used. A GUI based script is developed in order to monitor states and 3d visualization of VSCMG. Screenshot of testing trained PPO model is shown in \autoref{fig:model_explorer}. Main advantage of script is along with plots, attitude command and other model related parameters can be updated in real time, giving user an option for better calibrating the ACS according to required performance. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/AI/ModelExplorer1.png}
+    \caption{VSCMG Model and expert agent Testing GUI}
+    \label{fig:model_explorer}
+\end{figure}
 
