@@ -114,28 +114,28 @@ Sab ki dua
 
 % List of Tables
 \listoftables
-\addcontentsline{toc}{chapter}{\listtablename}
+%\addcontentsline{toc}{chapter}{Tables}
 
 % List of Figures
 \listoffigures
-\addcontentsline{toc}{chapter}{\listfigurename}
+%\addcontentsline{toc}{chapter}{Figures}
 
 % List of Acronyms (short forms)
 \printglossary[type=\acronymtype, title=List of Acronyms]
-\addcontentsline{toc}{chapter}{List of Acronyms}
+\addcontentsline{toc}{chapter}{Acronyms}
 % Some Acronyms
 %\newacronym{cmg}{CMG}{Control Moment Gyroscope}
 % usagee \acrfull{cmg}
 
 % List of Glossary
 \printglossary[title=List of Terms]
-\addcontentsline{toc}{chapter}{List of Terms}
+\addcontentsline{toc}{chapter}{Glossary}
 
 
 % List of Nomenclature renamed as Abbreviations
-\renewcommand{\nomname}{List of Abbreviations}
+\renewcommand{\nomname}{Abbreviations}
 \printnomenclature
-\addcontentsline{toc}{chapter}{List of Abbreviations}
+\addcontentsline{toc}{chapter}{Abbreviations}
 % \mbox{}
 
 
@@ -235,6 +235,8 @@ process is similar to that used for the \acrfull{lcm}.
 \input{include/mainmatter/Chapter_9}
 % Conclusion
 \input{include/mainmatter/Chapter_10}
+\begin{comment}
+\end{comment}
 
 %\include{filename}
 \begin{comment}
