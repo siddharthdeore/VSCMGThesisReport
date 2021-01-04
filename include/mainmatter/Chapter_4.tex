@@ -88,13 +88,13 @@ q_{e,v}
 \end{equation}
 Similar approach will be used to derive ``Reward Function'' for training Neural Netrwork policy with \acrfull{rl} methods.
 \subsection{The Lyapunov Candidate Function}
-Based on previously developed analogy of quaternion tracking error and angular velocity tracking error, for shifted target equilibrium candidate Lyapunov function is selected as
+Based on previously developed analogy of quaternion tracking error and angular velocity tracking error, for shifted target equilibrium candidate Lyapunov function is selected as \cite{Wie1989}
 
 \begin{equation}
 \mathcal{V} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1} J\omega _{e} +q_{e,v} q^{T}_{e,v} +( q_{e,0} -1)^{2}
 \label{eqn:lyp_first}
 \end{equation}
-Here. $\displaystyle J$ is inertia tensor of complete spacecraft and function and $\displaystyle \mathbf{K}^{-1}_{3\times 3}$ is positive definite matrix. consequently $\displaystyle \mathcal{V}$ guaranties to be positive definite since all the terms in \autoref{eqn:lyp_first} are in quadratic form. From \autoref{eqn:qe_zero} we can deduce that that Candidate becomes zero when velocity tracking error and quaternion error becomes zero. With unit norm quaternion property
+Here, $\displaystyle J$ is inertia tensor of complete spacecraft and function and $\displaystyle \mathbf{K}^{-1}_{3\times 3}$ is positive definite matrix. consequently $\displaystyle \mathcal{V}$ guaranties to be positive definite since all the terms in \autoref{eqn:lyp_first} are in quadratic form. From \autoref{eqn:qe_zero} we can deduce that that Candidate becomes zero when velocity tracking error and quaternion error becomes zero. With unit norm quaternion property
 \begin{equation}
 q^{2}_{e,0} +q_{e,v} q^{T}_{e,v} =1
 \end{equation}
@@ -107,7 +107,7 @@ Using above relation Lyapunov Candidate function is reduced to
 \mathcal{V} =\frac{1}{2} \omega ^{T}_{e}\mathbf{K}^{-1} J\omega _{e} +2( 1-q_{e,0})
 \label{eqn:lyp_first_reduced}
 \end{equation}
-Another popular candidate function selected for regulation is purely based on kinetic energy of spacecraft which is
+Another popular candidate function selected for regulation is purely based on kinetic energy of spacecraft which is \cite{Leve2015}
 \begin{equation}
 \mathcal{V} =\frac{1}{2} \omega ^{T} J\omega 
 \end{equation}

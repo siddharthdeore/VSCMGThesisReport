@@ -10,7 +10,7 @@
 \usepackage[utf8]{inputenx}
 \usepackage{hyperref}
 \hypersetup{
-	pdftitle={Neural Network Based steering of Variable Speed Control Moment Gyroscope},
+	pdftitle={Neural Network Based steering and Hardware in Loop Simulation of Variable Speed Control Moment Gyroscope},
 	pdfauthor={Siddharth Nimbajirao Deore}}
 
 
@@ -45,10 +45,11 @@
 \usepackage[acronym]{glossaries}
 \makeglossaries
 
+\usepackage{etoolbox}
 
 
 % Remove in a normal thesis
-\usepackage{lipsum}
+%\usepackage{lipsum}
 \usepackage{curve2e}
 \definecolor{gray}{gray}{0.4}
 \newcommand{\bs}{\textbackslash}
@@ -130,46 +131,78 @@ Sab ki dua
 % List of Glossary
 \printglossary[title=List of Terms]
 \addcontentsline{toc}{chapter}{Glossary}
+\nomlabelwidth=30mm 
 
+\renewcommand\nomgroup[1]{%
+  \item[\bfseries
+  \ifstrequal{#1}{A}{Spacecraft Attitude Dynamics}{%
+  \ifstrequal{#1}{B}{AI based Learning Agent}{%
+  \ifstrequal{#1}{C}{Other Symbols}{}}}%
+]}
 
 % List of Nomenclature renamed as Abbreviations
-\renewcommand{\nomname}{Abbreviations}
+%\renewcommand{\nomname}{Abbreviations}
 \printnomenclature
-\addcontentsline{toc}{chapter}{Abbreviations}
+%\addcontentsline{toc}{chapter}{Abbreviations}
 % \mbox{}
 
 
 
 % add nomenclatures as you write latter it will update here
-\nomenclature[01]{$\mathcal{F}_i$}{Inertial reference frame}
-\nomenclature[02]{$\mathcal{F}_b$}{Body fixed reference frame}
-\nomenclature[03]{$\mathcal{F}_{g}$}{Gimbal Reference frame}
-\nomenclature[04]{$\mathbf{R}$}{Rotation matrix}
-\nomenclature[05]{$\mathbf{q}$}{Quaternion}
-\nomenclature[07]{$q_i$}{Components of Quaternion $i\in\{0,1,2,3\}$}
-\nomenclature[08]{${q_v}$}{vector component of quaternion}
-\nomenclature[09]{$\mathbf{q_d}$}{Desired attitude quaternion}
-\nomenclature[10]{$\mathbf{q_e}$}{Attitude error quaternion}
-\nomenclature[11]{$\mathbf{\omega}$}{Angular velocity vector}
-\nomenclature[12]{$\mathcal{T}$}{Kinetic Energy}
-\nomenclature[13]{$\mathcal{H}$}{Angular momentum}
-\nomenclature[14]{$\mathcal{H}_P$}{Angular momentum of platform}
-\nomenclature[15]{$\mathcal{H}_{CMG}$}{Angular momentum of CMG system}
-\nomenclature[16]{$\mathcal{H_{W}}$}{Angular momentum of Reaction wheel}
-\nomenclature[17]{$\mathcal{H}_{u}$}{Angular momentum component along singular direction}
-\nomenclature[18]{$\mathbf{\tau_e}$}{Environmental Torques}
-\nomenclature[19]{$\mathbf{\tau_d}$}{Disturbance Torques}
-\nomenclature[20]{$\mathbf{u}$}{Control Torque}
-\nomenclature[21]{$ J_p$}{Platform inertia tensor}
-\nomenclature[22]{$J_{W}$}{Reaction Wheel inertia}
-\nomenclature[23]{$J_{G}$}{Gimbal inertia}
-\nomenclature[24]{$J_{CMG}$}{CMG inertia tensor}
-\nomenclature[25]{$\hat{\mathbf{g}}$}{Gimbal Axis}
-\nomenclature[26]{$\hat{\mathbf{s}}$}{Spin Axis}
-\nomenclature[27]{$\hat{\mathbf{t}}$}{Transverse Axis}
-\nomenclature[28]{$\Omega$}{Reaction Wheel angular velocity}
-\nomenclature[29]{$\delta$}{Gimbal angle}
-\nomenclature[30]{$\beta$}{VSCMG pyramid skew angle}
+\nomenclature[A, 01]{$\mathcal{F}_i$}{Inertial reference frame}
+\nomenclature[A, 02]{$\mathcal{F}_b$}{Body fixed reference frame}
+\nomenclature[A, 03]{$\mathcal{F}_{g}$}{Gimbal Reference frame}
+\nomenclature[A, 04]{$\mathbf{R}$}{Rotation matrix}
+\nomenclature[A, 05]{$\mathbf{q}$}{Quaternion}
+\nomenclature[A, 07]{$q_i$}{Components of Quaternion $i\in\{0,1,2,3\}$}
+\nomenclature[A, 08]{${q_v}$}{vector component of quaternion}
+\nomenclature[A, 09]{$\mathbf{q_d}$}{Desired attitude quaternion}
+\nomenclature[A, 10]{$\mathbf{q_e}$}{Attitude error quaternion}
+\nomenclature[A, 11]{$\mathbf{\omega}$}{Angular velocity vector}
+\nomenclature[A, 12]{$\mathcal{T}$}{Kinetic Energy}
+\nomenclature[A, 13]{$\mathcal{H}$}{Angular momentum}
+\nomenclature[A, 14]{$\mathcal{H}_P$}{Angular momentum of platform}
+\nomenclature[A, 15]{$\mathcal{H}_{CMG}$}{Angular momentum of CMG system}
+\nomenclature[A, 16]{$\mathcal{H_{W}}$}{Angular momentum of Reaction wheel}
+\nomenclature[A, 17]{$\mathcal{H}_{u}$}{Angular momentum component along singular direction}
+\nomenclature[A, 18]{$\mathbf{\tau_e}$}{Environmental Torques}
+\nomenclature[A, 19]{$\mathbf{\tau_d}$}{Disturbance Torques}
+\nomenclature[A, 20]{$\mathbf{u}$}{Control Torque}
+\nomenclature[A, 21]{$ J_p$}{Platform inertia tensor}
+\nomenclature[A, 22]{$J_{W}$}{Reaction Wheel inertia}
+\nomenclature[A, 23]{$J_{G}$}{Gimbal inertia}
+\nomenclature[A, 24]{$J_{CMG}$}{CMG inertia tensor}
+\nomenclature[A, 25]{$\hat{\mathbf{g}}$}{Gimbal Axis}
+\nomenclature[A, 26]{$\hat{\mathbf{s}}$}{Spin Axis}
+\nomenclature[A, 27]{$\hat{\mathbf{t}}$}{Transverse Axis}
+\nomenclature[A, 28]{$\Omega$}{Reaction Wheel angular velocity}
+\nomenclature[A, 29]{$\delta$}{Gimbal angle}
+\nomenclature[A, 30]{$\beta$}{VSCMG pyramid skew angle}
+
+
+\nomenclature[B, 01]{$s \in \mathcal{S}$}{States}
+\nomenclature[B, 02]{$a \in \mathcal{A}$}{Actions}
+\nomenclature[B, 03]{$r \in \mathcal{R}$}{Rewards}
+\nomenclature[B, 04]{$\gamma$}{Discount factor $ 0 < \gamma \leq 1$}
+\nomenclature[B, 05]{$G_t$}{Discounted future reward}
+\nomenclature[B, 06]{$P(s', r \vert s, a)$}{Transition probability of getting to the next state $s$′ from the current state $s$ with action $a$ and reward $r$}
+\nomenclature[B, 07]{$\pi_\theta(.)$}{Policy parameterized by $\theta$}
+\nomenclature[B, 08]{$\pi(a \vert s)$}{Stochastic policy (agent behavior strategy) }
+\nomenclature[B, 09]{$\mu(s)$}{Deterministic policy; Either $\pi$ or $\mu$ is learned through reinforcement learning algorithm}
+\nomenclature[B, 10]{$V_w(.)$}{Value function parameterized by $w$}
+\nomenclature[B, 11]{$V(s)$}{State-value function measures the expected return of state}
+\nomenclature[B, 12]{$V^\pi(s)$}{The value of state $s$ with policy $\pi$ is followed}
+\nomenclature[B, 13]{$Q_w(.)$}{ Action value function parameterized by $w$}
+\nomenclature[B, 14]{$Q(s, a)$}{Action-value function 
+evaluates the expected return of a pair of state and action $(s,a)$}
+\nomenclature[B, 15]{$Q^\pi(s, a)$}{the value of (state, action) pair with policy $\pi$ is followed}
+\nomenclature[B, 16]{$A(s, a)$}{Advantage function $A(s, a) = Q(s, a) - V(s)$}
+\nomenclature[B, 17]{$J(\theta)$}{Reward function}
+\nomenclature[B, 18]{$d^\pi(s)$}{stationary distribution of Markov chain for $\pi_\theta$}
+\nomenclature[B, 19]{$L(\theta)$}{Policy Loss}
+
+
+
 
 
 
