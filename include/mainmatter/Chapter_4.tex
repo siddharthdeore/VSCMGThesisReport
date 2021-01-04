@@ -5,12 +5,12 @@ In the interest of trajectory tracking and regulation maneuver during mission li
     \centering
     \input{figures/tikFeedbackControlArch}
     %\includegraphics{}
-    \caption{VSCMG Spacecraft Control Architecture}
+    \caption{VSCMG Spacecraft Attitude Control Architecture}
     \label{fig:control_architecture}
 \end{figure}
 
 \section{Lyapunov Stability Method}
-Lyapunov stability is widely used methods for continuous time nonlinear systems, two methods proposed by Aleksandr Lyapunov in1892 are indirect method in which behavior linearized system about equilibrium point is examined whereas direct method to verify stability of nonlinear system by inspecting evaluation of "lyapunov function" an energy like positive definite function composed of \ system states. If the carefully constructed scalar function decreases over time, the system under study is proved to be stable. It is possible to realize controller which dissipates selected scalar function.
+Lyapunov stability is widely used methods for continuous time nonlinear systems, two methods proposed by Aleksandr Lyapunov in 1892 are indirect methods \cite{Liapunov1968} in which behavior of linearized system about equilibrium point is examined, whereas direct method to verify stability of nonlinear system by inspecting evaluation of "lyapunov function" an energy like positive definite function composed of \ system states. If the carefully constructed scalar function decreases over time, the system under study is proved to be stable. It is possible to realize controller which dissipates selected scalar function.
 
 Consider continuous, time-invariant nonlinear system with state $\displaystyle x$ and control input $\displaystyle u$.
 \begin{equation*}

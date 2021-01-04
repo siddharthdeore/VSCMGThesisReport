@@ -365,7 +365,7 @@ z & z >0\\
 \label{tbl_act_func}
 \end{table}
 
-\newacronym{mlp}{MLP}{Multi Layer Perceptron (MLP)}
+\newacronym{mlp}{MLP}{Multi Layer Perceptron}
 \subsection{Multi Layer Perceptron}
 \acrlong{mlp} is a complex network of perceptrons connected based on various architectures. Most common method is feed forward neural network. Neurons are grouped in a single stage called a layers. Every unit in a layer is connected to all units of previous layers. Three distinct layers are Input, Hidden and Output. Data enters from input and passes thorough hidden layers finally emitted from output layer. Hidden layers are not accessible to external world hence the name. Shallow neural network has one hidden layer as opposed to Deep neural networks, which may have multiple hidden layers, an example shown in \autoref{fig:mlp}. With properly chosen weights, Neural network can approximate any nonlinear function. Process of finding weights is called training an iterative process where data is passed from input layer and based on error between evaluated and expected output weights are updated in backward direction layer by layer, process referred as propagation.
 \begin{figure}
@@ -410,11 +410,12 @@ Starting with fundamentals discussed in earlier sections, a neural network is tr
     \caption{Neural Network based VSCMG Spacecraft Steering and Control Architecture}
     \label{fig:nn_control_architecture}
 \end{figure}
-\subsection{RL Agent}
+\subsection{Reinforcement Learning Agent}
 As previously reported Reinforcement Learning based strategy has an ``Agent'' learns a policy in this case a \acrshort{mlp} policy by interacting with environment in order to maximize the received reward. The observation space of agent is states that agent can precept and action space is actuators that agent can act on. \acrshort{mlp} policy is designed such a way that input layer is observation space and output layer is action space. In order to train the model a critic network is required, input layer of critic is sum observation space and action space while only one output.
-\subsubsection{Training Procedure}
-With regard to \autoref{fig:ppo_flowchart} a custom environment with complete VSCMG dynamical equation of motion stepper compatible with OpenAI Gym \cite{OpenAIGym} is developed in python. This environment evolves predefined time-step at each call, although time-steps considered are order of magnitude of milliseconds environment takes multiple intermediate time-steps based on adaptive  Runge–Kutta Cash–Karp method in order to preserve accuracy of numerical integration. After integrating for one step environment returns observations, action, reward and few status parameters for monitoring learning process. It is realised that python based \newacronym{ode}{ODE}{Ordinary Differential Equation} \acrfull{ode} integrator is slow and knowing the fact that simulation time must be in magnitude of millions of seconds, entire equation of motion is developed in C++ with Boost library \cite{abrahams2003building} for high performance \acrshort{ode} integrator. The developed Dynamical Linked Library(DLL) has exported interface with python consequently increasing performance and speed of simulation. Tensorflow and Open Source machine learning library has been used to train the agent. Along with plots of system states, OpenGL based real time 3D visualization of VSCMG is devolved in order to have better understanding of system dynamics. Some core components of VSCMG Environment are 
-\subsubsection{Observation Space}
+\newacronym{dll}{DLL}{Dynamical Linked Library}
+\subsection{Training Procedure}
+With regard to \autoref{fig:ppo_flowchart} a custom environment with complete VSCMG dynamical equation of motion stepper compatible with OpenAI Gym \cite{OpenAIGym} is developed in python. This environment evolves predefined time-step at each call, although time-steps considered are order of magnitude of milliseconds environment takes multiple intermediate time-steps based on adaptive  Runge–Kutta Cash–Karp method in order to preserve accuracy of numerical integration. After integrating for one step environment returns observations, action, reward and few status parameters for monitoring learning process. It is realised that python based \newacronym{ode}{ODE}{Ordinary Differential Equation} \acrfull{ode} integrator is slow and knowing the fact that simulation time must be in magnitude of millions of seconds, entire equation of motion is developed in C++ with Boost library \cite{abrahams2003building} for high performance \acrshort{ode} integrator. The developed \acrfull{dll} has exported interface with python consequently increasing performance and speed of simulation. Tensorflow and Open Source machine learning library has been used to train the agent. Along with plots of system states, OpenGL based real time 3D visualization of VSCMG is devolved in order to have better understanding of system dynamics. Some core components of VSCMG Environment are 
+\subsection{Observation Space}
 Choice of observation can be a vector of states comprising quaternion error, body rate error, RW velocities and gimbals angles. Since outer loop is of control remains same, for steering law observation which is input layer of policy layer is selected as vector comprising demand torque, gimbal angles and RW velocities. This reduced length observation space from $\displaystyle 15$ to 11, keeping information of attitude error and rate error in the form of required torque. Selecting reduced observation space also played important role for redaction in storage requirements. Since for supervised learning, large amount of trajectory with input output pairs need to be stored.
 \begin{equation}
 s_{11\times 1} =\begin{pmatrix}
@@ -440,14 +441,14 @@ Selection of reward function is crucial process, with a good reward function age
 
 \begin{equation}
 \begin{aligned}
-r_t & =k_{0} \ \exp\left( -\mathbf{\tau }^{T}_{c}\mathbf{\tau }_{c}\right)\\
+R & =k_{0} \ \exp\left( -\mathbf{\tau }^{T}_{c}\mathbf{\tau }_{c}\right)\\
  & +\ k_{1}\det\left( QQ^{T}\right) \ \\
  & +\ k_{2} \ \ln\left(\det\left( CC^{T}\right)\right)\\
  & +\ k_{3}\ln\left(\det\left( DD^{T}\right)\right)
 \end{aligned}
 \end{equation}with $\displaystyle k_{1} ,k_{2} \ and\ k_{3}$ are positive constants to weight distance from VSCMG, CMG and RW singularities.
 \section{Training}
-Initially trajectories of state action pairs are generated using Monte-Carlo Simulation of VSCMG based steering law (expert agent) for 3000 episodes with 1000 steps of time $\Delta t=0.01sec$ each eposode starting with random initial states and attitude error. Supervised learning is used to pretrain the agent in order to reduce training time. Pre trained model is later trained with PPO algorithm shown in \autoref{fig:ppo_flowchart} with hyper parameters configuration set as \autoref{tbl_hyperparam_PPO}. Apart from 11 neurons in input and 8 neurons in output Policy network has 7 fully connected hidden layers having architecture of neurons in each layer as [32,64,64,64,64,32,16] with tanh activation hence total of 355 Neurons in a policy. Value function has same hidden layer configuration as policy network but 19 neurons in input layer (11 observations and 8 actions of policy layer) and only one neuron in output layer making total of 356 neurons in value network.
+Initially trajectories of state action pairs are generated using Monte-Carlo Simulation of VSCMG based steering law (expert agent) for 3000 episodes with 1000 steps of time $\Delta t=0.01sec$ each eposode starting with random initial states and attitude error. Supervised learning implementation using Tensorflow \cite{tensorflow2015-whitepaper} an Open Source library to develop and train \newacronym{ml}{ML}{Machine Learning} \acrshort{ml} library is used to pretrain the agent in order to reduce training time. Pre trained model is later trained with PPO algorithm shown in \autoref{fig:ppo_flowchart} with hyper parameters configuration set as \autoref{tbl_hyperparam_PPO}. Apart from 11 neurons in input and 8 neurons in output Policy network has 7 fully connected hidden layers having architecture of neurons in each layer as [32,64,64,64,64,32,16] with tanh activation hence total of 355 Neurons in a policy. Value function has same hidden layer configuration as policy network but 19 neurons in input layer (11 observations and 8 actions of policy layer) and only one neuron in output layer making total of 356 neurons in value network.
 
 \begin{figure}[H]
     \centering

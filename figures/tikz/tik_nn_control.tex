@@ -33,17 +33,17 @@
     \node [output,right of=sys,node distance=2cm] (output){};
     
     
-    \draw [draw,->] (input) -- node {$r$} (sum);
+    \draw [draw,->] (input) -- node[anchor=south east] {$q_d,\omega_d$} (sum);
     \draw[->](sum)--node {$e$}(ctrl);
     \draw[->](ctrl)--node {$\tau_c$}(str);
-    \draw[->](str)--node {}(cmg);
+    \draw[->](str)--node[anchor=south east] {$ \ \dot{\delta} $}node[anchor=north east] {$ \ \dot{\Omega}$}(cmg);
     \draw[->](cmg)--node {$\tau_{a}$}(sys);
-    \draw[->](sys)-- node [name=y] {$y$}(output);
+    \draw[->](sys)-- node [name=y] {$q,\omega$}(output);
     \node[tmp,below of=sys,node distance=1.5cm](fo1){};
     \node[tmp,below of=y,node distance=2.5cm](fo2){};
     \draw[->](y)--(fo2)-|node[pos=0.99] {$-$} 
-        node [near start] {Spacecraft State feedback}(sum);
-    \draw[->](sys)--(fo1)-|node [near start] {VSCMG State feedback}(str);
+        node [near start] {Spacecraft Quaternion and body rate feedback ($q,\omega$)}(sum);
+    \draw[->](sys)--(fo1)-|node [near start] {VSCMG State feedback ($\delta,\Omega$)}(str);
 
 
 \end{tikzpicture}

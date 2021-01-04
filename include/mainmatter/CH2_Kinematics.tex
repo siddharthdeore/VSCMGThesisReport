@@ -19,7 +19,7 @@ Three mutually perpendicular basis vectors describes reference frame in Euclidea
 \label{eqn:rotmat}
 \end{equation}
 
-$ R$ is real and orthogonal matrix with eigenvalues $ \left\{1,e^{\pm i\theta }\right\}$, with unit determinant. Successive rotations are represented as product of matrix in order of rotation performed.
+\noindent $ R$ is real and orthogonal matrix with eigenvalues $ \left\{1,e^{\pm i\theta }\right\}$, with unit determinant. Successive rotations are represented as product of matrix in order of rotation performed.
 
 
 \begin{equation}
@@ -46,7 +46,7 @@ With dextro-rotation assumption, $ \mathbf{R}$ moves the vectors but not co-ordi
 \subsection{Davenport chained rotations}
 Davenport chained rotations are three chained sequence of consecutive intrinsic rotation about body-fixed axes. Based on number of axes used to represent rotation Davenport chain rotations are characterized in two types, "Generalized Euler rotations" if two rotation occurs about same axis and "Generalized Tait–Bryan rotations" if each rotations occur about different axis. Order in which rotations are performed is not cumulative so must be specified. Three numbers indicates axis about which rotations are performed. For example Euler 313 commonly used in aerodynamics to describe satellites position with other parameters. Sequence involves first rotation about third axis, second rotation about first axis and finally, third rotation about third axis. Tait-Bryan angle sequence 123 is commonly used t describe attitude of aircraft and individual rotation is called roll, pitch and yaw ($ \phi ,\theta ,\psi $). Classic Euler angles are first introduced by Euler for orbital mechanics and rigid body dynamics. Problem with classic Euler angle is, they become singular near zero angles, on the other hand Tait–Bryan angles become singular when second rotation is $ \pi/2$ condition also referred as Gimble Lock. \\
 
-\noindent Elaboration of Tait–Bryan $ R_{123}$ is product of three individual coordinate rotation about each axis$ R_{i} :\mathbb{R}\longrightarrow SO( 3)$ for $ i\in \{1,2,3\}$ as shown below:
+\noindent Elaboration of Tait–Bryan $ R_{123}$ is product of three individual coordinate rotation about each axis $R_{i} :\mathbb{R}\longrightarrow SO( 3)$ for $ i\in \{1,2,3\}$ as shown below:
 
 
 \begin{equation*}
@@ -123,7 +123,7 @@ q_{0}\\
 -\mathbf{q}
 \end{bmatrix} \ \\
 \| \mathbf{q} \| =\sqrt{\mathbf{qq}^{*}} =\sqrt{q^{2}_{0} +q^{2}_{1} +q^{2}_{2} +q^{2}_{3}}\\
-\mathbf{q}^{-1} =\frac{\mathbf{q}^{*}}{\| \mathbf{q} \| ^{2}}
+\mathbf{q}^{-1} =\frac{\mathbf{q}^{*}}{\| \mathbf{q}_v \| ^{2}}
 \end{gather}
 Quaternion product is noncommutative, defined in terms of scalar and vector part, product of two quaternion $\displaystyle \mathbf{q}_{1}$ and $\displaystyle \mathbf{q}_{2}$ evaluated as 
 \begin{equation}
@@ -142,7 +142,7 @@ q_{1,0} q_{2,v} +q_{2,0} q_{1} +\mathbf{q ^{\times }_{1} q}_{2,v}
 \end{bmatrix}
 \end{aligned} \ 
 \end{equation}
-Unit quaternions are special class of quaternion which poses following property
+Hereafter, unit norm quaternions, a special class of quaternion are followed throughout the thesis which poses following property
 \begin{equation}
 \| \mathbf{q} \| =\sqrt{q^{2}_{0} +q^{2}_{1} +q^{2}_{2} +q^{2}_{3}} =1
 \end{equation}
@@ -211,7 +211,7 @@ Kinematic relation of rigid body describes changing attitude over time of body f
 \begin{equation*}
 \mathbf{\omega } =\omega_{1}\hat{\mathbf{b}}_{1} +\omega_{2}\hat{\mathbf{b}}_{2} +\omega_{3}\hat{\mathbf{b}}_{3}
 \end{equation*}
-Then $\displaystyle ^{\mathcal{F}_{i}} d/dt\{\hat{\mathbf{b}}\}$ is derivative of $\displaystyle \mathcal{F}_{b}$ base vectors taken in $\displaystyle \mathcal{F} i$, applying transport theorem
+Then $\displaystyle \frac{^{\mathcal{F}_{i}}d}{dt}\{\hat{\mathbf{b}}\}$ is derivative of $\displaystyle \mathcal{F}_{b}$ base vectors taken in $\displaystyle \mathcal{F} i$, applying transport theorem
 \begin{equation}
 \frac{^{\mathcal{F}_{i}} d}{dt} \ \hat{\mathbf{b}}_{i} =\ \frac{^{\mathcal{F}_{b}} d}{dt} \ \hat{\mathbf{b}}_{i} +\ \mathbf{\omega } \times \ \hat{\mathbf{b}}_{i}
 \end{equation}

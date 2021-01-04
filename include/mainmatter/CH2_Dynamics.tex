@@ -3,7 +3,7 @@ In order to archive complete system dynamics of spacecraft with array of N - VSC
 \begin{equation*}
 \delta \vec{\mathbf{h}} =\ \vec{r} \times \delta m\mathbf{\vec{v}}
 \end{equation*}
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \input{figures/rigid_body}
     \caption{Representation of Rigid body rotation in space}
@@ -56,7 +56,7 @@ Total rotational kinetic energy is evaluated as:
 \subsection{System Representation}
 Let us consider a generic CMG attached to rigid free floating spacecraft body with respect to inertial frame $\displaystyle \mathcal{F}_{i}$ having basis $\displaystyle \{\hat{e}_{1} ,\hat{e}_{2} ,\hat{e}_{2}\}$ as shown in \autoref{fig:tikSGCMGFrame}. Body frame $\displaystyle \mathcal{F}_{b}$ with basis vector $\displaystyle \{\hat{b}_{1} ,\hat{b}_{2} ,\hat{b}_{2}\}$ is used to represent attitude of spacecraft with respect to \ $\displaystyle \mathcal{F}_{i}$. Another reference frame $\displaystyle \mathcal{F}_{g}$ attached to the center of mass having basis vector $\displaystyle \{\hat{g} ,\hat{s} ,\hat{t}\}$. Gimbal axis is aliened with unit vector $\displaystyle \hat{g}$ and spin axis attached to $\displaystyle \hat{s}$ and orthogonal to gimbal axis. Transverse axis $\displaystyle \hat{t}$ is described as $\displaystyle \hat{t} =\hat{g} \times \hat{s}$ making it mutually perpendicular to $\displaystyle \hat{g}$ and $\displaystyle \hat{s}$. Gimbal motor rotates $\displaystyle \hat{s}$ and $\displaystyle \hat{t}$ with respect to $\displaystyle \mathcal{F}_{b}$
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \input{figures/tikSGCMGFrame}
     \caption{Schematic illustration of Spacecraft with Momentum exchange device}
@@ -65,7 +65,7 @@ Let us consider a generic CMG attached to rigid free floating spacecraft body wi
 
 \subsection{Control Moment Gyro Model}
 A generic CMG contains a flywheel spinning at constant rate $\displaystyle \Omega $, spin axis is rotated about fixed axis (gimbal axis), this action exerts gyroscopic torque on spacecraft body. Rotation angle $\displaystyle \delta $ is referred as gimbal angle. \autoref{fig:tikCMG} shows generic control moment gyroscope and its axis representation.
-\begin{figure}[!h]
+\begin{figure}[!ht]
     \centering
     \input{figures/tikSGCMG}
     \caption{Axis definition for generic Control Moment Gyroscope}
@@ -275,9 +275,9 @@ Substituting \autoref{eqn:TorqueFreeEOM_xH} and \autoref{eqn:TorqueFreeEOM_xH} i
 
 %//////////////////END EOM/////////////////////
 Dynamical equation \autoref{eqn:EOM_FULL} is composition of contribution effects due to spacecraft angular velocity, gyroscopic effects the angular momentum of the entire system, variation of moment of inertia flywheel and gimbal velocities explained in \autoref{tab:vscmg_eom_explain} as reasoning \ of each terms contribution in entire system dynamics.A generalized dynamics for a satellite equipped with generic number of momentum exchange devices. We can see that this equation of motion comprises dynamics of reaction wheel, CMG and VSCMG 
-\begin{table}[!h]
+\begin{table}[!ht]
 \centering
-\begin{tabular}{p{0.25\textwidth}||p{0.75\textwidth}}
+\begin{tabular}{p{0.30\textwidth}||p{0.7\textwidth}}
 \toprule
 \begin{center} Contribution rationale  \end{center}& \begin{center}
      Term
