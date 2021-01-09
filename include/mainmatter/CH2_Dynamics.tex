@@ -372,9 +372,9 @@ Taking advantage from both reaction wheel and CMG for regulation maneuver to neu
 is combination of RW and torque amplification due to CMG. Trivial presence in CMG can be escaped with RW and high torques are generated with gyroscopic forces. This thesis focuses on VSCMG with pyramid cluster. In order to simplify numerical computation direction vectors can be arranged in matrix form. For n-VSCMG, Unit direction vectors of Gimbal, Spin and Transverse axis axis are evaluated based on their initial orientation
 
 \begin{gather}
-\mathcal{G}_{g} =[\hat{g}_{1} \cdots \ \hat{g}_{n}]_{3\times n} =\mathcal{G}_{g0} \notag\\
-\mathcal{G}_{s} \ =\ [\hat{s}_{1} \cdots \ \hat{s}_{n}]_{3\times n} =\mathcal{G}_{s0}\cos \delta +\mathcal{G}_{t0}\sin \delta  \notag\\
-\mathcal{G}_{t} \ =[\hat{t}_{1} \cdots \ \hat{t}_{n}]_{3\times n} =\mathcal{- G_{s0}\sin \delta +G}_{t0}\cos \delta 
+\mathcal{G}_{g} =[\hat{g}_{1} \cdots \ \hat{g}_{n}]_{3\times n} =\mathcal{G}_{g_0} \notag\\
+\mathcal{G}_{s} \ =\ [\hat{s}_{1} \cdots \ \hat{s}_{n}]_{3\times n} =\mathcal{G}_{s_0}\cos \delta +\mathcal{G}_{t_0}\sin \delta  \notag\\
+\mathcal{G}_{t} \ =[\hat{t}_{1} \cdots \ \hat{t}_{n}]_{3\times n} =\mathcal{- G}_{s_0}\sin \delta +\mathcal{G}_{t_0}\cos \delta 
 \end{gather}
 
 This thesis is focused on pyramid cluster of four VSCMG units. Single Gimbal Control Moment Gyroscope basis vectors, initially orientation of each CMG spin and gimbal axis is shown in \autoref{fig:VSCMGPyramid} with gimbal axis skewed by angle $\beta$.

@@ -85,7 +85,7 @@ Where, action-value of state action pair
 \begin{equation}
 Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_t \vert S_t = s, A_t = a]    
 \end{equation}
-Advantage function is difference between state-value and action value
+\textbf{Advantage function} $A(s,a)$ is difference between state-value and action value, it asses quality of selected action with respect to certain state.  
 \begin{equation}
     A_{\pi}(s, a) = Q_{\pi}(s, a) - V_{\pi}(s)
 \end{equation}
@@ -165,11 +165,11 @@ Consider the $\displaystyle \theta $ with $\displaystyle k$ dimensions is to be 
  and for analytical gradient of \ $\displaystyle J(\theta )$
 \begin{equation}
 \begin{aligned}
-J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )Q_{\pi } (s,a)\\
-\nabla J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \nabla \pi (a|s;\theta )Q_{\pi } (s,a)\\
- & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )\frac{\nabla \pi (a|s;\theta )}{\pi (a|s;\theta )} Q_{\pi } (s,a)\\
- & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s;\theta )\nabla \ln \pi (a|s;\theta )Q_{\pi } (s,a)\\
- & =\mathbb{E}_{\pi _{\theta }} [\nabla \ln \pi (a|s;\theta )Q_{\pi } (s,a)]
+J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s,\theta )Q_{\pi } (s,a)\\
+\nabla J(\theta ) & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \nabla \pi (a|s,\theta )Q_{\pi } (s,a)\\
+ & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s,\theta )\frac{\nabla \pi (a|s,\theta )}{\pi (a|s,\theta )} Q_{\pi } (s,a)\\
+ & =\sum _{s\in \mathcal{S}} d(s)\sum _{a\in \mathcal{A}} \pi (a|s,\theta )\nabla \ln \pi (a|s,\theta )Q_{\pi } (s,a)\\
+ & =\mathbb{E}_{\pi _{\theta }} [\nabla \ln \pi (a|s,\theta )Q_{\pi } (s,a)]
 \end{aligned}
 \end{equation}
 and finally, we get policy gradient theorem as
@@ -366,7 +366,7 @@ z & z >0\\
 \end{table}
 
 \newacronym{mlp}{MLP}{Multi Layer Perceptron}
-\subsection{Multi Layer Perceptron}
+\subsection{Multi Layer Perceptron policy}
 \acrlong{mlp} is a complex network of perceptrons connected based on various architectures. Most common method is feed forward neural network. Neurons are grouped in a single stage called a layers. Every unit in a layer is connected to all units of previous layers. Three distinct layers are Input, Hidden and Output. Data enters from input and passes thorough hidden layers finally emitted from output layer. Hidden layers are not accessible to external world hence the name. Shallow neural network has one hidden layer as opposed to Deep neural networks, which may have multiple hidden layers, an example shown in \autoref{fig:mlp}. With properly chosen weights, Neural network can approximate any nonlinear function. Process of finding weights is called training an iterative process where data is passed from input layer and based on error between evaluated and expected output weights are updated in backward direction layer by layer, process referred as propagation.
 \begin{figure}
     \centering
@@ -424,7 +424,7 @@ s_{11\times 1} =\begin{pmatrix}
 \mathbf{{\Omega }}
 \end{pmatrix}
 \end{equation}
-\subsubsection{Action Space}
+\subsection{Action Space}
 All Reaction wheel angular accelerations, and gimbal velocities are considered as action space which is output layer of Policy network.
 
 \begin{equation}
@@ -436,7 +436,7 @@ a_{8\times 1} =\begin{pmatrix}
 
 
 \noindent here gimbal velocity and angular acceleration bounded by actuator limit within $\displaystyle \mathbf{\dot{\delta }}_{4\times 1} \in \ [ -5,5] \ rad/\sec^{2}$ and \ $\displaystyle \mathbf{\dot{\Omega }}_{4\times 1} \in \ [ -30,30] \ rad/\sec$
-\subsubsection{Reward Function}
+\subsection{Reward Function}
 Selection of reward function is crucial process, with a good reward function agent quickly learns policy, with bad reward function, may stuck in to local maxima.Perhaps agent finds certain sequence of action which might not be the solution but still prefers since it is increasing reward. although there is no general method to find best reward function and it is chosen based on information about system with few iteration of trial and error. \ An example of torque based reward function with distance to singularity is shown below gives tenancy to move away from singularities.
 
 \begin{equation}

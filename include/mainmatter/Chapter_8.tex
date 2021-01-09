@@ -1,7 +1,55 @@
-\chapter{Electronics Design}
+\chapter{Embedded System Architecture}
 \label{chap:8}
-Wiring diagrams, communications, embedded system...
-ESP32, ESP8266, ESC, Stepper Driver, AMS5600 Batteries, Power Supply... 
+In this chapter electronics architecture along with communication scheme is briefly explained. Complete close loop SGCMG unit is realised. Each individual SGCMG unit consist of a three phase close loop brushless motor driver to control reaction wheel at specified angular velocity with given angular acceleration signal. Gimbal motor is driven with Stepper Motor Driver and a dedicated micro-controller which provides appropriate signal to both motor drivers. Angular velocity of gimbal motor is measured using magnetic encoder. Communication protocol is implemented such that each SGCMG unit has dedicated address and returns angular velocity of reaction wheel, angle and angular velocity of gimbal motor when input desired states are provided. Body states of platform such as attitude quaternions, angular rates are computed from 3 axis IMU with dedicated on board master micro-controller for platform. Entire testbed architecture is divided in following major subsystems:
+\begin{itemize}
+    \item Platform Master State Feedback System
+    \item Close Loop SGCMGs
+    \item Electrical Power Systems
+    \item Communication System
+    \item Ground Control Station Server
+\end{itemize}
+\section{Platform Master State Feedback System}
+Heart of testbench is master micro-controller has primary objective to evaluates platform orientation, body rates from an IMU and communicate in real time with Ground Control Station Server. It can also interact with other SGCMG units if VSCMG control is to be performed on board the platform.
+\subsection{Microcontroller}
+ESP32 an ultra low power MCU with integrated WiFi by Espressif Systems is used due to it's high performance dual core Tensilica Xtensa LX6 microprocessor running at 160 or 240 MHz, 39 GPIO and supports all standard embedded communication protocols such as 18 Analog-to-Digital Converter (ADC) channels, SPI, UART, I2C PWM output channels, Digital-to-Analog Converters (DAC) I2S interfaces etc, and requires very low power specifically 5V ~100mA(Max). \cite{web:ds_esp32}
+
+\subsection{IMU}
+Bosch Sensortech's BNO055 9 axis absolute orientation sensor is System in Package includes 3 axis 14-bit accelerometer, 3 axis magnetometer and 3 axis 16-bit gyroscope  and 32-bit microcontroller running on board sensor fusion algorithm.\cite{web:ds_BNO055}
+\newacronym{mcu}{MCU}{Microcontroller Unit}
+\newacronym{sda}{SDA}{Serial Data}
+\newacronym{scl}{SCL}{Serial Clock}
+\newacronym{pcb}{PCB}{Printed Circuit Board}
+\noindent A custom  \acrshort{pcb} is designed in order to make sure proper and rigid placement of IMU and its interface with microcontroller. Schematic and PCB is shown in \autoref{fig:intefeceIMU} I2C protocol is used to communicate between \acrfull{mcu} and BNO055. \acrshort{sda} and \acrshort{scl} of BNO is connected to GPIO21 and GPIO22 of \acrshort{mcu}. Firmware inside \acrshort{mcu} is programmed in order to update and evaluate current angular velocity and orientation quaternions using Sebastian Madgwick's sensor fusion algorithm \cite{madgwick2010efficient} and send states to Ground station.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/Electronics/intefeceSCH.pdf}
+         \caption{Schematic diagram}
+         \label{fig:intefeceSCH}
+     \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/Electronics/intefecePCB.pdf}
+         \caption{Printed Circuit Board}
+         \label{fig:intefecePCB}
+     \end{subfigure}
+    \caption{IMU interface board customized for BNO055 and ESP32. }
+    \label{fig:intefeceIMU}
+\end{figure}
+
+
+\section{Close Loop SGCMG}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Assembly/sgcmg_wiring.pdf}
+    \caption{Schematic diagram of Close loop SGCMG electronics and wiring}
+    \label{fig:sch_sgcmg_wiring}
+\end{figure}
+\section{Electrical Power System}
+\section{Communication}
+
 \begin{comment}
 
 
