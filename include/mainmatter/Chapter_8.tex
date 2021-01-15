@@ -124,7 +124,7 @@ Most important part of \acrshort{vscmg} \acrshort{acs} testbed is its novel grou
 \newacronym{crc}{CRC}{Cyclic Redundancy Check}
 Since each SGCMG unit and master platform has its own WiFi enabled \acrshort{mcu}, all the communication requirements are solved using standard network protocol in particular \acrfull{udp} due to simplicity of implementation and fast communication speed with least latency. Ground station server listens on port 3333 over UDP protocol. Each MCU on board as soon as powered on connected to same network SSID of server start transmitting their respective states packaged in specific format to server on same port 3333. As soon as server receives the states from all MCUs it updates all the state variables on GUI simultaneously replies with the command signals for particular MCU. Server communication loop is running at 1000Hz and can easily increased which is far beyond actuator and sensor loop time requirements for this reason even though control and steering law is ported on server computer high speed communication simulates as if control is happening inside on board computer. In this thesis a custom messaging protocol designed on the top of UDP is developed. String of bytes transmitted or received on UDP buffer. There are three different types of message packets. A telemetry payload described in \autoref{tbl:tlm_c2s} is 7 byte packet transmitted from SGCMG to server it contains unique 8bit address of MCU, gimbal angle and reaction wheel angular velocity represented in two bytes each. Last two bytes are \acrfull{crc} computed with buffer starting from byte 0 to byte 4.
 
-\begin{table}[!h]
+\begin{table}[ht]
         \centering
 \begin{tabular}{|p{0.1\textwidth}|p{0.2\textwidth}|p{0.6\textwidth}|}
 \hline 
@@ -145,11 +145,46 @@ Since each SGCMG unit and master platform has its own WiFi enabled \acrshort{mcu
  6 & CRC\_L & CRC low byte \\
  \hline
 \end{tabular}
-        \caption{Telemetry Payload from SGCMG to Server}
+        \caption{Telemetry packet from SGCMG to Server}
         \label{tbl:tlm_c2s}
         \end{table}
+
+\noindent An example of SGCMG 1 hexadecimal byte string packet with address gimbal angle 60 deg and reaction wheel angular velocity 50 deg/sec is as follows:
+\begin{equation*}
+\texttt{[0x50 0xAA 0xAA 0xBF 0xFF 0x84 0xD5]}
+\end{equation*}
+\noindent here \texttt{0x50} is address of MCU, next two bytes \texttt{0xAA 0xAA} represent gimbal angle and \texttt{0xBF 0xFF} represent angular velocity of reaction wheel finaly last two bytes are computed CRC16 checksum.
+Gimbal angle -180.0 $\deg$ to 180.0 $\deg$ is represented in two bytes as per following conversion factor:
+\begin{equation}
+    (\texttt{word})Angle=(angle+180)\frac{65536}{360}
+\end{equation}
+Angular velocity range -100.0 $\deg/\sec$ to 100.0 $\deg/\sec$ is represented in two bytes as per following conversion factor:
+\begin{equation}
+    (\texttt{word})Velocity=(velocity+100)\frac{65536}{200}
+\end{equation}
+
+Element of quaternion vector ranging from -1.0 to 1.0  is represented in two bytes as per following conversion factor:
+\begin{equation}
+    (\texttt{word})Quaternion=(quaternion_i+1)32768
+\end{equation}
+Decomposition of 2 byte = 1 word (16bit) in to chunks of 8bits is represented as high and low byte as given in \autoref{tbl:byteoreder} 
+
+\begin{table}[ht]
+        \centering
+\begin{tabular}{|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|p{0.022\textwidth}|}
+\hline 
+ bit & 15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
+\hline 
+  & \multicolumn{8}{l|}{\texttt{High Byte}} & \multicolumn{8}{l|}{\texttt{Low Byte}} \\
+ \hline
+\end{tabular}
+        \caption{Composition of Leftmost and rightmost byte of 16 bit word.}
+         \label{tbl:byteoreder}
+
+        \end{table}
+
 \noindent Command packet transmitted to SGCMG shown in \autoref{tbl:tlm_s2c} contains address of destination MCU, 2 byte data of magnetic encoder offset correction, command gimbal angular velocity, and command reaction wheel angular velocity ended with 2 bytes of CRC.
-\begin{table}[!h]
+\begin{table}[ht]
         \centering
 \begin{tabular}{|p{0.10\textwidth}|p{0.20\textwidth}|p{0.60\textwidth}|}
 \hline 
@@ -174,14 +209,14 @@ Since each SGCMG unit and master platform has its own WiFi enabled \acrshort{mcu
  8 & CRC\_L & CRC low byte \\
  \hline
 \end{tabular}
-        \caption{Command Payload from Server to SGCMG MCU}
+        \caption{Command packet from Server to SGCMG MCU}
         \label{tbl:tlm_s2c}
         \end{table}
         
 \noindent Similarly, 17 byte packet is transmitted from Master to server contains 8 bit address of master, quaternion vector, and body rate vector having two bytes for each element of vector and at last 2 bytes CRC computed with buffer from byte 0 to byte 14 as given in \autoref{tbl:tlm_m2s}
 
 This type of coding scheme allows fast data transmission without conflicting any variable, in addition since data is sent in string made up of chunks of 8 bit (byte), same coding scheme can be ported easily to various embedded communication protocols such as UART or I2C making it easy to port control algorithm on board master controller based on users choice. Note that \acrshort{crc} appended at the end of each message is 16 bit error detecting code following IBM CRC-16 also referred as CRC-16-ANSI X3.28 polynomial representations of cyclic redundancy check with polynomial $x^{16}+x^{15}+x^2+1$.
-\begin{table}[!h]
+\begin{table}[ht]
         \centering
         
 \begin{tabular}{|p{0.1\textwidth}|p{0.2\textwidth}|p{0.6\textwidth}|}
@@ -223,7 +258,16 @@ This type of coding scheme allows fast data transmission without conflicting any
  16 & CRC\_L & CRC low byte \\
  \hline
 \end{tabular}
-        \caption{Telemetry Payload from Master MCU to Server}
+        \caption{Telemetry packet from Master MCU to Server}
         \label{tbl:tlm_m2s}
         \end{table}
 
+\newpage
+Ground station software responsible for entire control and steering of VSCMG testbed. Core functionalities of the server software is to receive telemetry packets from VSCMG test setup, decode byte stream in to appropriate state variable and transmit command signal in form of byte stream to corresponding actuators. A GUI shown in \autoref{fig:serverGUI} developed in python allows real-time visualization of state variables. Interactive GUI allows user to manually command gimbal angle and reaction wheel angular velocity and update magnetic encoder offsets. Moreover, various control schemes such as Singularity Robust VSCMG steering, Neural Network based steering  can be switched  as well as controller gains can be updated in real-time. In order to have visual representation of state variables a 3D view of VSCMG satellite implemented using OpenGL. Several steps has been taken to improve performance of software and make it stable. Extensive use of multi-threading includes four diffident threads, one thread dedicated for communication over UDP another thread is responsible for computation of control and steering based on selected algorithm, one thread for GUI and user interaction input and a thread for 3D visualization of Satellite. Although, entry point of software is written in python, all the core components and computationally expensive algorithms are written in C++ wrapped using Boost.Python \cite{abrahams2003building} in order to expose these compiled libraries to python.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/Electronics/Server.pdf}
+    \caption{Ground command and control server Graphical User Interface}
+    \label{fig:serverGUI}
+\end{figure}
