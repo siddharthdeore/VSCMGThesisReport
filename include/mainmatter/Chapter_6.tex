@@ -558,24 +558,51 @@ Let us consider a test case, Neural Network based steering has to cancel attitud
 \end{figure}
 
 
-\section{Neural Network vs SR-VSCMG Steering Law}
-
+\section{Comparison of Neural Network and SR-VSCMG Steering Law}
+\newacronym{sr-vscmg}{SR-VSCMG}{Singularity-Robust VSCMG Steering Law}
+Following discussion assumes regulation maneuver with initial attitude error of $90^\circ$ in yaw angle has to be canceled. In order to evaluate the performance of steering law, spacecraft actuators are deliberately kept in singular states as shown in  \autoref{tbl:nnvscmg_params}. Notice angular momentum of all reaction wheels is zero, moreover required torque is orthogonal to CMG torque axis. 
+\begin{table}[ht]
+        \centering
+\begin{tabular}{|p{0.2\textwidth}|p{0.4\textwidth}|p{0.3\textwidth}|}
+\hline 
+ Parameter & Value & Unit \\
+\hline 
+ $\displaystyle q$ & $\displaystyle [ 1\ 0\ 0\ 0]^{T}$ & - \\
+\hline 
+ $\displaystyle q_{d}$ & $\displaystyle [ 0.7071\ 0\ 0\ 0.7071]$ & - \\
+\hline 
+ $\displaystyle \omega _{d}$ & $\displaystyle [ 0\ 0\ 0]^{T}$ & $\displaystyle rad/\sec$ \\
+\hline 
+ $\displaystyle \delta $ & $\displaystyle [ 0,\ 0,\ 0,0]^{T}$ & $\displaystyle rad$ \\
+\hline 
+ $\displaystyle \Omega $ & $\displaystyle [ 0,\ 0,\ 0,\ 0]^{T}$ & $\displaystyle rad/\sec$ \\
+\hline 
+ $\displaystyle K_{w}$ & 4.4 & - \\
+\hline 
+ $\displaystyle K_{q}$ & 10.1 & - \\
+ \hline
+\end{tabular}
+        \caption{Simulation parameters for regulation maneuver in order to cancel attitude error of $\displaystyle 90^{\circ }$ in yaw angle.}
+        \label{tbl:nnvscmg_params}
+        \end{table}
+        
+\noindent Results of Neural Network based and \acrfull{sr-vscmg} are concurrently simulated using specially developed Model Explorer software \autoref{fig:model_explorer} discussed in earlier section. Quaternions of simulation with neural network based steering are shown in \autoref{fig:nn_q} and \acrlong{sr-vscmg} shown in \autoref{fig:vs_q}. Notice that with NN based steering quickly approaches desired state within 5 seconds but a small steady state error persists, whereas with \acrshort{sr-vscmg} steering, slight overshoot is seen followed by long period osculation near desired state. Notice that with same control gains NN based steering quickly stabilizes and follows different trajectory than \acrshort{sr-vscmg} steering law. As shown in \autoref{fig:nnvscmg_w} small variation in body rates are visible in other two axis since NN based steering is following slightly different trajectory than SR-VSCMG for which variation in body rate is only along yaw axis. Even after approaching close to desired state small but significant amount of variations are persistent in all three body rates.
 \begin{figure}[ht]
      \centering
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-q.pdf}
-         \caption{Neural Network based Steering}
-         \label{fig:y equals x}
+         \caption{}
+         \label{fig:nn_q}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-q.pdf}
-         \caption{SR-VSCMG Steering}
-         \label{fig:three sin x}
+         \caption{}
+         \label{fig:vs_q}
      \end{subfigure}
-        \caption{Three simple graphs}
-        \label{fig:three graphs}
+        \caption{Attitude quaternions : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \label{fig:nnvscmg_q}
 \end{figure}
 
 \begin{figure}[ht]
@@ -583,15 +610,15 @@ Let us consider a test case, Neural Network based steering has to cancel attitud
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-w.pdf}
-         \label{fig:y equals x}
+         \label{fig:nn_w}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-w.pdf}
-         \label{fig:three sin x}
+         \label{fig:vs_w}
      \end{subfigure}
-        \caption{Three simple graphs}
-        \label{fig:three graphs}
+        \caption{Body rates : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \label{fig:nnvscmg_w}
 \end{figure}
 
 \begin{figure}[ht]
@@ -599,16 +626,45 @@ Let us consider a test case, Neural Network based steering has to cancel attitud
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-Omg.pdf}
-         \label{fig:y equals x}
+          \caption{}
+         \label{fig:nn_Omg}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-Omg.pdf}
-         \label{fig:three sin x}
+          \caption{}
+         \label{fig:vs_Omg}
      \end{subfigure}
      
-        \caption{Three simple graphs}
-        \label{fig:three graphs}
+        \caption{Reaction wheel angular velocity : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \label{fig:nnvscmg_Omg}
+\end{figure}
+
+
+\noindent Each reaction wheel wheel is running at slightly different angular velocity in case of NN based steering, in fact this is the reason we can observe slightly different path followed than shortest path as in case of SR-VSCMG steering law in which only reaction wheel based control is followed throughout the maneuver. \autoref{fig:nnvscmg_sings} depicts three types of singularities. System becomes singular in case of rank deficiency that is transformation matrix is no longer full rank and hence non invertible. Degree or closeness to singularity can be measured with taking determinant of matrix. Here CMG singularity measure $m_c = \det(CC^T)$, Reaction wheel singularity measure measure $m_s = \det(DD^T)$ and complete VSCMG singularity measure measure $m_{vscmg} = \det(QQ^T)$ is shown in \autoref{fig:nnvscmg_sings}. CMGs are in singular state at the beginning since all reaction wheels are at rest. As angular momentum of RW is increased CMGs are getting away from singular state. Notice that in case of NN based steering distance from singularity is much higher at maximum RW angular momentum. Measure of RW remains constant in case of SR-VSCMG steering law since only RWs are used throughout the maneuver and gimbal angle remains constant. Whereas in case of NN-Steering, reaction wheel are moving far away from singularity due to variation in gimbal angle. Another contributing factor for increased in singular distance of RW singularity is different angular momentum of RWs.
+
+\begin{figure}[ht]
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-CC.pdf}
+        \caption{}
+    \label{fig:nnvscmg_CC}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-DD.pdf}
+          \caption{}
+        \label{fig:nnvscmg_DD}
+     \end{subfigure}
+      \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-QQ.pdf}
+          \caption{}
+        \label{fig:nnvscmg_QQ}
+     \end{subfigure}
+        \caption{System approaches singular state as singularity measure tends to zero (a) CMG singularity; (b) Reaction Wheel singularity and (c) VSCMG singularity}
+        \label{fig:nnvscmg_sings}
 \end{figure}
 
 \begin{figure}[ht]
@@ -616,35 +672,18 @@ Let us consider a test case, Neural Network based steering has to cancel attitud
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-delta.pdf}
-         \label{fig:y equals x}
+          \caption{}
+         \label{fig:nn_delta}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
          \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-delta.pdf}
-         \label{fig:three sin x}
+          \caption{}
+         \label{fig:vs_delta}
      \end{subfigure}
      
-        \caption{Three simple graphs}
-        \label{fig:three graphs}
+        \caption{CMG gimbal angles : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \label{fig:nnvscmg_delta}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-CC.pdf}
-    \caption{Caption}
-    \label{fig:my_CC}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-DD.pdf}
-    \caption{Caption}
-    \label{fig:my_DD}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-QQ.pdf}
-    \caption{Caption}
-    \label{fig:my_QQ}
-\end{figure}
+\noindent From above results it is clear that SR-VSCMG steering law provides more precise attitude tracking performance, although Neural network based steering is better at quickly approaching desires state following different trajectory with maintain body in  allowable range. NN based steering is inversion free technique thus very large velocities are not present in proximity of singularity. Steady state error and body rate oscillations in proximity of desired state can be reduced by regulating output layer by appropriate activation such as softmax and by filtering the output in order provide smooth actions to actuators. After numerous Monte Carlo simulations it is observed that NN based agent always converges to desired states but may follow trajectories which are not intuitive or similar to SR-VSCMG law. NN performance can be improved by more training and selecting better reward function crafted for required performance. A Hybrid of both steering law can be used, NN based steering for large slew maneuvers when error is large and SR-VSCMG based steering when current state is in proximity of desired state i.e. when error is small.
