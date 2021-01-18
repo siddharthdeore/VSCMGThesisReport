@@ -88,13 +88,23 @@
 \begin{abstract}
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
-Derived EOM, studied singularity, made some simulations, rl thinngs are done, for testing made some c++ based things, traing code, ground station, mech desing, electronic , firmware
+Control Moment Gyroscope (CMG) an attitude control actuator generates torques utilizing gyroscopic couple by tilting spin axis of high angular momentum wheels. Despite having significantly large torque compared to Reaction Wheels they pose problem of singularity. Significant efforts had been made to surmount singularity problem associated with CMG. Variable Speed Control Moment Gyroscope (VSCMG) can avoid singularities by changing flywheel speed to escape singular states. Various singularity avoidance techniques have been proposed such as Singularity Robust Pseudo inverse, and Local Gradient method both are computationally complex and requires fine tuning of weights in steering logic. \\
+\\
+Neural Network based VSCMG attitude control is discussed in this thesis. Neural Networks can approximate any nonlinear function with high accuracy. Nonlinear Dynamics of generic VSCMG and Singularity Robust steering law is realized. Supervised Learning is used to pretrain a deep neural network with trajectories generated from Monte-Carlo simulation of SR-VSCMG steering law. Pre trained neural network is further trained using Proximal Policy Optimization a policy gradient method for Reinforcement Learning in which intelligent agent interacts with environment by taking action based on current state. For each action there is a reward associated based on pre-determined reward function, goal is to maximize the delayed reward. PPO utilizes multiple epochs of minibatch updates instead of one gradient update per sample, this is advantageous since network parameters does not change rapidly consequently complex nonlinear behavior of VSCMG steering is easily approximated. Trained Neural Network based steering agent is found to be computationally less expensive than conventional methods, moreover it is capable of escaping singularities and avoid singular states in large slew maneuver.  \\
+\\
+For performance verification of numerical simulations on physical system a low-cost testbed for hardware in loop simulation of Variable Speed Control Moment Gyroscope (VSCMG) is developed. Reconfigurable Attitude Control System test setup comprise of a platform with pyramid cluster of SGCMG units balancing on sharp tip with its center of mass kept close to point of contact to simulate complete freedom yaw motion and 120 degrees in both roll and pitch while restricting translation motion. High bandwidth communication between customized developed ground station software suite and test bed on board computers allows just in time updates of controller parameters, real-time visualization of sensor state and switching between various control schemes.
+
+
 \end{abstract}
 
 \begin{acknowledgments}
 \phantomsection
 \addcontentsline{toc}{chapter}{Acknowledgments}
-Sab ki dua
+I would like to express deepest sense of gratitude to my thesis advisor Prof. Fabio Santoni for introducing me to complex challenging subject and encouraging me to develop experimental setup to gain practical insights satellite system to bridge gap between theoretical understanding and practical implementation. It was great privilege and honor to work and explore under his guidance. \\
+\\
+Furthermore, I would like to thank my friend Graziano Ullucci for helping me in various stages to build the prototype and providing manufacturing support for various parts of the project. In addition a special thanks goes to Centro Saperi & Co for permitting me to 3D print few parts amidst global pandemic restriction. \\
+\\
+I am extremely grateful to my parents and sisters for their love and support throughout my academic trial.
 
 \end{acknowledgments}
 \begin{comment}
@@ -157,7 +167,10 @@ Sab ki dua
 \nomenclature[A, 03]{$\mathcal{F}_{g}$}{Gimbal Reference frame}
 \nomenclature[A, 04]{$\mathbf{R}$}{Rotation matrix}
 \nomenclature[A, 05]{$\mathbf{q}$}{Quaternion}
-\nomenclature[A, 07]{$q_i$}{Components of Quaternion $i\in\{0,1,2,3\}$}
+\nomenclature[A, 06]{$q_i$}{Components of Quaternion $i\in\{0,1,2,3\}$}
+\nomenclature[A, 07]{$\psi$}{Yaw}
+\nomenclature[A, 07]{$\theta$}{Pitch}
+\nomenclature[A, 07]{$\phi$}{Roll}
 \nomenclature[A, 08]{${q_v}$}{vector component of quaternion}
 \nomenclature[A, 09]{$\mathbf{q_d}$}{Desired attitude quaternion}
 \nomenclature[A, 10]{$\mathbf{q_e}$}{Attitude error quaternion}
@@ -189,8 +202,8 @@ Sab ki dua
 \nomenclature[B, 04]{$\gamma$}{Discount factor $ 0 < \gamma \leq 1$}
 \nomenclature[B, 05]{$G_t$}{Discounted future reward}
 \nomenclature[B, 06]{$P(s', r \vert s, a)$}{Transition probability of getting to the next state $s'$ from the current state $s$ with action $a$ and reward $r$}
-\nomenclature[B, 07]{$\pi_\theta(.)$}{Policy parameterized by $\theta$}
-\nomenclature[B, 08]{$\pi(a \vert s)$}{Stochastic policy (agent behavior strategy) }
+\nomenclature[B, 07]{$\pi_\theta(\cdot)$}{Policy corresponding to parameter $\theta$}
+\nomenclature[B, 08]{$\pi_\theta(a \vert s)$}{Stochastic policy (agent behavior strategy).  Probability of taking action $a$ in state $s$ given parameter vector $\theta$ }
 \nomenclature[B, 09]{$\mu(s)$}{Deterministic policy; Either $\pi$ or $\mu$ is learned through reinforcement learning algorithm}
 \nomenclature[B, 10]{$V_w(.)$}{Value function parameterized by $w$}
 \nomenclature[B, 11]{$V(s)$}{State-value function measures the expected return of state}
@@ -204,45 +217,17 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 \nomenclature[B, 18]{$d^\pi(s)$}{stationary distribution of Markov chain for $\pi_\theta$}
 \nomenclature[B, 19]{$L(\theta)$}{Policy Loss}
 \nomenclature[B, 20]{$r(\theta)$}{Probability ratio of new policy over old policy}
+\nomenclature[B, 21]{$ \nabla \pi_\theta(a \vert s)$}{column vector of partial derivatives of $\pi_\theta(a \vert s)$ with respect to $\theta$ }
+\nomenclature[B, 22]{$\nabla J(\theta)$}{ column vector of partial derivatives of $J(\theta)$ with respect to $\theta$ }
 
 
 
 
-
-
-%//////////////////////////////////////////////////////////////
-\begin{comment}
-
-
-
-% Do not use the starred version of the chapter command!
-\chapter{No Numbered Chapter}
-
-In this manual you can skip the gray text because it is just dummy text.%
-\footnote{This is a footnote.}
-
-
-
-\section*{Paragrafo non numerato}
-In this manual you can skip the gray text because it is just dummy text.
-
-
-
-The \Gls{maths} typesetting markup language is specially suitable 
-for documents that include \gls{maths}. \Glspl{formula} are 
-rendered properly an easily once one gets used to the commands.
-
-in order to \Gls{policy}
-
-Given a set of numbers, there are elementary methods to compute 
-its \acrlong{gcd}, which is abbreviated \acrshort{gcd}. This 
-process is similar to that used for the \acrfull{lcm}.
-
-
-\end{comment}
 
 
 \mainmatter
+\begin{comment}
+\end{comment}
 
 % Introduction
 \input{include/mainmatter/Chapter_1}
@@ -255,9 +240,7 @@ process is similar to that used for the \acrfull{lcm}.
 
 %  Controller Design
 \input{include/mainmatter/Chapter_4}
-\begin{comment}
 
-\end{comment}
 
 %  Numerical Sims
 \input{include/mainmatter/Chapter_5}
@@ -272,6 +255,9 @@ process is similar to that used for the \acrfull{lcm}.
 % Electrical Design
 \input{include/mainmatter/Chapter_8}
 % Hardware in Loop Simulations
+% Mechanical Design
+\input{include/mainmatter/Chapter_7}
+
 \input{include/mainmatter/Chapter_9}
 
 \appendix
