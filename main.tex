@@ -69,9 +69,9 @@
 \website{http://deore.in}
 
 \examdate{26th January 2020}
-\examiner{Prof. Nome Cognome}
-\examiner{Prof. Nome Cognome}
-\examiner{Dr. Nome Cognome}
+%\examiner{Prof. Nome Cognome}
+%\examiner{Prof. Nome Cognome}
+%\examiner{Dr. Nome Cognome}
 \versiondate{\today}
 
 % For VSCMG Geometries
@@ -83,14 +83,14 @@
 \begin{document}
 \frontmatter
 \maketitle
-\dedication{Dedicated to\\ Aai and Aaba}
+\dedication{Dedicated to parents \\ Usha and N. Z. Deore}
 
 \begin{abstract}
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
 Control Moment Gyroscope (CMG) an attitude control actuator generates torques utilizing gyroscopic couple by tilting spin axis of high angular momentum wheels. Despite having significantly large torque compared to Reaction Wheels they pose problem of singularity. Significant efforts had been made to surmount singularity problem associated with CMG. Variable Speed Control Moment Gyroscope (VSCMG) can avoid singularities by changing flywheel speed to escape singular states. Various singularity avoidance techniques have been proposed such as Singularity Robust Pseudo inverse, and Local Gradient method both are computationally complex and requires fine tuning of weights in steering logic. \\
 \\
-Neural Network based VSCMG attitude control is discussed in this thesis. Neural Networks can approximate any nonlinear function with high accuracy. Nonlinear Dynamics of generic VSCMG and Singularity Robust steering law is realized. Supervised Learning is used to pretrain a deep neural network with trajectories generated from Monte-Carlo simulation of SR-VSCMG steering law. Pre trained neural network is further trained using Proximal Policy Optimization a policy gradient method for Reinforcement Learning in which intelligent agent interacts with environment by taking action based on current state. For each action there is a reward associated based on pre-determined reward function, goal is to maximize the delayed reward. PPO utilizes multiple epochs of minibatch updates instead of one gradient update per sample, this is advantageous since network parameters does not change rapidly consequently complex nonlinear behavior of VSCMG steering is easily approximated. Trained Neural Network based steering agent is found to be computationally less expensive than conventional methods, moreover it is capable of escaping singularities and avoid singular states in large slew maneuver.  \\
+Neural Network based VSCMG attitude control is discussed in this thesis. Neural Networks can approximate any nonlinear function with high accuracy. Nonlinear Dynamics of generic VSCMG and Singularity Robust steering law is realized. Supervised Learning is used to pretrain a deep neural network with trajectories generated from Monte-Carlo simulation of SR-VSCMG steering law. Pre trained neural network is further trained using Proximal Policy Optimization a policy gradient method for Reinforcement Learning in which intelligent agent interacts with environment by taking action based on current state. For each action there is a reward associated based on pre-determined reward function, goal is to maximize the delayed reward. PPO utilizes multiple epochs of minibatch updates instead of one gradient update per sample, this is advantageous since network parameters does not change rapidly consequently complex nonlinear behavior of VSCMG steering is easily approximated. Trained Neural Network based steering agent is found to be computationally less expensive  and showed significant improvement in computation time over conventional control methods, moreover it is capable of escaping singularities and avoid singular states in large slew maneuver.  \\
 \\
 For performance verification of numerical simulations on physical system a low-cost testbed for hardware in loop simulation of Variable Speed Control Moment Gyroscope (VSCMG) is developed. Reconfigurable Attitude Control System test setup comprise of a platform with pyramid cluster of SGCMG units balancing on sharp tip with its center of mass kept close to point of contact to simulate complete freedom yaw motion and 120 degrees in both roll and pitch while restricting translation motion. High bandwidth communication between customized developed ground station software suite and test bed on board computers allows just in time updates of controller parameters, real-time visualization of sensor state and switching between various control schemes.
 
@@ -226,22 +226,16 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 
 
 \mainmatter
-\begin{comment}
-\end{comment}
 
 % Introduction
 \input{include/mainmatter/Chapter_1}
-
 %\part{Fundamentals}
 % Equation of Motion
 \input{include/mainmatter/Chapter_2}
 % Singularities
 \input{include/mainmatter/Chapter_3}
-
 %  Controller Design
 \input{include/mainmatter/Chapter_4}
-
-
 %  Numerical Sims
 \input{include/mainmatter/Chapter_5}
 %\part{Artificial Intelligence}
@@ -256,9 +250,12 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 \input{include/mainmatter/Chapter_8}
 % Hardware in Loop Simulations
 % Mechanical Design
-\input{include/mainmatter/Chapter_7}
-
 \input{include/mainmatter/Chapter_9}
+
+\input{include/mainmatter/Conclusion}
+\begin{comment}
+
+\end{comment}
 
 \appendix
 

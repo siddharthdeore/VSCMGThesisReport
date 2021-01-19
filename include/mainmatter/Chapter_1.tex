@@ -4,11 +4,10 @@
 
 \newacronym{ai}{AI}{Artificial Intelligence}
 
-\subsubsection*{\acrfull{ai}}
+\subsubsection*{Singularity Avoidance Control of VSCMG}
 \newacronym{cmg}{CMG}{Control Moment Gyroscope}
 \newacronym{vscmg}{VSCMG}{Variable Speed Control Moment Gyroscope}
-
-Although machine learning based models are widely used in everyday applications ranging from image processing, weather prediction to Alpha Go being the first computer program to defeat human player in game of Go, \cite{Silver2016} their use in mission-critical task is limited.  This thesis is to evaluate the performance and technological readiness level of Neural Network based control model. Evident presence of singularities in \acrfull{cmg} and escaping them by adding an extra degree of freedom by using \acrfull{vscmg} to escape singular states is highly complex and nonlinear multi-input multi-output problem making it suitable choice to be evaluated on machine learning models. Moreover, a sub-optimal neural network approximation of nonlinear optimum function requires much less computing resources and memory storage than optimum guidance law\cite{Santoni1996}.
+Evident presence of singularities in \acrfull{cmg} and escaping them by adding an extra degree of freedom by using \acrfull{vscmg} to escape singular states is highly complex and nonlinear multi-input multi-output problem making it suitable choice to be evaluated on machine learning models. Moreover, a sub-optimal neural network approximation of nonlinear optimum function requires much less computing resources and memory storage than optimum guidance law\cite{Santoni1996}. Although machine learning based models are widely used in everyday applications ranging from image processing, weather prediction to Alpha Go being the first computer program to defeat human player in game of Go, \cite{Silver2016} their use in mission-critical task is limited.  This thesis is to evaluate the performance and technological readiness level of Neural Network based control model. 
 
 \subsubsection*{The Test Bench}
 It is difficult to evaluate the performance of the control law on real hardware and always been challenging to carry out hardware in the loop simulation of the attitude control system on the ground. Implementing complete 360 degrees of angular freedom of three body axes observed in orbit is indispensably difficult to attain inside ground-based laboratory. There has been a wide variety of technological solutions proposed and implemented since the beginning of the space age. Compromising with a reduced degree of freedom a platform balancing on sharp pin with its center of mass kept closer to pivot is chosen to keep the cost of the entire test setup as low as possible. 
