@@ -61,14 +61,14 @@
 
 \course{Space and Astronautical Engineering (LM-20)}
 \courseorganizer{Dipartimento di Ingegneria Meccanica e Aerospazialev(DIMA)}
-\AcademicYear{2020/2021}
+\AcademicYear{2019-20}
 \copyyear{2020}
 \advisor{Prof. Fabio Santoni}
 %\coadvisor{}
 \authoremail{deore.1823670@studenti.uniroma1.it}
 \website{http://deore.in}
 
-\examdate{26th January 2020}
+\examdate{26th January 2021}
 %\examiner{Prof. Nome Cognome}
 %\examiner{Prof. Nome Cognome}
 %\examiner{Dr. Nome Cognome}
@@ -83,14 +83,14 @@
 \begin{document}
 \frontmatter
 \maketitle
-\dedication{Dedicated to parents \\ Usha and N. Z. Deore}
+\dedication{Dedicated to mother Usha and father N. Z. Deore}
 
 \begin{abstract}
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
-Control Moment Gyroscope (CMG) an attitude control actuator generates torques utilizing gyroscopic couple by tilting spin axis of high angular momentum wheels. Despite having significantly large torque compared to Reaction Wheels they pose problem of singularity. Significant efforts had been made to surmount singularity problem associated with CMG. Variable Speed Control Moment Gyroscope (VSCMG) can avoid singularities by changing flywheel speed to escape singular states. Various singularity avoidance techniques have been proposed such as Singularity Robust Pseudo inverse, and Local Gradient method both are computationally complex and requires fine tuning of weights in steering logic. \\
+Control Moment Gyroscope (CMG) an attitude control actuator, generates torques utilizing gyroscopic couple by tilting spin axis of high angular momentum wheels. Despite having significantly large torque compared to Reaction Wheels, they pose the problem of singularity. Significant efforts had been made to surmount singularity problem associated with CMG. Variable Speed Control Moment Gyroscope (VSCMG) can avoid singularities by changing flywheel speed to escape singular states. Various singularity avoidance techniques have been proposed such as Singularity Robust Pseudo inverse, and Local Gradient method both are computationally complex and requires fine tuning of weights in steering logic. \\
 \\
-Neural Network based VSCMG attitude control is discussed in this thesis. Neural Networks can approximate any nonlinear function with high accuracy. Nonlinear Dynamics of generic VSCMG and Singularity Robust steering law is realized. Supervised Learning is used to pretrain a deep neural network with trajectories generated from Monte-Carlo simulation of SR-VSCMG steering law. Pre trained neural network is further trained using Proximal Policy Optimization a policy gradient method for Reinforcement Learning in which intelligent agent interacts with environment by taking action based on current state. For each action there is a reward associated based on pre-determined reward function, goal is to maximize the delayed reward. PPO utilizes multiple epochs of minibatch updates instead of one gradient update per sample, this is advantageous since network parameters does not change rapidly consequently complex nonlinear behavior of VSCMG steering is easily approximated. Trained Neural Network based steering agent is found to be computationally less expensive  and showed significant improvement in computation time over conventional control methods, moreover it is capable of escaping singularities and avoid singular states in large slew maneuver.  \\
+Neural Network based VSCMG attitude control is discussed in this thesis. Neural Networks can approximate any nonlinear function with high accuracy. Nonlinear Dynamics of generic VSCMG and Singularity Robust steering law is realized. Supervised Learning is used to pretrain a deep neural network with trajectories generated from Monte-Carlo simulation of SR-VSCMG steering law. Pre trained neural network is further trained using Proximal Policy Optimization a policy gradient method for Reinforcement Learning in which intelligent agent interacts with environment by taking action based on current state. For each action there is a reward associated based on pre-determined reward function, goal is to maximize the delayed reward. PPO utilizes multiple epochs of minibatch updates instead of one gradient update per sample, this is advantageous since network parameters does not change rapidly consequently complex nonlinear behavior of VSCMG steering is easily approximated. Performance of Neural Network based steering is compared with SR-VSCMG steering via numerical simulations. Results show that trained Neural Network based steering agent is found to be computationally less expensive  and showed significant improvement in computation time over conventional control methods, moreover it is capable of escaping singularities and avoid singular states in large slew maneuver. In proximity of singularity, very high frequency jitters of gimbal angles clearly seen in SR-VSCMG steering law may compromise structural integrity of satellite, proposed technique is free from such high frequency jitters hence clearly advantageous safeguarding structural integrity.   \\
 \\
 For performance verification of numerical simulations on physical system a low-cost testbed for hardware in loop simulation of Variable Speed Control Moment Gyroscope (VSCMG) is developed. Reconfigurable Attitude Control System test setup comprise of a platform with pyramid cluster of SGCMG units balancing on sharp tip with its center of mass kept close to point of contact to simulate complete freedom yaw motion and 120 degrees in both roll and pitch while restricting translation motion. High bandwidth communication between customized developed ground station software suite and test bed on board computers allows just in time updates of controller parameters, real-time visualization of sensor state and switching between various control schemes.
 
@@ -104,7 +104,7 @@ I would like to express deepest sense of gratitude to my thesis advisor Prof. Fa
 \\
 Furthermore, I would like to thank my friend Graziano Ullucci for helping me in various stages to build the prototype and providing manufacturing support for various parts of the project. In addition a special thanks goes to Centro Saperi & Co for permitting me to 3D print few parts amidst global pandemic restriction. \\
 \\
-I am extremely grateful to my parents and sisters for their love and support throughout my academic trial.
+Finally, I am extremely grateful to my parents and sisters for their love and support throughout my academic trial.
 
 \end{acknowledgments}
 \begin{comment}
@@ -221,11 +221,13 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 \nomenclature[B, 22]{$\nabla J(\theta)$}{ column vector of partial derivatives of $J(\theta)$ with respect to $\theta$ }
 
 
-
+\newacronym{nn}{NN}{Neural Network}
 
 
 
 \mainmatter
+\begin{comment}
+\end{comment}
 
 % Introduction
 \input{include/mainmatter/Chapter_1}
@@ -237,12 +239,15 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 %  Controller Design
 \input{include/mainmatter/Chapter_4}
 %  Numerical Sims
+
 \input{include/mainmatter/Chapter_5}
 %\part{Artificial Intelligence}
 % Neural Network
 
 \input{include/mainmatter/Chapter_6}
 %\part{Testbed}
+\begin{comment}
+\end{comment}
 
 % Mechanical Design
 \input{include/mainmatter/Chapter_7}
@@ -253,9 +258,7 @@ evaluates the expected return of a pair of state and action $(s,a)$}
 \input{include/mainmatter/Chapter_9}
 
 \input{include/mainmatter/Conclusion}
-\begin{comment}
 
-\end{comment}
 
 \appendix
 

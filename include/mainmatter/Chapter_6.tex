@@ -609,15 +609,15 @@ Following discussion assumes regulation maneuver with initial attitude error of 
      \centering
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-w.pdf}
+         \includegraphics[width=\textwidth,trim={0 0 0 0.35cm},clip]{figures/plots/Results/vs-nn-w.pdf}
          \label{fig:nn_w}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-w.pdf}
+         \includegraphics[width=\textwidth,trim={0 0 0 0.35cm},clip]{figures/plots/Results/vs-vs-w.pdf}
          \label{fig:vs_w}
      \end{subfigure}
-        \caption{Body rates : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \caption{Body rates (rad/sec): (a) Neural Network based steering (b) SR-VSCMG steering}
         \label{fig:nnvscmg_w}
 \end{figure}
 
@@ -625,13 +625,13 @@ Following discussion assumes regulation maneuver with initial attitude error of 
      \centering
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-Omg.pdf}
+         \includegraphics[width=\textwidth,trim={0 0 0 0.35cm},clip]{figures/plots/Results/vs-nn-Omg.pdf}
           \caption{}
          \label{fig:nn_Omg}
      \end{subfigure}
      \begin{subfigure}[b]{0.49\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-Omg.pdf}
+         \includegraphics[width=\textwidth,trim={0 0 0 0.35cm},clip]{figures/plots/Results/vs-vs-Omg.pdf}
           \caption{}
          \label{fig:vs_Omg}
      \end{subfigure}
@@ -640,8 +640,29 @@ Following discussion assumes regulation maneuver with initial attitude error of 
         \label{fig:nnvscmg_Omg}
 \end{figure}
 
+\begin{figure}[ht]
+     \centering
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/plots/Results/vs-nn-delta.pdf}
+          \caption{}
+         \label{fig:nn_delta}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.49\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figures/plots/Results/vs-vs-delta.pdf}
+          \caption{}
+         \label{fig:vs_delta}
+     \end{subfigure}
+     
+        \caption{Gimbal Angle : (a) Neural Network based steering (b) SR-VSCMG steering}
+        \label{fig:nnvscmg_delta}
+\end{figure}
 
-\noindent Each reaction wheel wheel is running at slightly different angular velocity in case of NN based steering, in fact this is the reason we can observe slightly different path followed than shortest path as in case of SR-VSCMG steering law in which only reaction wheel based control is followed throughout the maneuver. \autoref{fig:nnvscmg_sings} depicts three types of singularities. System becomes singular in case of rank deficiency that is transformation matrix is no longer full rank and hence non invertible. Degree or closeness to singularity can be measured with taking determinant of matrix. Here CMG singularity measure $m_c = \det(CC^T)$, Reaction wheel singularity measure measure $m_s = \det(DD^T)$ and complete VSCMG singularity measure measure $m_{vscmg} = \det(QQ^T)$ is shown in \autoref{fig:nnvscmg_sings}. CMGs are in singular state at the beginning since all reaction wheels are at rest. As angular momentum of RW is increased CMGs are getting away from singular state. Notice that in case of NN based steering distance from singularity is much higher at maximum RW angular momentum. Measure of RW remains constant in case of SR-VSCMG steering law since only RWs are used throughout the maneuver and gimbal angle remains constant. Whereas in case of NN-Steering, reaction wheel are moving far away from singularity due to variation in gimbal angle. Another contributing factor for increased in singular distance of RW singularity is different angular momentum of RWs. Time required for 10 seconds si
+
+\noindent Each reaction wheel wheel is running at slightly different angular velocity in case of NN based steering, in fact this is the reason we can observe slightly different path followed than shortest path as in case of SR-VSCMG steering.
+Most significant difference is  seen in Gimbal Angles, comparison is shown in \autoref{fig:nnvscmg_delta}. Very high frequency jitter is clearly visible in \autoref{vs_delta} since CMGs are very close to singularity, whereas in the case of \autoref{fig:nn_delta} even in the proximity of singularity no high frequency contents are visible. Considering structural integrity of system Neural network based steering performs better near singular state.
+\autoref{fig:nnvscmg_sings} depicts three types of singularities. System becomes singular in case of rank deficiency that is transformation matrix is no longer full rank and hence non invertible. Degree or closeness to singularity can be measured with taking determinant of matrix. Here CMG singularity measure $m_c = \det(CC^T)$, Reaction wheel singularity measure measure $m_s = \det(DD^T)$ and complete VSCMG singularity measure measure $m_{vscmg} = \det(QQ^T)$ is shown in \autoref{fig:nnvscmg_sings}. CMGs are in singular state at the beginning since all reaction wheels are at rest. As angular momentum of RW is increased CMGs are getting away from singular state. Notice that in case of NN based steering distance from singularity is much higher at maximum RW angular momentum. Measure of RW remains constant in case of SR-VSCMG steering law since only RWs are used throughout the maneuver and gimbal angle remains constant. Whereas in case of NN-Steering, reaction wheel are moving far away from singularity due to variation in gimbal angle. Another contributing factor for increased in singular distance of RW singularity is different angular momentum of RWs. 
 
 \begin{figure}[ht]
      \centering
@@ -687,4 +708,4 @@ Following discussion assumes regulation maneuver with initial attitude error of 
 \end{figure}
 Multiple simulations keeping same scenario are performed considering both NN based and SR-VSCMG based steering law
 For above maneuver of 10 seconds, SR-VSCMG based steering law requires average of 3.82 seconds to complete entire simulation whereas neural network based steering requires 2.16 seconds on  intel i7 processor. Processing time is reduced by 1.66 seconds which is clear computational advantage provided by proposed steering law. 
-\noindent From above results it is clear that SR-VSCMG steering law provides more precise attitude tracking performance, although Neural network based steering is better at quickly approaching desires state following different trajectory with maintain body in  allowable range.  NN based steering is inversion free technique thus very large velocities are not present in proximity of singularity. Steady state error and body rate oscillations in proximity of desired state can be reduced by regulating output layer by appropriate activation such as softmax and by filtering the output in order provide smooth actions to actuators. After numerous Monte Carlo simulations it is observed that NN based agent always converges to desired states but may follow trajectories which are not intuitive or similar to SR-VSCMG law. NN performance can be improved by more training and selecting better reward function crafted for required performance. A Hybrid of both steering law can be used, NN based steering for large slew maneuvers when error is large and SR-VSCMG based steering when current state is in proximity of desired state i.e. when error is small.
+\noindent From above results it is clear that SR-VSCMG steering law provides more precise attitude tracking performance, although Neural network based steering is better at quickly approaching desires state following different trajectory with maintain body in  allowable range.  Most important advantage of proposed technique is seen in proximity of singularity. SR-VSCMG based steering undergoes very high frequency jitter which not favaurable considering structural integrity of spacecraft. NN based steering is inversion free technique thus very large velocities are not present in proximity of singularity. Steady state error and body rate oscillations in proximity of desired state can be reduced by regulating output layer by appropriate activation such as softmax and by filtering the output in order provide smooth actions to actuators. After numerous Monte Carlo simulations it is observed that NN based agent always converges to desired states but may follow trajectories which are not intuitive or similar to SR-VSCMG law. NN performance can be improved by more training and selecting better reward function crafted for required performance. A Hybrid of both steering law can be used, NN based steering for large slew maneuvers when error is large and SR-VSCMG based steering when current state is in proximity of desired state i.e. when error is small.
