@@ -1,4 +1,49 @@
 \chapter{Neural Network based Learning Agent}
+\newglossaryentry{Agent}
+{
+    name=Agent,
+    description={The entity (robot) that uses a policy to maximize expected return gained from transitioning between states of the environment.}
+}
+\newglossaryentry{Environment}
+{
+    name=Environment,
+    description={System dynamical model that agent can interact with.The environment changes as the Agent performs actions; every such change is considered a state-transition.}
+}
+\newglossaryentry{state}
+{
+    name=State,
+    description={The parameter values that describe the current configuration of the environment.}
+}
+\newglossaryentry{Action}
+{
+    name=Action,
+    description={The mechanism by which the agent transitions between states of the environment.}
+}
+\newglossaryentry{Reward}
+{
+    name=Reward,
+    description={The numerical result of taking an action in a state, as defined by the environment.}
+}
+\newglossaryentry{Policy}
+{
+    name=Policy,
+    description={An agent's probabilistic mapping from states to actions.}
+}
+\newglossaryentry{Episode}
+{
+    name=Episode,
+    description={Finite sequence of state action pair till predefined terminal time-steps}
+}
+\newglossaryentry{Advantage}
+{
+    name=Advantage,
+    description={A measure of how much is a certain action a good or bad decision given a certain state}
+}
+\newglossaryentry{Value}
+{
+    name=Value,
+    description={A function which describes or approximates the expected discounted return from each state under a particular policy.}
+}
 \label{chap:6}
 In this chapter Artificial Intelligence based agent particularly Neural Network strategy is proposed to evaluate steering of variable speed control moment gyroscope. Machine learning scheme especially reinforcement learning with combination of supervised learning is followed to train neural network \ From equations of motion and control architecture derived in it is evident that spacecraft attitude dynamics is nonlinear function of its states. Moreover singularity avoidance steering mechanism is complex and computationally expensive. Neural network are capable of approximating nonlinear functions and produce sub-optimal solution which is beneficial to reduce computational loads moreover steering is possible without matrix inversion. To design complete neural network based ACS following sections are discussed to clear some concepts. Starting with a brief introduction about machine learning types, particular interest of this thesis is focused on policy gradient method especially Proximal Policy Optimisation is discussed in detail.
 
@@ -19,7 +64,7 @@ Machine learns by exploring large chunk of unlabeled data set. Clustering and di
 
 \newacronym{mdp}{MDP}{Markov Decision Processes}
 \subsection{Reinforcement Learning}
-Reinforcement learning is a close loop problem where agent takes action, each action is associated with reward or penalty, and based on outcome agent tries to maximize reward or minimize the penalty by exploring in to environment or exploiting past experiences through trial and error along with received feedback. \autoref{fig:ai_agent_env_mdp} shows architecture of agent-environment interaction in \acrlong{mdp}.\cite{russell2010artificial}
+Reinforcement learning is a close loop problem where agent takes action, each \Gls{Action} is associated with \Gls{Reward} or penalty, and based on outcome agent tries to maximize reward or minimize the penalty by exploring in to environment or exploiting past experiences through trial and error along with received feedback. \autoref{fig:ai_agent_env_mdp} shows architecture of agent-environment interaction in \acrlong{mdp}.\cite{russell2010artificial}
 
 \begin{figure}[H]
     \centering
@@ -60,18 +105,20 @@ node[right,pos=0.25,align=left] {reward\\ $r_t$};
     \label{fig:ai_agent_env_mdp}
 \end{figure}
 
-\noindent\textbf{Agent} is any entity that perceives environment using sensors and acts on it using actuators. A rational agent should take appropriate actions based on strategy to reach goal. Success of agent is determined by performance measure.
+
+\noindent\textbf{\Gls{Agent}} is any entity that perceives \gls{Environment} using sensors and acts on it using actuators. A rational agent should take appropriate actions based on strategy to reach goal. Success of agent is determined by performance measure.
 Agent function that maps precept history to action is given as:
 \begin{equation}
     f: \mathcal{P}^*\longrightarrow \mathcal{A}
 \end{equation}
 \textbf{Environment} is a real situation or simulated plant dynamics and may have properties such fully or partially observable, deterministic or stochastic, discrete or continuous.
 \textbf{Perceptions} are observed states $s\in \mathcal{S}$ in the environment through sensors whereas \textbf{actions} $a\in \mathcal{A}$ are performed by agent through actuators
-Agent at state $s$ inside environment, chooses one action $a$ among many choices in order to evolve its state and evolution is determined by state transition probability. For each action, environment provides reward $r \in \mathcal{R}$ as feedback. The \acrfull{mdp} consists of set of states $\mathcal{S}$, set of actions $\mathcal{A}$, transition probability function $P$ reward function $R$, discounting factor for future rewards $\gamma$
+Agent at \gls{state} $s$ inside environment, chooses one action $a$ among many choices in order to evolve its state and evolution is determined by state transition probability. For each action, environment provides reward $r \in \mathcal{R}$ as feedback. The \acrfull{mdp} consists of set of states $\mathcal{S}$, set of actions $\mathcal{A}$, transition probability function $P$ reward function $R$, discounting factor for future rewards $\gamma$
 \begin{equation*}
     \mathcal{M} = \langle \mathcal{S}, \mathcal{A}, P, R, \gamma \rangle
 \end{equation*}
-\noindent A \textbf{Policy} $\pi(s)$  is, therefore, a strategy that an agent uses in pursuit of goals.\cite{russell2010artificial} Policy determines actions that has to be taken by agent at state $s$. Policy can be deterministic: $\pi(s)=a$ or stochastic:$\pi(a \vert s) = \mathbb{P}_\pi [A=a \vert S=s]$
+
+\noindent A \textbf{\Gls{Policy}} $\pi(s)$  is, therefore, a strategy that an agent uses in pursuit of goals.\cite{russell2010artificial} Policy determines actions that has to be taken by agent at state $s$. Policy can be deterministic: $\pi(s)=a$ or stochastic:$\pi(a \vert s) = \mathbb{P}_\pi [A=a \vert S=s]$
 
 Each state is associated with a \textbf{Value} $V(s)$ function which is probability of future rewards than can be received by acting on policy at given state. With future reward as total some of rewards going forward from time t noted as $G_t$
 \begin{equation}
@@ -85,11 +132,11 @@ Where, action-value of state action pair
 \begin{equation}
 Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_t \vert S_t = s, A_t = a]    
 \end{equation}
-\textbf{Advantage function} $A(s,a)$ is difference between state-value and action value, it asses quality of selected action with respect to certain state.  
+\textbf{\Gls{Advantage} function} $A(s,a)$ is difference between state-value and action value, it asses quality of selected action with respect to certain state.  
 \begin{equation}
     A_{\pi}(s, a) = Q_{\pi}(s, a) - V_{\pi}(s)
 \end{equation}
-An optimum value function that produces maximum returns is
+An optimum \Gls{Value} function that produces maximum returns is
 \begin{equation}
     V_{*}(s) = \max_{\pi} V_{\pi}(s),
 Q_{*}(s, a) = \max_{\pi} Q_{\pi}(s, a)
@@ -99,7 +146,7 @@ and the policy that achieves optimum value function is optimal policy given as
     \pi_{*} = \arg\max_{\pi} V_{\pi}(s),
 \pi_{*} = \arg\max_{\pi} Q_{\pi}(s, a)
 \end{equation}
-The agent-environment interaction is produces series of state, action and reward each time step evolved from $t=0,1,2,\dots,T$. Hence, evolution is sequence state $S_t \in \mathcal{S}$, action $A_t \in \mathcal{A}(s)$ and rewards $R_{t+1} \in \mathcal{R}$ taken at each time $t$ to end of an episode at terminal time $T$.
+The agent-environment interaction is produces series of state, action and reward each time step evolved from $t=0,1,2,\dots,T$. Hence, evolution is sequence state $S_t \in \mathcal{S}$, action $A_t \in \mathcal{A}(s)$ and rewards $R_{t+1} \in \mathcal{R}$ taken at each time $t$ to end of an \gls{Episode} at terminal time $T$.
 \acrlong{mdp} shown in \autoref{fig:ai_agent_env_mdp} gives rise to sequence:
 \begin{equation*}
     S_0, A_0, R_1,S_1, A_1, R_2, \dots S_{T}, A_{T}, R_{T+1},
