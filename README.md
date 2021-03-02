@@ -1,5 +1,6 @@
 # Thesis: Neural Network Based steering ofVariable Speed Control Moment Gyroscope
+## Dipartimento di Ingegneria meccanica e aerospaziale, Sapineza University of Rome, Italy
 
 author  : Siddharth Deore
 
-Advisor : Prof. Fabio Santoni
+advisor : Prof. Fabio Santoni
