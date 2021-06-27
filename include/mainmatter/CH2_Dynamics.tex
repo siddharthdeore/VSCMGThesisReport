@@ -99,7 +99,7 @@ Angular velocity vector gimbal frame $\displaystyle \mathcal{F}_{g}$ with respec
 \end{equation}
 and angular velocity vector of reaction wheel frame $\displaystyle \mathcal{F}_{w}$ in $\displaystyle \mathcal{F}_{g}$ is represented as
 \begin{equation}
-\omega _{\mathcal{F}_{W} /\mathcal{F}_{g}} =\dot{\delta}\hat{g}
+\omega _{\mathcal{F}_{W} /\mathcal{F}_{g}} =\dot{\delta}\hat{s}
 \end{equation}
 Gimbal inertia matrix expressed in $\displaystyle \mathcal{F}_{G}$ as diagonal matrix with $\displaystyle J^{*}_{g}$ are gimbal frame inertia along superscript * represented as spin $\displaystyle \hat{s} \ $transverse $\displaystyle \hat{t}$ and $\displaystyle \hat{g}$ axis Subscript $G$ and $W$  $CMG$are used to identify gimbal, RW and CMG respectively.
 
@@ -325,7 +325,7 @@ J^{s}_{W}\sum ^{n}_{k=1} \ \dot{\Omega }_{k} \ \hat{s}_{k} =\tau _{d}
 Three reaction wheels with their spin axis mutually perpendicular are sufficient to counteract disturbance in any axis as long as saturation (maximum limit of angular momentum) does not occurs. Output torque is torque is proportional to rate of change of RW angular velocity and moment of inertia.
 
 \subsection{Control Moment Gyroscope (CMG)}
-Keeping angular velocity of RW \ $\displaystyle \Omega $ constant in \autoref{eqn:EOM_FULL} we get e attitude equation of a satellite equipped with control moment gyros as 
+Keeping angular velocity of RW \ $\displaystyle \Omega $ constant in \autoref{eqn:EOM_FULL} we get attitude equation of a satellite equipped with control moment gyros as 
 \begin{equation}
 \begin{aligned}
 \dot{\mathcal{H}} +\omega \times \mathcal{H} & =\left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \delta_{k})\right] \cdotp \dot{\omega } +\omega \times \left[ J_{P} +\sum ^{n}_{k=1} J^{k}_{CMG}( \delta_{k})\right] \cdotp \omega \\
