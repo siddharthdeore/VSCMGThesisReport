@@ -10,7 +10,7 @@ advisor : Prof. Fabio Santoni
 1. Compiled final report in pdf format [
 tessi_DEORE_1823670.pdf](https://github.com/siddharthdeore/VSCMGThesisReport/releases/download/Defence/tessi_DEORE_1823670.pdf)
 2. System URDF [vscmg_description](https://github.com/siddharthdeore/vscmg_description)
-
+3. Control and Simulation Repositiory [vscmg-cpp](https://github.com/siddharthdeore/vscmg-cpp)
 ## Cite this work
 
 
