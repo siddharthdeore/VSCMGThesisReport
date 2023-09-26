@@ -76,25 +76,25 @@ Only reaction wheel based controller was sufficient to counteract the external d
 After several iterations of testing, many problems were analyzed of which most important is very small oscillations persist which were not visible in each test with same input parameters. Controller has different steady state performance for and long time is needed to compensate disturbances, this was due to lower battery voltage and can be solved by keeping batteries above minimum threshold or by updating controller gain based on available power. Orientation uncertainties can be removed by recording IMU offset and introducing offset rotation matrix. Gimbal angle is measured through magnetic encoder which provide absolute angular feedback but are not linear due to offset in sensor and shaft magnet. Since steeper motors are used for gimbal, Encoder error can be compensated by keeping track of motor steps and updating the zero position every time magnet crosses the zero position. Thus magnetic encoders will be only used as reference. Breathless motors used for reaction wheels are driven using back EMF feed back based motor controller. These type of controllers are not capable of running motors at lower speed and significant dead band is present near zero RPM, this is introduces jerks at lower speeds. Hall sensor based controllers can be used to have better control at lower speed. Hall sensor based controllers keeps track of rotor orientation and activate coils in sequence based on pre determined lookup table.
 \\
 \\
-Photos of homemade test setup for VSCMG is shown in \autoref{fig:tv-tb-stand} to \autoref{fig:sv-tb}. Small 3D printed tripod with a metal coin at the top along side complete VSCMG platform is shown in \autoref{fig:tv-tb-stand}. \autoref{fig:tv-tb} and \autoref{fig:sv-tb} are top and side view of complete test setup.
+Photos of custom-built test setup for VSCMG is shown in \autoref{fig:tv-tb-stand} to \autoref{fig:sv-tb}. Small 3D printed tripod with a metal coin at the top along side complete VSCMG platform is shown in \autoref{fig:tv-tb-stand}. \autoref{fig:tv-tb} and \autoref{fig:sv-tb} are top and side view of complete test setup.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/photos/tb-stand-tv.pdf}
-    \caption{Top view of homemade VSCMG experimental test bed and tripod}
+    \caption{Top view of custom-built VSCMG experimental test bed and tripod}
     \label{fig:tv-tb-stand}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/photos/tv-tb.pdf}
-    \caption{Top view of homemade VSCMG experimental test bed balancing on tripod}
+    \caption{Top view of custom-built VSCMG experimental test bed balancing on tripod}
     \label{fig:tv-tb}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/photos/sv-tb.pdf}
-    \caption{Side view of homemade VSCMG experimental test bed balancing on tripod}
+    \caption{Side view of custom-built VSCMG experimental test bed balancing on tripod}
     \label{fig:sv-tb}
 \end{figure}
